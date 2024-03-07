@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/LogInFragment">
+
+    <fragment
+        android:id="@+id/LogInFragment"
+        android:name="com.example.talkey_android.ui.LogInFragment"
+        android:label="LogIn"
+        tools:layout="@layout/fragment_log_in">
+
+        <action
+            android:id="@+id/action_login_to_home"
+            app:destination="@id/HomeFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.example.talkey_android.ui.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_chat"
+            app:destination="@id/ChatFragment" />
+
+        <action
+            android:id="@+id/action_home_to_login"
+            app:destination="@id/LogInFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/ChatFragment"
+        android:name="com.example.talkey_android.ui.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat">
+
+        <action
+            android:id="@+id/action_chat_to_home"
+            app:destination="@id/HomeFragment" />
+
+    </fragment>
+
+</navigation>
