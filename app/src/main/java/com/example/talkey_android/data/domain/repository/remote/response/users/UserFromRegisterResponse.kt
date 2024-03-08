@@ -2,7 +2,7 @@ package com.example.talkey_android.data.domain.repository.remote.response.users
 
 import com.google.gson.annotations.SerializedName
 
-data class UserResponse(
+data class UserFromRegisterResponse(
     @SerializedName("id")
     val id: String?,
     @SerializedName("login")
@@ -16,7 +16,7 @@ data class UserResponse(
     @SerializedName("avatar")
     val avatar: String?,
     @SerializedName("uuid")
-    val uuid: Any?,
+    val uuid: String?,
     @SerializedName("token")
     val token: String?,
     @SerializedName("online")
