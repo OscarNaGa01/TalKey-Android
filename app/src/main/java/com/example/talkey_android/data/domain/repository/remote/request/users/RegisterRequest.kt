@@ -1,4 +1,4 @@
-package com.example.talkey_android.data.domain.repository.remote.request
+package com.example.talkey_android.data.domain.repository.remote.request.users
 
 import com.google.gson.annotations.SerializedName
 
