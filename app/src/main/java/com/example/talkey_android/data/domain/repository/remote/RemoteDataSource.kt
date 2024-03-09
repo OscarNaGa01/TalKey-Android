@@ -11,11 +11,13 @@ object RemoteDataSource : DataSource {
 
     //Aquí está la variable que iría en la inyección de dependencias
     private val apiCallService = ApiCallService(RetrofitClient.getApiServices())
-    override suspend fun postRegister(registerToRequestModel: RegisterToRequestModel): BaseResponse<RegisterFromResponseModel> {
-        // TODO: incluir la variable en el when. Lo haré cuando vea que todo funciona bien, por si tengo que modificar algo
+
+    override suspend fun postRegister(registerToRequestModel: RegisterToRequestModel)
+            : BaseResponse<RegisterFromResponseModel> {
+        // TODO: incluir la variable en el when. Lo haré cuando vea
+        //  que todo funciona bien, por si tengo que modificar algo
         val apiResult =
             apiCallService.postRegister(RegisterToRequestMappper().toRequest(registerToRequestModel))
-
         return when (apiResult) {
             is BaseResponse.Success -> BaseResponse.Success(
                 RegisterFromResponseMapper().fromResponse(
