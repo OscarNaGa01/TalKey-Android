@@ -6,6 +6,6 @@ data class UserModel(
     val id: String = "",
     val nick: String = "",
     val avatar: String = "",
-    val online: String = "",
+    val online: Boolean = false,
     val token: String = ""
 ) : BaseModel()
