@@ -1,6 +1,8 @@
 package com.example.talkey_android.data.domain.repository.remote
 
+import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
+import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.RegisterResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -12,5 +14,10 @@ interface RemoteApiService {
     suspend fun postRegister(
         @Body registerRequest: RegisterRequest
     ): Response<RegisterResponse>
+
+    @POST("users/login")
+    suspend fun postLogin(
+        @Body loginRequest: LoginRequest
+    ): Response<LoginResponse>
 
 }

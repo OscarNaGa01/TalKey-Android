@@ -7,14 +7,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.example.talkey_android.data.constants.Constants.PLATFORM
-import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
+import com.example.talkey_android.data.domain.model.users.LoginRequestModel
+import com.example.talkey_android.data.domain.use_cases.PostLoginUseCase
 import com.example.talkey_android.data.domain.use_cases.PostRegisterUseCase
 import com.example.talkey_android.ui.LogInFragmentViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private val mViewModel = LogInFragmentViewModel(PostRegisterUseCase())
+    private val mViewModel = LogInFragmentViewModel(
+        PostRegisterUseCase(),
+        PostLoginUseCase()
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val screenSplash = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -24,28 +29,48 @@ class MainActivity : AppCompatActivity() {
 
         observeViewModel()
 
-        mViewModel.postRegister(
+        /*mViewModel.postRegister(
             RegisterRequestModel(
-                "yakisoba",
-                "yakisoba",
-                "yakisoba",
+                "wasabi",
+                "wasabi",
+                "wasabi",
                 PLATFORM
             )
-        )
+        )*/
+        mViewModel.postLogin(LoginRequestModel("wasabi", "wasabi", PLATFORM))
 
     }
 
     private fun observeViewModel() {
-        val tvTry = findViewById<TextView>(R.id.tvTry)
+        val tvId = findViewById<TextView>(R.id.tvId)
+        val tvNick = findViewById<TextView>(R.id.tvNick)
+        val tvAvatar = findViewById<TextView>(R.id.tvAvatar)
+        val tvOnline = findViewById<TextView>(R.id.tvOnline)
+        val tvToken = findViewById<TextView>(R.id.tvToken)
+
         lifecycleScope.launch {
-            mViewModel.register.collect {
-                tvTry.text = it.success.toString()
+            mViewModel.user.collect {
+                tvId.text = it.id
+                tvNick.text = it.nick
+                tvAvatar.text = it.avatar
+                tvOnline.text = it.online.toString()
+                tvToken.text = it.token
             }
         }
 
 
         lifecycleScope.launch {
             mViewModel.registerError.collect { error ->
+                Toast.makeText(
+                    this@MainActivity,
+                    error.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        lifecycleScope.launch {
+            mViewModel.loginError.collect { error ->
                 Toast.makeText(
                     this@MainActivity,
                     error.message,
