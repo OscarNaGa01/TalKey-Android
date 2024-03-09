@@ -2,7 +2,7 @@ package com.example.talkey_android.data.domain.model.users
 
 import com.example.talkey_android.data.domain.model.BaseModel
 
-data class RegisterToRequestModel(
+data class RegisterRequestModel(
     val login: String = "",
     val password: String = "",
     val nick: String = "",

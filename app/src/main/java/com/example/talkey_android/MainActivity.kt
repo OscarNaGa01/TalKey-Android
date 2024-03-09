@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.example.talkey_android.data.constants.Constants.PLATFORM
-import com.example.talkey_android.data.domain.model.users.RegisterToRequestModel
+import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.use_cases.PostRegisterUseCase
 import com.example.talkey_android.ui.LogInFragmentViewModel
 import kotlinx.coroutines.launch
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         observeViewModel()
 
         mViewModel.postRegister(
-            RegisterToRequestModel(
+            RegisterRequestModel(
                 "yakisoba",
                 "yakisoba",
                 "yakisoba",

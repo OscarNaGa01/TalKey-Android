@@ -3,8 +3,8 @@ package com.example.talkey_android.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.error.ErrorModel
-import com.example.talkey_android.data.domain.model.users.RegisterFromResponseModel
-import com.example.talkey_android.data.domain.model.users.RegisterToRequestModel
+import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
+import com.example.talkey_android.data.domain.model.users.RegisterResponseModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.use_cases.PostRegisterUseCase
 import kotlinx.coroutines.Dispatchers
@@ -22,14 +22,14 @@ class LogInFragmentViewModel(
     val registerError: SharedFlow<ErrorModel> = _registerError
 
     private val _register =
-        MutableStateFlow(RegisterFromResponseModel())
-    val register: StateFlow<RegisterFromResponseModel> = _register
+        MutableStateFlow(RegisterResponseModel())
+    val register: StateFlow<RegisterResponseModel> = _register
 
 
-    fun postRegister(registerToRequestModel: RegisterToRequestModel) {
+    fun postRegister(registerRequestModel: RegisterRequestModel) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val baseResponse = postRegisterUseCase(registerToRequestModel)
+            val baseResponse = postRegisterUseCase(registerRequestModel)
 
             when (baseResponse) {
                 is BaseResponse.Success -> {
