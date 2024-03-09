@@ -5,5 +5,5 @@ import com.example.talkey_android.data.domain.model.users.RegisterToRequestModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 
 interface DataSource {
-    fun postRegister(registerToRequestModel: RegisterToRequestModel): BaseResponse<RegisterFromResponseModel>
+    suspend fun postRegister(registerToRequestModel: RegisterToRequestModel): BaseResponse<RegisterFromResponseModel>
 }
