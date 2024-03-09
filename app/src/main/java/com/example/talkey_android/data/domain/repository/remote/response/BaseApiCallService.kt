@@ -34,6 +34,8 @@ abstract class BaseApiCallService {
             val parsedData = Gson().fromJson(errorBody, ErrorResponse::class.java)
             if (response.code() == 401) {
                 parsedData.errorCode = 401.toString()
+                // TODO: Arreglar el mensaje de error y que no se quede aquí hardcodeado
+                parsedData.message = "Ya existe un usuario con ese nombre"
             }
             parsedData
         } catch (exception: java.lang.Exception) {
