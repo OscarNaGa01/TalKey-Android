@@ -1,5 +1,6 @@
 package com.example.talkey_android.data.domain.repository
 
+import com.example.talkey_android.data.domain.model.users.ListUsersModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.LogoutModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
@@ -26,5 +27,9 @@ object DataProvider : DataSource {
 
     override suspend fun getProfile(token: String): BaseResponse<UserFullDataModel> {
         return RemoteDataSource.getProfile(token)
+    }
+
+    override suspend fun getListProfiles(token: String): BaseResponse<ListUsersModel> {
+        return RemoteDataSource.getListProfiles(token)
     }
 }

@@ -26,4 +26,9 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
     suspend fun getProfile(token: String): BaseResponse<UserFullDataResponse> {
         return apiCall { remoteApiService.getProfile(token) }
     }
+
+    suspend fun getListProfiles(token: String): BaseResponse<List<UserFullDataResponse>> {
+        return apiCall { remoteApiService.getListProfiles(token) }
+    }
+
 }

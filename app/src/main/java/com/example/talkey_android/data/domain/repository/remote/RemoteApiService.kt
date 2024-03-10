@@ -16,7 +16,7 @@ interface RemoteApiService {
 
     //USERS------------------------------------
 
-    //Registro y login/logout
+    //Register and login/logout
     @POST("users/register")
     suspend fun postRegister(
         @Body registerRequest: RegisterRequest
@@ -32,9 +32,14 @@ interface RemoteApiService {
         @Header("Authorization") token: String
     ): Response<LogoutResponse>
 
-    //Perfil/es
+    //Profile/s
     @GET("users/profile")
     suspend fun getProfile(
         @Header("Authorization") token: String
     ): Response<UserFullDataResponse>
+
+    @GET("users")
+    suspend fun getListProfiles(
+        @Header("Authorization") token: String
+    ): Response<List<UserFullDataResponse>>
 }

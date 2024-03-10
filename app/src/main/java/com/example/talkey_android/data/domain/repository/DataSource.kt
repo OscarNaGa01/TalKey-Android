@@ -1,5 +1,6 @@
 package com.example.talkey_android.data.domain.repository
 
+import com.example.talkey_android.data.domain.model.users.ListUsersModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.LogoutModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
@@ -13,4 +14,5 @@ interface DataSource {
     suspend fun postLogin(loginRequestModel: LoginRequestModel): BaseResponse<UserModel>
     suspend fun postLogout(token: String): BaseResponse<LogoutModel>
     suspend fun getProfile(token: String): BaseResponse<UserFullDataModel>
+    suspend fun getListProfiles(token: String): BaseResponse<ListUsersModel>
 }
