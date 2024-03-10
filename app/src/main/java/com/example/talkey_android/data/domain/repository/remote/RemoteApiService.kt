@@ -24,12 +24,12 @@ interface RemoteApiService {
 
     //Register and login/logout------------------
     @POST("users/register")
-    suspend fun postRegister(
+    suspend fun register(
         @Body registerRequest: RegisterRequest
     ): Response<RegisterResponse>
 
     @POST("users/login")
-    suspend fun postLogin(
+    suspend fun login(
         @Body loginRequest: LoginRequest
     ): Response<LoginResponse>
 
@@ -37,17 +37,17 @@ interface RemoteApiService {
      * This fun is not tested. Maybe doesn't work
      */
     @POST("users/biometric")
-    suspend fun postBiometric(
+    suspend fun loginBiometric(
         @Body firebaseTokenRequest: FirebaseTokenRequest
     ): Response<LoginResponse>
 
     @POST("users/logout")
-    suspend fun postLogout(
+    suspend fun logout(
         @Header("Authorization") token: String
     ): Response<MessageResponse>
 
     @PUT("users/online/{isOnline}")
-    suspend fun putOnline(
+    suspend fun setOnline(
         @Header("Authorization") token: String,
         @Path("isOnline") isOnline: Boolean
     ): Response<MessageResponse>
@@ -71,7 +71,7 @@ interface RemoteApiService {
     ): Response<List<UserFullDataResponse>>
 
     @PUT("users/profile")
-    suspend fun putProfile(
+    suspend fun updateProfile(
         @Header("Authorization") token: String,
         @Body updateUserRequest: UpdateUserRequest
     ): Response<SuccessResponse>
@@ -80,7 +80,7 @@ interface RemoteApiService {
      * This fun is not tested. Maybe doesn't work
      */
     @POST("users/upload")
-    suspend fun postUpload(
+    suspend fun uploadImg(
         @Header("Authorization") token: String,
         @Body file: File
     ): Response<MessageResponse>

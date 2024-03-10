@@ -5,8 +5,8 @@ import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.repository.DataProvider
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 
-class PostLoginUseCase {
+class LoginUseCase {
     suspend operator fun invoke(loginRequestModel: LoginRequestModel): BaseResponse<UserModel> {
-        return DataProvider.postLogin(loginRequestModel)
+        return DataProvider.login(loginRequestModel)
     }
 }

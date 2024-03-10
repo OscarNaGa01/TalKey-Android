@@ -15,16 +15,16 @@ import java.io.File
 
 class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCallService() {
 
-    suspend fun postRegister(registerRequest: RegisterRequest): BaseResponse<RegisterResponse> {
-        return apiCall { remoteApiService.postRegister(registerRequest) }
+    suspend fun register(registerRequest: RegisterRequest): BaseResponse<RegisterResponse> {
+        return apiCall { remoteApiService.register(registerRequest) }
     }
 
-    suspend fun postLogin(loginRequest: LoginRequest): BaseResponse<LoginResponse> {
-        return apiCall { remoteApiService.postLogin(loginRequest) }
+    suspend fun login(loginRequest: LoginRequest): BaseResponse<LoginResponse> {
+        return apiCall { remoteApiService.login(loginRequest) }
     }
 
-    suspend fun postLogout(token: String): BaseResponse<MessageResponse> {
-        return apiCall { remoteApiService.postLogout(token) }
+    suspend fun logout(token: String): BaseResponse<MessageResponse> {
+        return apiCall { remoteApiService.logout(token) }
     }
 
     suspend fun getProfile(token: String): BaseResponse<UserFullDataResponse> {
@@ -35,19 +35,19 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         return apiCall { remoteApiService.getListProfiles(token) }
     }
 
-    suspend fun putProfile(
+    suspend fun updateProfile(
         token: String,
         updateUserRequest: UpdateUserRequest
     ): BaseResponse<SuccessResponse> {
-        return apiCall { remoteApiService.putProfile(token, updateUserRequest) }
+        return apiCall { remoteApiService.updateProfile(token, updateUserRequest) }
     }
 
-    suspend fun postUpload(token: String, file: File): BaseResponse<MessageResponse> {
-        return apiCall { remoteApiService.postUpload(token, file) }
+    suspend fun uploadImg(token: String, file: File): BaseResponse<MessageResponse> {
+        return apiCall { remoteApiService.uploadImg(token, file) }
     }
 
-    suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageResponse> {
-        return apiCall { remoteApiService.putOnline(token, isOnline) }
+    suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<MessageResponse> {
+        return apiCall { remoteApiService.setOnline(token, isOnline) }
     }
 
     suspend fun putNotification(
@@ -57,9 +57,9 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         return apiCall { remoteApiService.putNotification(token, firebaseTokenRequest) }
     }
 
-    suspend fun postBiometric(
+    suspend fun loginBiometric(
         firebaseTokenRequest: FirebaseTokenRequest
     ): BaseResponse<LoginResponse> {
-        return apiCall { remoteApiService.postBiometric(firebaseTokenRequest) }
+        return apiCall { remoteApiService.loginBiometric(firebaseTokenRequest) }
     }
 }

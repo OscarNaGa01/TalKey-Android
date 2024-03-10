@@ -4,8 +4,8 @@ import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.repository.DataProvider
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 
-class PostBiometricUseCase {
+class LoginBiometricUseCase {
     suspend operator fun invoke(firebaseToken: String): BaseResponse<UserModel> {
-        return DataProvider.postBiometric(firebaseToken)
+        return DataProvider.loginBiometric(firebaseToken)
     }
 }

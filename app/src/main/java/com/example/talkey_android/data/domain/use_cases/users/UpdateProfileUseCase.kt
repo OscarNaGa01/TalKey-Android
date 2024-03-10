@@ -5,11 +5,11 @@ import com.example.talkey_android.data.domain.model.users.UpdateUserModel
 import com.example.talkey_android.data.domain.repository.DataProvider
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 
-class PutProfileUseCase {
+class UpdateProfileUseCase {
     suspend operator fun invoke(
         token: String,
         updateUserModel: UpdateUserModel
     ): BaseResponse<SuccessModel> {
-        return DataProvider.putProfile(token, updateUserModel)
+        return DataProvider.updateProfile(token, updateUserModel)
     }
 }

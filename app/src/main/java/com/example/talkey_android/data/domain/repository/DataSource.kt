@@ -13,19 +13,19 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 import java.io.File
 
 interface DataSource {
-    suspend fun postRegister(registerRequestModel: RegisterRequestModel): BaseResponse<RegisterResponseModel>
-    suspend fun postLogin(loginRequestModel: LoginRequestModel): BaseResponse<UserModel>
-    suspend fun postLogout(token: String): BaseResponse<MessageModel>
+    suspend fun register(registerRequestModel: RegisterRequestModel): BaseResponse<RegisterResponseModel>
+    suspend fun login(loginRequestModel: LoginRequestModel): BaseResponse<UserModel>
+    suspend fun logout(token: String): BaseResponse<MessageModel>
     suspend fun getProfile(token: String): BaseResponse<UserFullDataModel>
     suspend fun getListProfiles(token: String): BaseResponse<ListUsersModel>
-    suspend fun putProfile(
+    suspend fun updateProfile(
         token: String,
         updateUserModel: UpdateUserModel
     ): BaseResponse<SuccessModel>
 
-    suspend fun postUpload(token: String, file: File): BaseResponse<MessageModel>
-    suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel>
+    suspend fun uploadImg(token: String, file: File): BaseResponse<MessageModel>
+    suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel>
     suspend fun putNotification(token: String, firebaseToken: String): BaseResponse<MessageModel>
-    suspend fun postBiometric(firebaseToken: String): BaseResponse<UserModel>
+    suspend fun loginBiometric(firebaseToken: String): BaseResponse<UserModel>
 
 }

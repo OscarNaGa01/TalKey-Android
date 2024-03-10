@@ -14,18 +14,18 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 import java.io.File
 
 object DataProvider : DataSource {
-    override suspend fun postRegister(
+    override suspend fun register(
         registerRequestModel: RegisterRequestModel
     ): BaseResponse<RegisterResponseModel> {
-        return RemoteDataSource.postRegister(registerRequestModel)
+        return RemoteDataSource.register(registerRequestModel)
     }
 
-    override suspend fun postLogin(loginRequestModel: LoginRequestModel): BaseResponse<UserModel> {
-        return RemoteDataSource.postLogin(loginRequestModel)
+    override suspend fun login(loginRequestModel: LoginRequestModel): BaseResponse<UserModel> {
+        return RemoteDataSource.login(loginRequestModel)
     }
 
-    override suspend fun postLogout(token: String): BaseResponse<MessageModel> {
-        return RemoteDataSource.postLogout(token)
+    override suspend fun logout(token: String): BaseResponse<MessageModel> {
+        return RemoteDataSource.logout(token)
     }
 
     override suspend fun getProfile(token: String): BaseResponse<UserFullDataModel> {
@@ -36,19 +36,19 @@ object DataProvider : DataSource {
         return RemoteDataSource.getListProfiles(token)
     }
 
-    override suspend fun putProfile(
+    override suspend fun updateProfile(
         token: String,
         updateUserModel: UpdateUserModel
     ): BaseResponse<SuccessModel> {
-        return RemoteDataSource.putProfile(token, updateUserModel)
+        return RemoteDataSource.updateProfile(token, updateUserModel)
     }
 
-    override suspend fun postUpload(token: String, file: File): BaseResponse<MessageModel> {
-        return RemoteDataSource.postUpload(token, file)
+    override suspend fun uploadImg(token: String, file: File): BaseResponse<MessageModel> {
+        return RemoteDataSource.uploadImg(token, file)
     }
 
-    override suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
-        return RemoteDataSource.putOnline(token, isOnline)
+    override suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
+        return RemoteDataSource.setOnline(token, isOnline)
     }
 
     override suspend fun putNotification(
@@ -58,7 +58,7 @@ object DataProvider : DataSource {
         return RemoteDataSource.putNotification(token, firebaseToken)
     }
 
-    override suspend fun postBiometric(firebaseToken: String): BaseResponse<UserModel> {
-        return RemoteDataSource.postBiometric(firebaseToken)
+    override suspend fun loginBiometric(firebaseToken: String): BaseResponse<UserModel> {
+        return RemoteDataSource.loginBiometric(firebaseToken)
     }
 }

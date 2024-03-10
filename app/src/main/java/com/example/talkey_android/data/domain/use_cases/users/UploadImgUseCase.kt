@@ -3,9 +3,10 @@ package com.example.talkey_android.data.domain.use_cases.users
 import com.example.talkey_android.data.domain.model.common.MessageModel
 import com.example.talkey_android.data.domain.repository.DataProvider
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
+import java.io.File
 
-class PutOnlineUseCase {
-    suspend operator fun invoke(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
-        return DataProvider.putOnline(token, isOnline)
+class UploadImgUseCase {
+    suspend operator fun invoke(token: String, file: File): BaseResponse<MessageModel> {
+        return DataProvider.uploadImg(token, file)
     }
 }

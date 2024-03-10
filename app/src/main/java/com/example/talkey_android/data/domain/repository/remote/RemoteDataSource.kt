@@ -28,10 +28,10 @@ object RemoteDataSource : DataSource {
     //Aquí está la variable que iría en la inyección de dependencias
     private val apiCallService = ApiCallService(RetrofitClient.getApiServices())
 
-    override suspend fun postRegister(registerRequestModel: RegisterRequestModel)
+    override suspend fun register(registerRequestModel: RegisterRequestModel)
             : BaseResponse<RegisterResponseModel> {
         val apiResult =
-            apiCallService.postRegister(RegisterRequestMappper().toRequest(registerRequestModel))
+            apiCallService.register(RegisterRequestMappper().toRequest(registerRequestModel))
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(RegisterResponseMapper().fromResponse(apiResult.data))
@@ -41,9 +41,9 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun postLogin(loginRequestModel: LoginRequestModel): BaseResponse<UserModel> {
+    override suspend fun login(loginRequestModel: LoginRequestModel): BaseResponse<UserModel> {
         val apiResult =
-            apiCallService.postLogin(LoginRequestMapper().toRequest(loginRequestModel))
+            apiCallService.login(LoginRequestMapper().toRequest(loginRequestModel))
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(LoginResponseToUserModelMapper().fromResponse(apiResult.data))
@@ -53,11 +53,11 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun postBiometric(
+    override suspend fun loginBiometric(
         firebaseToken: String
     ): BaseResponse<UserModel> {
         val apiResult =
-            apiCallService.postBiometric(FirebaseTokenMapper().toRequest(firebaseToken))
+            apiCallService.loginBiometric(FirebaseTokenMapper().toRequest(firebaseToken))
 
         return when (apiResult) {
             is BaseResponse.Success ->
@@ -68,8 +68,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun postLogout(token: String): BaseResponse<MessageModel> {
-        val apiResult = apiCallService.postLogout(token)
+    override suspend fun logout(token: String): BaseResponse<MessageModel> {
+        val apiResult = apiCallService.logout(token)
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(MessageMapper().fromResponse(apiResult.data))
@@ -101,12 +101,12 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun putProfile(
+    override suspend fun updateProfile(
         token: String,
         updateUserModel: UpdateUserModel
     ): BaseResponse<SuccessModel> {
         val apiResult =
-            apiCallService.putProfile(token, UpdateUserMapper().toRequest(updateUserModel))
+            apiCallService.updateProfile(token, UpdateUserMapper().toRequest(updateUserModel))
 
         return when (apiResult) {
             is BaseResponse.Success ->
@@ -117,8 +117,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun postUpload(token: String, file: File): BaseResponse<MessageModel> {
-        val apiResult = apiCallService.postUpload(token, file)
+    override suspend fun uploadImg(token: String, file: File): BaseResponse<MessageModel> {
+        val apiResult = apiCallService.uploadImg(token, file)
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(MessageMapper().fromResponse(apiResult.data))
@@ -128,8 +128,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
-        val apiResult = apiCallService.putOnline(token, isOnline)
+    override suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
+        val apiResult = apiCallService.setOnline(token, isOnline)
 
         return when (apiResult) {
             is BaseResponse.Success ->
