@@ -57,4 +57,9 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         return apiCall { remoteApiService.putNotification(token, firebaseTokenRequest) }
     }
 
+    suspend fun postBiometric(
+        firebaseTokenRequest: FirebaseTokenRequest
+    ): BaseResponse<LoginResponse> {
+        return apiCall { remoteApiService.postBiometric(firebaseTokenRequest) }
+    }
 }

@@ -53,6 +53,21 @@ object RemoteDataSource : DataSource {
         }
     }
 
+    override suspend fun postBiometric(
+        firebaseToken: String
+    ): BaseResponse<UserModel> {
+        val apiResult =
+            apiCallService.postBiometric(FirebaseTokenMapper().toRequest(firebaseToken))
+
+        return when (apiResult) {
+            is BaseResponse.Success ->
+                BaseResponse.Success(LoginResponseToUserModelMapper().fromResponse(apiResult.data))
+
+            is BaseResponse.Error ->
+                BaseResponse.Error(apiResult.error)
+        }
+    }
+
     override suspend fun postLogout(token: String): BaseResponse<MessageModel> {
         val apiResult = apiCallService.postLogout(token)
         return when (apiResult) {

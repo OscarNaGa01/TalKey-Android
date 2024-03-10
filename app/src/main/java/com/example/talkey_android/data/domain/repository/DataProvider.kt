@@ -57,4 +57,8 @@ object DataProvider : DataSource {
     ): BaseResponse<MessageModel> {
         return RemoteDataSource.putNotification(token, firebaseToken)
     }
+
+    override suspend fun postBiometric(firebaseToken: String): BaseResponse<UserModel> {
+        return RemoteDataSource.postBiometric(firebaseToken)
+    }
 }

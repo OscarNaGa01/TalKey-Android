@@ -26,6 +26,6 @@ interface DataSource {
     suspend fun postUpload(token: String, file: File): BaseResponse<MessageModel>
     suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel>
     suspend fun putNotification(token: String, firebaseToken: String): BaseResponse<MessageModel>
-
+    suspend fun postBiometric(firebaseToken: String): BaseResponse<UserModel>
 
 }
