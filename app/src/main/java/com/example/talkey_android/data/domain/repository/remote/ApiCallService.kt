@@ -2,12 +2,15 @@ package com.example.talkey_android.data.domain.repository.remote
 
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
+import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateUserRequest
 import com.example.talkey_android.data.domain.repository.remote.response.BaseApiCallService
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
+import com.example.talkey_android.data.domain.repository.remote.response.common.MessageResponse
+import com.example.talkey_android.data.domain.repository.remote.response.common.SuccessResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
-import com.example.talkey_android.data.domain.repository.remote.response.users.LogoutResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.RegisterResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.UserFullDataResponse
+import java.io.File
 
 class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCallService() {
 
@@ -19,7 +22,7 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         return apiCall { remoteApiService.postLogin(loginRequest) }
     }
 
-    suspend fun postLogout(token: String): BaseResponse<LogoutResponse> {
+    suspend fun postLogout(token: String): BaseResponse<MessageResponse> {
         return apiCall { remoteApiService.postLogout(token) }
     }
 
@@ -29,6 +32,17 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
 
     suspend fun getListProfiles(token: String): BaseResponse<List<UserFullDataResponse>> {
         return apiCall { remoteApiService.getListProfiles(token) }
+    }
+
+    suspend fun putProfile(
+        token: String,
+        updateUserRequest: UpdateUserRequest
+    ): BaseResponse<SuccessResponse> {
+        return apiCall { remoteApiService.putProfile(token, updateUserRequest) }
+    }
+
+    suspend fun postUpload(token: String, file: File): BaseResponse<MessageResponse> {
+        return apiCall { remoteApiService.postUpload(token, file) }
     }
 
 }
