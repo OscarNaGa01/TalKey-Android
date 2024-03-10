@@ -1,4 +1,4 @@
-package com.example.talkey_android.data.domain.use_cases
+package com.example.talkey_android.data.domain.use_cases.users
 
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.UserModel

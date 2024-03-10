@@ -14,13 +14,14 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import java.io.File
 
 interface RemoteApiService {
 
-    //USERS------------------------------------
+    //USERS--------------------------------------
 
-    //Register and login/logout
+    //Register and login/logout------------------
     @POST("users/register")
     suspend fun postRegister(
         @Body registerRequest: RegisterRequest
@@ -36,7 +37,14 @@ interface RemoteApiService {
         @Header("Authorization") token: String
     ): Response<MessageResponse>
 
-    //Profile/s
+    @PUT("users/online/{isOnline}")
+    suspend fun putOnline(
+        @Header("Authorization") token: String,
+        @Path("isOnline") isOnline: Boolean
+    ): Response<MessageResponse>
+
+
+    //Profile/s----------------------------------
     @GET("users/profile")
     suspend fun getProfile(
         @Header("Authorization") token: String
@@ -53,9 +61,8 @@ interface RemoteApiService {
         @Body updateUserRequest: UpdateUserRequest
     ): Response<SuccessResponse>
 
-
     /**
-     * This fun is not tested. Maybe is wrong
+     * This fun is not tested. Maybe doesn't work
      */
     @POST("users/upload")
     suspend fun postUpload(

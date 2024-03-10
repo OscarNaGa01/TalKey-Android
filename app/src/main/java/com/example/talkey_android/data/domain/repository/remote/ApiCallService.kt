@@ -45,4 +45,8 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         return apiCall { remoteApiService.postUpload(token, file) }
     }
 
+    suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageResponse> {
+        return apiCall { remoteApiService.putOnline(token, isOnline) }
+    }
+
 }

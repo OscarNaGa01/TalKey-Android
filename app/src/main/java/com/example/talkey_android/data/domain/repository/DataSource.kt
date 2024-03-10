@@ -24,6 +24,7 @@ interface DataSource {
     ): BaseResponse<SuccessModel>
 
     suspend fun postUpload(token: String, file: File): BaseResponse<MessageModel>
+    suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel>
 
 
 }

@@ -46,4 +46,8 @@ object DataProvider : DataSource {
     override suspend fun postUpload(token: String, file: File): BaseResponse<MessageModel> {
         return RemoteDataSource.postUpload(token, file)
     }
+
+    override suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
+        return RemoteDataSource.putOnline(token, isOnline)
+    }
 }

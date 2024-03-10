@@ -111,4 +111,16 @@ object RemoteDataSource : DataSource {
                 BaseResponse.Error(apiResult.error)
         }
     }
+
+    override suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
+        val apiResult = apiCallService.putOnline(token, isOnline)
+
+        return when (apiResult) {
+            is BaseResponse.Success ->
+                BaseResponse.Success(MessageMapper().fromResponse(apiResult.data))
+
+            is BaseResponse.Error ->
+                BaseResponse.Error(apiResult.error)
+        }
+    }
 }

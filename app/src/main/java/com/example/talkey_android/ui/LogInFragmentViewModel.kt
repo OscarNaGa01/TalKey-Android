@@ -7,8 +7,8 @@ import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
-import com.example.talkey_android.data.domain.use_cases.PostLoginUseCase
-import com.example.talkey_android.data.domain.use_cases.PostRegisterUseCase
+import com.example.talkey_android.data.domain.use_cases.users.PostLoginUseCase
+import com.example.talkey_android.data.domain.use_cases.users.PostRegisterUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
