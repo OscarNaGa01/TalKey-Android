@@ -4,6 +4,7 @@ import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.LogoutModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterResponseModel
+import com.example.talkey_android.data.domain.model.users.UserFullDataModel
 import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.repository.remote.RemoteDataSource
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
@@ -21,5 +22,9 @@ object DataProvider : DataSource {
 
     override suspend fun postLogout(token: String): BaseResponse<LogoutModel> {
         return RemoteDataSource.postLogout(token)
+    }
+
+    override suspend fun getProfile(token: String): BaseResponse<UserFullDataModel> {
+        return RemoteDataSource.getProfile(token)
     }
 }

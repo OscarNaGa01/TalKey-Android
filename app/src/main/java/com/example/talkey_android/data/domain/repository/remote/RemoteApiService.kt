@@ -5,13 +5,18 @@ import com.example.talkey_android.data.domain.repository.remote.request.users.Re
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LogoutResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.RegisterResponse
+import com.example.talkey_android.data.domain.repository.remote.response.users.UserFullDataResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface RemoteApiService {
 
+    //USERS------------------------------------
+
+    //Registro y login/logout
     @POST("users/register")
     suspend fun postRegister(
         @Body registerRequest: RegisterRequest
@@ -27,4 +32,9 @@ interface RemoteApiService {
         @Header("Authorization") token: String
     ): Response<LogoutResponse>
 
+    //Perfil/es
+    @GET("users/profile")
+    suspend fun getProfile(
+        @Header("Authorization") token: String
+    ): Response<UserFullDataResponse>
 }
