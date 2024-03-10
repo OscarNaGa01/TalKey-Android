@@ -5,6 +5,7 @@ import com.example.talkey_android.data.domain.repository.remote.request.users.Re
 import com.example.talkey_android.data.domain.repository.remote.response.BaseApiCallService
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
+import com.example.talkey_android.data.domain.repository.remote.response.users.LogoutResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.RegisterResponse
 
 class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCallService() {
@@ -15,5 +16,9 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
 
     suspend fun postLogin(loginRequest: LoginRequest): BaseResponse<LoginResponse> {
         return apiCall { remoteApiService.postLogin(loginRequest) }
+    }
+
+    suspend fun postLogout(token: String): BaseResponse<LogoutResponse> {
+        return apiCall { remoteApiService.postLogout(token) }
     }
 }

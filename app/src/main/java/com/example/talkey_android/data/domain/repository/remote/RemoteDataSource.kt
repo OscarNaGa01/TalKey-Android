@@ -1,12 +1,14 @@
 package com.example.talkey_android.data.domain.repository.remote
 
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
+import com.example.talkey_android.data.domain.model.users.LogoutModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterResponseModel
 import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.repository.DataSource
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.LoginRequestMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.LoginResponseToUserModelMapper
+import com.example.talkey_android.data.domain.repository.remote.mapper.users.LogoutMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.RegisterRequestMappper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.RegisterResponseMapper
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
@@ -35,6 +37,17 @@ object RemoteDataSource : DataSource {
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(LoginResponseToUserModelMapper().fromResponse(apiResult.data))
+
+            is BaseResponse.Error ->
+                BaseResponse.Error(apiResult.error)
+        }
+    }
+
+    override suspend fun postLogout(token: String): BaseResponse<LogoutModel> {
+        val apiResult = apiCallService.postLogout(token)
+        return when (apiResult) {
+            is BaseResponse.Success ->
+                BaseResponse.Success(LogoutMapper().fromResponse(apiResult.data))
 
             is BaseResponse.Error ->
                 BaseResponse.Error(apiResult.error)
