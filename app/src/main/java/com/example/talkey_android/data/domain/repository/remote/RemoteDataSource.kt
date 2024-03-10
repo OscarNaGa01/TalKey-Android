@@ -12,6 +12,7 @@ import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.repository.DataSource
 import com.example.talkey_android.data.domain.repository.remote.mapper.common.MessageMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.common.SuccessMapper
+import com.example.talkey_android.data.domain.repository.remote.mapper.users.FirebaseTokenMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.ListUsersMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.LoginRequestMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.LoginResponseToUserModelMapper
@@ -114,6 +115,22 @@ object RemoteDataSource : DataSource {
 
     override suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
         val apiResult = apiCallService.putOnline(token, isOnline)
+
+        return when (apiResult) {
+            is BaseResponse.Success ->
+                BaseResponse.Success(MessageMapper().fromResponse(apiResult.data))
+
+            is BaseResponse.Error ->
+                BaseResponse.Error(apiResult.error)
+        }
+    }
+
+    override suspend fun putNotification(
+        token: String,
+        firebaseToken: String
+    ): BaseResponse<MessageModel> {
+        val apiResult =
+            apiCallService.putNotification(token, FirebaseTokenMapper().toRequest(firebaseToken))
 
         return when (apiResult) {
             is BaseResponse.Success ->

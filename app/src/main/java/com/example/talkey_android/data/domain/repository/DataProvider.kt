@@ -50,4 +50,11 @@ object DataProvider : DataSource {
     override suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
         return RemoteDataSource.putOnline(token, isOnline)
     }
+
+    override suspend fun putNotification(
+        token: String,
+        firebaseToken: String
+    ): BaseResponse<MessageModel> {
+        return RemoteDataSource.putNotification(token, firebaseToken)
+    }
 }

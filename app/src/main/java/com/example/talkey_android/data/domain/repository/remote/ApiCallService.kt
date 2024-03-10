@@ -1,5 +1,6 @@
 package com.example.talkey_android.data.domain.repository.remote
 
+import com.example.talkey_android.data.domain.repository.remote.request.users.FirebaseTokenRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateUserRequest
@@ -47,6 +48,13 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
 
     suspend fun putOnline(token: String, isOnline: Boolean): BaseResponse<MessageResponse> {
         return apiCall { remoteApiService.putOnline(token, isOnline) }
+    }
+
+    suspend fun putNotification(
+        token: String,
+        firebaseTokenRequest: FirebaseTokenRequest
+    ): BaseResponse<MessageResponse> {
+        return apiCall { remoteApiService.putNotification(token, firebaseTokenRequest) }
     }
 
 }

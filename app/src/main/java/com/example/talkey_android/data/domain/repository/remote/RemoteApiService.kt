@@ -1,5 +1,6 @@
 package com.example.talkey_android.data.domain.repository.remote
 
+import com.example.talkey_android.data.domain.repository.remote.request.users.FirebaseTokenRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateUserRequest
@@ -41,6 +42,12 @@ interface RemoteApiService {
     suspend fun putOnline(
         @Header("Authorization") token: String,
         @Path("isOnline") isOnline: Boolean
+    ): Response<MessageResponse>
+
+    @PUT("users/notification")
+    suspend fun putNotification(
+        @Header("Authorization") token: String,
+        @Body firebaseTokenRequest: FirebaseTokenRequest
     ): Response<MessageResponse>
 
 
