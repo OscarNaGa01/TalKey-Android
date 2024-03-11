@@ -1,4 +1,4 @@
-package com.example.talkey_android.ui
+package com.example.talkey_android.ui.login
 
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -8,13 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.talkey_android.R
+import com.example.talkey_android.data.constants.Constants.PLATFORM
+import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.databinding.FragmentLogInBinding
 
 class LogInFragment : Fragment() {
 
     private lateinit var binding: FragmentLogInBinding
     private var isLogin: Boolean = true
+    private val logInFragmentViewModel by viewModels<LogInFragmentViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +52,15 @@ class LogInFragment : Fragment() {
 //                    findNavController().navigate(LogInFragmentDirections.actionLoginToHome())
                     Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
                 } else {
+                    logInFragmentViewModel.postRegister(
+                        RegisterRequestModel(
+                            binding.etEmail.toString(),
+                            binding.etPassword.toString(),
+                            binding.etNick.toString(),
+                            PLATFORM,
+                            ""
+                        )
+                    )
                     Toast.makeText(requireContext(), "Sign up", Toast.LENGTH_SHORT).show()
                 }
             }
