@@ -1,23 +1,18 @@
 package com.example.talkey_android.data.domain.repository.remote.mapper.users
 
-import com.example.talkey_android.data.domain.model.users.UserFullDataModel
+import com.example.talkey_android.data.domain.model.users.UserProfileModel
 import com.example.talkey_android.data.domain.repository.remote.mapper.ResponseMapper
 import com.example.talkey_android.data.domain.repository.remote.response.users.UserFullDataResponse
 
-class UserFullDataMapper : ResponseMapper<UserFullDataResponse, UserFullDataModel> {
-    override fun fromResponse(response: UserFullDataResponse): UserFullDataModel {
-        return UserFullDataModel(
+class UserFullDataToUserProfileMapper : ResponseMapper<UserFullDataResponse, UserProfileModel> {
+    override fun fromResponse(response: UserFullDataResponse): UserProfileModel {
+        return UserProfileModel(
             response.id ?: "",
             response.login ?: "",
-            response.password ?: "",
             response.nick ?: "",
-            response.platform ?: "",
             response.avatar ?: "",
-            response.uuid ?: "",
             response.token ?: "",
             response.online ?: false,
-            response.created ?: "",
-            response.updated ?: ""
         )
     }
 }

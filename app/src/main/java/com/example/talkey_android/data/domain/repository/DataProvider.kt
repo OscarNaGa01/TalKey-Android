@@ -7,8 +7,8 @@ import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterResponseModel
 import com.example.talkey_android.data.domain.model.users.UpdateUserModel
-import com.example.talkey_android.data.domain.model.users.UserFullDataModel
 import com.example.talkey_android.data.domain.model.users.UserModel
+import com.example.talkey_android.data.domain.model.users.UserProfileModel
 import com.example.talkey_android.data.domain.repository.remote.RemoteDataSource
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import java.io.File
@@ -28,7 +28,7 @@ object DataProvider : DataSource {
         return RemoteDataSource.logout(token)
     }
 
-    override suspend fun getProfile(token: String): BaseResponse<UserFullDataModel> {
+    override suspend fun getProfile(token: String): BaseResponse<UserProfileModel> {
         return RemoteDataSource.getProfile(token)
     }
 
