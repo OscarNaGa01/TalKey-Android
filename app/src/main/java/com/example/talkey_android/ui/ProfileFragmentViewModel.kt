@@ -13,6 +13,8 @@ import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
 import com.example.talkey_android.data.domain.use_cases.users.UpdateProfileUseCase
 import com.example.talkey_android.data.domain.use_cases.users.UploadImgUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -48,55 +50,63 @@ class ProfileFragmentViewModel(
     val uploadImgMessage: StateFlow<MessageModel> = _uploadImgMessage
 
 
-    private fun uploadImg(file: File) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = uploadImgUseCase(
-                _userProfile.value.token,
-                file
+    fun saveData(passwd: String, nick: String, isOnline: Boolean, file: File) {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val deferreds = listOf(
+                async { updateProfile(UpdateProfileModel(passwd, nick)) },
+                async { setOnline(isOnline) },
+                async { uploadImg(file) }
             )
-            when (baseResponse) {
-                is BaseResponse.Success -> {
-                    _uploadImgMessage.emit(baseResponse.data)
-                }
+            deferreds.awaitAll()
+            getProfile(_userProfile.value.token)
+        }
+    }
 
-                is BaseResponse.Error -> {
-                    _uploadImgError.emit(baseResponse.error)
-                }
+
+    private suspend fun uploadImg(file: File) {
+        val baseResponse = uploadImgUseCase(
+            _userProfile.value.token,
+            file
+        )
+        when (baseResponse) {
+            is BaseResponse.Success -> {
+                _uploadImgMessage.emit(baseResponse.data)
+            }
+
+            is BaseResponse.Error -> {
+                _uploadImgError.emit(baseResponse.error)
             }
         }
     }
 
-    private fun updateProfile(updateProfileModel: UpdateProfileModel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = updateProfileUseCase(
-                _userProfile.value.token,
-                updateProfileModel
-            )
-            when (baseResponse) {
-                is BaseResponse.Success -> {
-                    _updateProfileSuccess.emit(baseResponse.data)
-                }
+    private suspend fun updateProfile(updateProfileModel: UpdateProfileModel) {
+        val baseResponse = updateProfileUseCase(
+            _userProfile.value.token,
+            updateProfileModel
+        )
+        when (baseResponse) {
+            is BaseResponse.Success -> {
+                _updateProfileSuccess.emit(baseResponse.data)
+            }
 
-                is BaseResponse.Error -> {
-                    _updateProfileError.emit(baseResponse.error)
-                }
+            is BaseResponse.Error -> {
+                _updateProfileError.emit(baseResponse.error)
             }
         }
     }
 
-    private fun setOnline(isOnline: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = setOnlineUseCase(
-                _userProfile.value.token, isOnline
-            )
-            when (baseResponse) {
-                is BaseResponse.Success -> {
-                    _setOnlineMessage.emit(baseResponse.data)
-                }
+    private suspend fun setOnline(isOnline: Boolean) {
+        val baseResponse = setOnlineUseCase(
+            _userProfile.value.token, isOnline
+        )
+        when (baseResponse) {
+            is BaseResponse.Success -> {
+                _setOnlineMessage.emit(baseResponse.data)
+            }
 
-                is BaseResponse.Error -> {
-                    _setOnlineError.emit(baseResponse.error)
-                }
+            is BaseResponse.Error -> {
+                _setOnlineError.emit(baseResponse.error)
             }
         }
     }
