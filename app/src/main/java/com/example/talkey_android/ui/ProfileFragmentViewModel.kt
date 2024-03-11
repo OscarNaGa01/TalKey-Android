@@ -11,17 +11,20 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 import com.example.talkey_android.data.domain.use_cases.users.GetProfileUseCase
 import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
 import com.example.talkey_android.data.domain.use_cases.users.UpdateProfileUseCase
+import com.example.talkey_android.data.domain.use_cases.users.UploadImgUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 
 class ProfileFragmentViewModel(
     private val getProfileUseCase: GetProfileUseCase,
     private val setOnlineUseCase: SetOnlineUseCase,
-    private val updateProfileUseCase: UpdateProfileUseCase
+    private val updateProfileUseCase: UpdateProfileUseCase,
+    private val uploadImgUseCase: UploadImgUseCase
 ) : ViewModel() {
 
     private val _getProfileError = MutableSharedFlow<ErrorModel>()
@@ -39,7 +42,30 @@ class ProfileFragmentViewModel(
     private val _updateProfileSuccess = MutableStateFlow(SuccessModel())
     val updateProfileSuccess: StateFlow<SuccessModel> = _updateProfileSuccess
 
-    
+    private val _uploadImgError = MutableSharedFlow<ErrorModel>()
+    val uploadImgError: SharedFlow<ErrorModel> = _uploadImgError
+    private val _uploadImgMessage = MutableStateFlow(MessageModel())
+    val uploadImgMessage: StateFlow<MessageModel> = _uploadImgMessage
+
+
+    private fun uploadImg(file: File) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val baseResponse = uploadImgUseCase(
+                _userProfile.value.token,
+                file
+            )
+            when (baseResponse) {
+                is BaseResponse.Success -> {
+                    _uploadImgMessage.emit(baseResponse.data)
+                }
+
+                is BaseResponse.Error -> {
+                    _uploadImgError.emit(baseResponse.error)
+                }
+            }
+        }
+    }
+
     private fun updateProfile(updateProfileModel: UpdateProfileModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val baseResponse = updateProfileUseCase(
@@ -52,7 +78,7 @@ class ProfileFragmentViewModel(
                 }
 
                 is BaseResponse.Error -> {
-                    _setOnlineError.emit(baseResponse.error)
+                    _updateProfileError.emit(baseResponse.error)
                 }
             }
         }
