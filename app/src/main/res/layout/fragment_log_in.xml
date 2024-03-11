@@ -18,10 +18,9 @@
         android:id="@+id/ivLogoTalKey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="48dp"
         android:importantForAccessibility="no"
         android:src="@drawable/logo_talkey"
-        app:layout_constraintBottom_toTopOf="@id/ivTalKeyVassCompany"
         app:layout_constraintStart_toEndOf="@id/ivTalKeyVassCompany"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,9 +31,9 @@
         android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         android:src="@drawable/talkey_vasscompany"
-        app:layout_constraintBottom_toTopOf="@id/etEmail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivLogoTalKey" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etEmail"
@@ -44,6 +43,7 @@
         android:layout_marginTop="46dp"
         android:background="@drawable/edit_text_background"
         android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
         android:padding="@dimen/common_margin"
         app:layout_constraintTop_toBottomOf="@id/ivTalKeyVassCompany" />
 
@@ -55,7 +55,9 @@
         android:layout_marginTop="@dimen/common_margin"
         android:background="@drawable/edit_text_background"
         android:hint="@string/hint_nick"
+        android:inputType="text"
         android:padding="@dimen/common_margin"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -67,6 +69,7 @@
         android:background="@drawable/edit_text_background"
         android:drawableEnd="@drawable/show_password"
         android:hint="@string/hint_password"
+        android:inputType="textPassword"
         android:padding="@dimen/common_margin"
         app:layout_constraintTop_toBottomOf="@id/etNick" />
 
@@ -79,7 +82,9 @@
         android:background="@drawable/edit_text_background"
         android:drawableEnd="@drawable/show_password"
         android:hint="@string/hint_confirm_password"
+        android:inputType="textPassword"
         android:padding="@dimen/common_margin"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/etPassword" />
 
     <CheckBox
@@ -90,28 +95,30 @@
         android:buttonTint="@color/white"
         android:text="@string/accept_terms_and_conditions_dialog"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/btnSignUp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSignUp"
+        android:id="@+id/btnAccept"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="48dp"
         android:backgroundTint="@color/vassBlue"
-        android:text="@string/sign_up_button"
-        app:layout_constraintBottom_toTopOf="@id/btnLogIn" />
+        android:text="@string/log_in_button"
+        app:layout_constraintBottom_toTopOf="@id/btnChange"
+        app:layout_constraintTop_toBottomOf="@id/cbTermsConditions" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogIn"
+        android:id="@+id/btnChange"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/invisible"
-        android:text="@string/log_in_button"
+        android:text="@string/sign_up_button"
         android:textColor="@color/vassBlue"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btnAccept" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
