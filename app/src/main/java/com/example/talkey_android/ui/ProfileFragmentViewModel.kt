@@ -3,11 +3,14 @@ package com.example.talkey_android.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.common.MessageModel
+import com.example.talkey_android.data.domain.model.common.SuccessModel
 import com.example.talkey_android.data.domain.model.error.ErrorModel
+import com.example.talkey_android.data.domain.model.users.UpdateProfileModel
 import com.example.talkey_android.data.domain.model.users.UserProfileModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.use_cases.users.GetProfileUseCase
 import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
+import com.example.talkey_android.data.domain.use_cases.users.UpdateProfileUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +20,8 @@ import kotlinx.coroutines.launch
 
 class ProfileFragmentViewModel(
     private val getProfileUseCase: GetProfileUseCase,
-    private val setOnlineUseCase: SetOnlineUseCase
+    private val setOnlineUseCase: SetOnlineUseCase,
+    private val updateProfileUseCase: UpdateProfileUseCase
 ) : ViewModel() {
 
     private val _getProfileError = MutableSharedFlow<ErrorModel>()
@@ -30,7 +34,31 @@ class ProfileFragmentViewModel(
     private val _setOnlineMessage = MutableStateFlow(MessageModel())
     val setOnlineMessage: StateFlow<MessageModel> = _setOnlineMessage
 
-    fun setOnline(isOnline: Boolean) {
+    private val _updateProfileError = MutableSharedFlow<ErrorModel>()
+    val updateProfileError: SharedFlow<ErrorModel> = _updateProfileError
+    private val _updateProfileSuccess = MutableStateFlow(SuccessModel())
+    val updateProfileSuccess: StateFlow<SuccessModel> = _updateProfileSuccess
+
+    
+    private fun updateProfile(updateProfileModel: UpdateProfileModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val baseResponse = updateProfileUseCase(
+                _userProfile.value.token,
+                updateProfileModel
+            )
+            when (baseResponse) {
+                is BaseResponse.Success -> {
+                    _updateProfileSuccess.emit(baseResponse.data)
+                }
+
+                is BaseResponse.Error -> {
+                    _setOnlineError.emit(baseResponse.error)
+                }
+            }
+        }
+    }
+
+    private fun setOnline(isOnline: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val baseResponse = setOnlineUseCase(
                 _userProfile.value.token, isOnline

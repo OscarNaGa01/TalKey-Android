@@ -3,7 +3,7 @@ package com.example.talkey_android.data.domain.repository.remote
 import com.example.talkey_android.data.domain.repository.remote.request.users.FirebaseTokenRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
-import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateUserRequest
+import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateProfileRequest
 import com.example.talkey_android.data.domain.repository.remote.response.common.MessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.SuccessResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
@@ -73,7 +73,7 @@ interface RemoteApiService {
     @PUT("users/profile")
     suspend fun updateProfile(
         @Header("Authorization") token: String,
-        @Body updateUserRequest: UpdateUserRequest
+        @Body updateProfileRequest: UpdateProfileRequest
     ): Response<SuccessResponse>
 
     /**

@@ -3,7 +3,7 @@ package com.example.talkey_android.data.domain.repository.remote
 import com.example.talkey_android.data.domain.repository.remote.request.users.FirebaseTokenRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
-import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateUserRequest
+import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateProfileRequest
 import com.example.talkey_android.data.domain.repository.remote.response.BaseApiCallService
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.MessageResponse
@@ -37,9 +37,9 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
 
     suspend fun updateProfile(
         token: String,
-        updateUserRequest: UpdateUserRequest
+        updateProfileRequest: UpdateProfileRequest
     ): BaseResponse<SuccessResponse> {
-        return apiCall { remoteApiService.updateProfile(token, updateUserRequest) }
+        return apiCall { remoteApiService.updateProfile(token, updateProfileRequest) }
     }
 
     suspend fun uploadImg(token: String, file: File): BaseResponse<MessageResponse> {

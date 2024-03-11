@@ -6,7 +6,7 @@ import com.example.talkey_android.data.domain.model.users.ListUsersModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterResponseModel
-import com.example.talkey_android.data.domain.model.users.UpdateUserModel
+import com.example.talkey_android.data.domain.model.users.UpdateProfileModel
 import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.model.users.UserProfileModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
@@ -20,7 +20,7 @@ interface DataSource {
     suspend fun getListProfiles(token: String): BaseResponse<ListUsersModel>
     suspend fun updateProfile(
         token: String,
-        updateUserModel: UpdateUserModel
+        updateProfileModel: UpdateProfileModel
     ): BaseResponse<SuccessModel>
 
     suspend fun uploadImg(token: String, file: File): BaseResponse<MessageModel>
