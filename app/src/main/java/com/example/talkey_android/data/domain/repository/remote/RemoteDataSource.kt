@@ -6,9 +6,9 @@ import com.example.talkey_android.data.domain.model.users.ListUsersModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterResponseModel
-import com.example.talkey_android.data.domain.model.users.UpdateUserModel
-import com.example.talkey_android.data.domain.model.users.UserFullDataModel
+import com.example.talkey_android.data.domain.model.users.UpdateProfileModel
 import com.example.talkey_android.data.domain.model.users.UserModel
+import com.example.talkey_android.data.domain.model.users.UserProfileModel
 import com.example.talkey_android.data.domain.repository.DataSource
 import com.example.talkey_android.data.domain.repository.remote.mapper.common.MessageMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.common.SuccessMapper
@@ -18,8 +18,8 @@ import com.example.talkey_android.data.domain.repository.remote.mapper.users.Log
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.LoginResponseToUserModelMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.RegisterRequestMappper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.RegisterResponseMapper
-import com.example.talkey_android.data.domain.repository.remote.mapper.users.UpdateUserMapper
-import com.example.talkey_android.data.domain.repository.remote.mapper.users.UserFullDataMapper
+import com.example.talkey_android.data.domain.repository.remote.mapper.users.UpdateProfileMapper
+import com.example.talkey_android.data.domain.repository.remote.mapper.users.UserFullDataToUserProfileMapper
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import java.io.File
 
@@ -79,11 +79,11 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun getProfile(token: String): BaseResponse<UserFullDataModel> {
+    override suspend fun getProfile(token: String): BaseResponse<UserProfileModel> {
         val apiResult = apiCallService.getProfile(token)
         return when (apiResult) {
             is BaseResponse.Success ->
-                BaseResponse.Success(UserFullDataMapper().fromResponse(apiResult.data))
+                BaseResponse.Success(UserFullDataToUserProfileMapper().fromResponse(apiResult.data))
 
             is BaseResponse.Error ->
                 BaseResponse.Error(apiResult.error)
@@ -103,10 +103,10 @@ object RemoteDataSource : DataSource {
 
     override suspend fun updateProfile(
         token: String,
-        updateUserModel: UpdateUserModel
+        updateProfileModel: UpdateProfileModel
     ): BaseResponse<SuccessModel> {
         val apiResult =
-            apiCallService.updateProfile(token, UpdateUserMapper().toRequest(updateUserModel))
+            apiCallService.updateProfile(token, UpdateProfileMapper().toRequest(updateProfileModel))
 
         return when (apiResult) {
             is BaseResponse.Success ->
