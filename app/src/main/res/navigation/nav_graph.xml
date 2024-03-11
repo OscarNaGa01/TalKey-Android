@@ -10,11 +10,13 @@
         android:name="com.example.talkey_android.ui.LogInFragment"
         android:label="LogIn"
         tools:layout="@layout/fragment_log_in">
-
         <action
-            android:id="@+id/action_login_to_home"
+            android:id="@+id/action_LogInFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/LogInFragment" />
+        <action
+            android:id="@+id/action_LogInFragment_to_HomeFragment"
             app:destination="@id/HomeFragment" />
-
     </fragment>
 
     <fragment
@@ -25,7 +27,8 @@
 
         <action
             android:id="@+id/action_home_to_chat"
-            app:destination="@id/ChatFragment" />
+            app:destination="@id/ChatFragment"
+            app:popUpTo="@id/HomeFragment" />
 
         <action
             android:id="@+id/action_home_to_login"
@@ -43,6 +46,28 @@
             android:id="@+id/action_chat_to_home"
             app:destination="@id/HomeFragment" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.talkey_android.ui.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_LogInFragment"
+            app:destination="@id/LogInFragment" />
+        <argument
+            android:name="isNew"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="token"
+            app:argType="string" />
     </fragment>
 
 </navigation>
