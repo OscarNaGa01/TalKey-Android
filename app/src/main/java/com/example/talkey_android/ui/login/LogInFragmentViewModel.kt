@@ -1,4 +1,4 @@
-package com.example.talkey_android.ui
+package com.example.talkey_android.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,8 +27,7 @@ class LogInFragmentViewModel(
     private val _loginError = MutableSharedFlow<ErrorModel>()
     val loginError: SharedFlow<ErrorModel> = _loginError
 
-    private val _user =
-        MutableStateFlow(UserModel())
+    private val _user = MutableStateFlow(UserModel())
     val user: StateFlow<UserModel> = _user
 
 
