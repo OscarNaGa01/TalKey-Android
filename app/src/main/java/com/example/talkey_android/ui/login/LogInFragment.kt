@@ -8,17 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.talkey_android.R
 import com.example.talkey_android.data.constants.Constants.PLATFORM
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
+import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
+import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
 
 class LogInFragment : Fragment() {
 
     private lateinit var binding: FragmentLogInBinding
     private var isLogin: Boolean = true
-    private val logInFragmentViewModel by viewModels<LogInFragmentViewModel>()
+    private val logInFragmentViewModel: LogInFragmentViewModel =
+        LogInFragmentViewModel(RegisterUseCase(), LoginUseCase())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,14 +57,21 @@ class LogInFragment : Fragment() {
                 } else {
                     logInFragmentViewModel.postRegister(
                         RegisterRequestModel(
-                            binding.etEmail.toString(),
-                            binding.etPassword.toString(),
-                            binding.etNick.toString(),
+                            binding.etEmail.text.toString(),
+                            binding.etPassword.text.toString(),
+                            binding.etNick.text.toString(),
                             PLATFORM,
                             ""
                         )
                     )
-                    Toast.makeText(requireContext(), "Sign up", Toast.LENGTH_SHORT).show()
+
+                    findNavController().navigate(
+                        LogInFragmentDirections.actionLogInFragmentToProfileFragment(
+                            binding.etEmail.text.toString(),
+                            "",
+                            true
+                        )
+                    )
                 }
             }
         }
