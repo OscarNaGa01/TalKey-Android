@@ -3,6 +3,7 @@ package com.example.talkey_android.ui.login
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,8 @@ import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
+
 
 class LogInFragment : Fragment() {
 
@@ -33,7 +36,31 @@ class LogInFragment : Fragment() {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
         binding.ivBackground.setColorFilter(Color.argb(50, 0, 0, 0), PorterDuff.Mode.SRC_OVER)
         initListeners()
+        observeViewModel()
         return binding.root
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            combine(
+                logInFragmentViewModel.user,
+                logInFragmentViewModel.registerError
+            ) { user, error ->
+                Pair(user, error)
+            }.collect { (user, error) ->
+                if (user.token.isNotEmpty()) {
+                    findNavController().navigate(
+                        LogInFragmentDirections.actionLogInFragmentToProfileFragment(
+                            user.id,
+                            user.token,
+                            true
+                        )
+                    )
+                } else {
+                    Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun initListeners() {
@@ -61,35 +88,20 @@ class LogInFragment : Fragment() {
     }
 
     private fun signUp() {
-        logInFragmentViewModel.postRegister(
-            RegisterRequestModel(
-                binding.etEmail.text.toString(),
-                binding.etPassword.text.toString(),
-                binding.etNick.text.toString(),
-                PLATFORM,
-                ""
-            )
-        )
-        lifecycleScope.launch {
-            combine(
-                logInFragmentViewModel.user,
-                logInFragmentViewModel.registerError
-            ) { user, error ->
-                Pair(user, error)
-            }.collect { (user, error) ->
-                if (user.token.isNotEmpty()) {
-                    findNavController().navigate(
-                        LogInFragmentDirections.actionLogInFragmentToProfileFragment(
-                            user.id,
-                            user.token,
-                            true
-                        )
+        if (isValidEmail(binding.etEmail.text.toString())) {
+            lifecycleScope.launch {
+                logInFragmentViewModel.postRegister(
+                    RegisterRequestModel(
+                        binding.etEmail.text.toString(),
+                        binding.etPassword.text.toString(),
+                        binding.etNick.text.toString(),
+                        PLATFORM,
+                        ""
                     )
-                } else {
-                    // Handle registration error if needed
-                    Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
-                }
+                )
             }
+        } else {
+            Toast.makeText(requireContext(), "Invalid Email", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -109,5 +121,10 @@ class LogInFragment : Fragment() {
                 isLogin = true
             }
         }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val pattern: Pattern = Patterns.EMAIL_ADDRESS
+        return pattern.matcher(email).matches()
     }
 }
