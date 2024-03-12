@@ -82,29 +82,6 @@ class LogInFragment : Fragment() {
         }
     }
 
-    private fun logIn() {
-//            findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
-        Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun signUp() {
-        if (isValidEmail(binding.etEmail.text.toString())) {
-            lifecycleScope.launch {
-                logInFragmentViewModel.postRegister(
-                    RegisterRequestModel(
-                        binding.etEmail.text.toString(),
-                        binding.etPassword.text.toString(),
-                        binding.etNick.text.toString(),
-                        PLATFORM,
-                        ""
-                    )
-                )
-            }
-        } else {
-            Toast.makeText(requireContext(), "Invalid Email", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun setLoginSignupView(login: Boolean) {
         with(binding) {
             if (login) {
@@ -123,8 +100,53 @@ class LogInFragment : Fragment() {
         }
     }
 
+    private fun logIn() {
+//            findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
+        Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun signUp() {
+        if (isValidEmail(binding.etEmail.text.toString()) && isValidPassword() && binding.etNick.text.toString()
+                .isNotEmpty()
+        ) {
+            lifecycleScope.launch {
+                logInFragmentViewModel.postRegister(
+                    RegisterRequestModel(
+                        binding.etEmail.text.toString(),
+                        binding.etPassword.text.toString(),
+                        binding.etNick.text.toString(),
+                        PLATFORM,
+                        ""
+                    )
+                )
+            }
+        } else if (binding.etNick.text.toString().isEmpty()) {
+            Toast.makeText(requireContext(), "You need a Nickname!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun isValidEmail(email: String): Boolean {
         val pattern: Pattern = Patterns.EMAIL_ADDRESS
-        return pattern.matcher(email).matches()
+        return if (pattern.matcher(email).matches()) {
+            true
+        } else {
+            Toast.makeText(requireContext(), "Invalid Email!", Toast.LENGTH_SHORT).show()
+            false
+        }
+    }
+
+    private fun isValidPassword(): Boolean {
+        val patron = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
+        return if (patron.matches(binding.etPassword.text.toString()) &&
+            binding.etPassword.text.toString() == binding.etConfirmPassword.text.toString()
+        ) {
+            true
+        } else if (binding.etPassword.text.toString() != binding.etConfirmPassword.text.toString()) {
+            Toast.makeText(requireContext(), "Passwords don't match!", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            Toast.makeText(requireContext(), "Check your password!", Toast.LENGTH_SHORT).show()
+            false
+        }
     }
 }
