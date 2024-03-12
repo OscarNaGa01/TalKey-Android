@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.talkey_android.R
 import com.example.talkey_android.data.constants.Constants.PLATFORM
@@ -15,6 +16,7 @@ import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
+import kotlinx.coroutines.launch
 
 class LogInFragment : Fragment() {
 
@@ -45,26 +47,47 @@ class LogInFragment : Fragment() {
     }
 
     private fun setLoginSignupAction(login: Boolean) {
-        if (isLogin) {
-//            findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
-            Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
+        if (login) {
+            logIn()
         } else {
-            logInFragmentViewModel.postRegister(
-                RegisterRequestModel(
-                    binding.etEmail.text.toString(),
-                    binding.etPassword.text.toString(),
-                    binding.etNick.text.toString(),
-                    PLATFORM,
-                    ""
-                )
+            signUp()
+        }
+    }
+
+    private fun logIn() {
+//            findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
+        Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun signUp() {
+        logInFragmentViewModel.postRegister(
+            RegisterRequestModel(
+                binding.etEmail.text.toString(),
+                binding.etPassword.text.toString(),
+                binding.etNick.text.toString(),
+                PLATFORM,
+                ""
             )
-            findNavController().navigate(
-                LogInFragmentDirections.actionLogInFragmentToProfileFragment(
-                    binding.etEmail.text.toString(),
-                    "",
-                    true
-                )
-            )
+        )
+
+        lifecycleScope.launch {
+            logInFragmentViewModel.user.collect { user ->
+                if (user.token.isNotEmpty()) {
+                    findNavController().navigate(
+                        LogInFragmentDirections.actionLogInFragmentToProfileFragment(
+                            user.id,
+                            user.token,
+                            true
+                        )
+                    )
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            logInFragmentViewModel.registerError.collect { error ->
+                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
