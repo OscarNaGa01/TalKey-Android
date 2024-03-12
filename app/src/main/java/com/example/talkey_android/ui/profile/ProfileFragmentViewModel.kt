@@ -1,4 +1,4 @@
-package com.example.talkey_android.ui
+package com.example.talkey_android.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

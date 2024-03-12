@@ -8,17 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.talkey_android.R
 import com.example.talkey_android.data.constants.Constants.PLATFORM
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
+import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
+import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
 
 class LogInFragment : Fragment() {
 
     private lateinit var binding: FragmentLogInBinding
     private var isLogin: Boolean = true
-    private val logInFragmentViewModel by viewModels<LogInFragmentViewModel>()
+    private val logInFragmentViewModel: LogInFragmentViewModel =
+        LogInFragmentViewModel(RegisterUseCase(), LoginUseCase())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,36 +36,52 @@ class LogInFragment : Fragment() {
     private fun initListeners() {
         with(binding) {
             btnChange.setOnClickListener {
-                if (isLogin) {
-                    etConfirmPassword.visibility = View.VISIBLE
-                    etNick.visibility = View.VISIBLE
-                    btnChange.text = getString(R.string.log_in_button)
-                    btnAccept.text = getString(R.string.sign_up_button)
-                    isLogin = false
-                } else {
-                    etConfirmPassword.visibility = View.GONE
-                    etNick.visibility = View.GONE
-                    btnChange.text = getString(R.string.sign_up_button)
-                    btnAccept.text = getString(R.string.log_in_button)
-                    isLogin = true
-                }
+                setLoginSignupView(isLogin)
             }
             btnAccept.setOnClickListener {
-                if (isLogin) {
-//                    findNavController().navigate(LogInFragmentDirections.actionLoginToHome())
-                    Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
-                } else {
-                    logInFragmentViewModel.postRegister(
-                        RegisterRequestModel(
-                            binding.etEmail.toString(),
-                            binding.etPassword.toString(),
-                            binding.etNick.toString(),
-                            PLATFORM,
-                            ""
-                        )
-                    )
-                    Toast.makeText(requireContext(), "Sign up", Toast.LENGTH_SHORT).show()
-                }
+                setLoginSignupAction(isLogin)
+            }
+        }
+    }
+
+    private fun setLoginSignupAction(login: Boolean) {
+        if (isLogin) {
+//            findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
+            Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
+        } else {
+            logInFragmentViewModel.postRegister(
+                RegisterRequestModel(
+                    binding.etEmail.text.toString(),
+                    binding.etPassword.text.toString(),
+                    binding.etNick.text.toString(),
+                    PLATFORM,
+                    ""
+                )
+            )
+            findNavController().navigate(
+                LogInFragmentDirections.actionLogInFragmentToProfileFragment(
+                    binding.etEmail.text.toString(),
+                    "",
+                    true
+                )
+            )
+        }
+    }
+
+    private fun setLoginSignupView(login: Boolean) {
+        with(binding) {
+            if (login) {
+                etConfirmPassword.visibility = View.VISIBLE
+                etNick.visibility = View.VISIBLE
+                btnChange.text = getString(R.string.log_in_button)
+                btnAccept.text = getString(R.string.sign_up_button)
+                isLogin = false
+            } else {
+                etConfirmPassword.visibility = View.GONE
+                etNick.visibility = View.GONE
+                btnChange.text = getString(R.string.sign_up_button)
+                btnAccept.text = getString(R.string.log_in_button)
+                isLogin = true
             }
         }
     }
