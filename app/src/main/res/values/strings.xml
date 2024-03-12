@@ -8,4 +8,5 @@
     <string name="hint_password">Contraseña</string>
     <string name="hint_confirm_password">Confirmar contraseña</string>
     <string name="accept_terms_and_conditions_dialog">Acepta nuestros términos y condiciones de uso</string>
+    <string name="img_profile_description">La imagen de perfil del usuario</string>
 </resources>
