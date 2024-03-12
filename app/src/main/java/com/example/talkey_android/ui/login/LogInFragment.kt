@@ -16,6 +16,7 @@ import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class LogInFragment : Fragment() {
@@ -69,9 +70,13 @@ class LogInFragment : Fragment() {
                 ""
             )
         )
-
         lifecycleScope.launch {
-            logInFragmentViewModel.user.collect { user ->
+            combine(
+                logInFragmentViewModel.user,
+                logInFragmentViewModel.registerError
+            ) { user, error ->
+                Pair(user, error)
+            }.collect { (user, error) ->
                 if (user.token.isNotEmpty()) {
                     findNavController().navigate(
                         LogInFragmentDirections.actionLogInFragmentToProfileFragment(
@@ -80,13 +85,10 @@ class LogInFragment : Fragment() {
                             true
                         )
                     )
+                } else {
+                    // Handle registration error if needed
+                    Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
                 }
-            }
-        }
-
-        lifecycleScope.launch {
-            logInFragmentViewModel.registerError.collect { error ->
-                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
