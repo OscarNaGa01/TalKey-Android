@@ -1,5 +1,6 @@
 package com.example.talkey_android.data.domain.repository
 
+import com.example.talkey_android.data.domain.model.chats.ListChatsModel
 import com.example.talkey_android.data.domain.model.common.MessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
 import com.example.talkey_android.data.domain.model.users.ListUsersModel
@@ -27,5 +28,6 @@ interface DataSource {
     suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel>
     suspend fun putNotification(token: String, firebaseToken: String): BaseResponse<MessageModel>
     suspend fun loginBiometric(firebaseToken: String): BaseResponse<UserModel>
+    suspend fun getListChats(token: String): BaseResponse<ListChatsModel>
 
 }

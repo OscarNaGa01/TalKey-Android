@@ -4,6 +4,7 @@ import com.example.talkey_android.data.domain.repository.remote.request.users.Fi
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateProfileRequest
+import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.MessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.SuccessResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
@@ -84,4 +85,12 @@ interface RemoteApiService {
         @Header("Authorization") token: String,
         @Body file: File
     ): Response<MessageResponse>
+
+
+    //CHATS--------------------------------------
+
+    @GET("chats")
+    suspend fun getListChats(
+        @Header("Authorization") token: String
+    ): Response<List<ChatResponse>>
 }

@@ -1,5 +1,6 @@
 package com.example.talkey_android.data.domain.repository
 
+import com.example.talkey_android.data.domain.model.chats.ListChatsModel
 import com.example.talkey_android.data.domain.model.common.MessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
 import com.example.talkey_android.data.domain.model.users.ListUsersModel
@@ -60,5 +61,9 @@ object DataProvider : DataSource {
 
     override suspend fun loginBiometric(firebaseToken: String): BaseResponse<UserModel> {
         return RemoteDataSource.loginBiometric(firebaseToken)
+    }
+
+    override suspend fun getListChats(token: String): BaseResponse<ListChatsModel> {
+        return RemoteDataSource.getListChats(token)
     }
 }
