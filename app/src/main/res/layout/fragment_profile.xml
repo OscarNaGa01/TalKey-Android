@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.ProfileFragment">
+    tools:context=".ui.profile.ProfileFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/backButton"
+            android:id="@+id/actionButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="12dp"
@@ -31,7 +31,7 @@
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginTop="50dp"
-        tools:src="@drawable/perfil"
+        android:src="@drawable/perfil"
         app:shapeAppearanceOverlay="@style/circleImageViewShape"
         app:layout_constraintTop_toBottomOf="@id/toolBar"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,8 +39,9 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivStatus"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
         android:background="@color/statusOnline"
         app:shapeAppearanceOverlay="@style/circleImageViewShape"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
@@ -57,15 +58,106 @@
         app:layout_constraintEnd_toEndOf="@id/imgProfile" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nickname"
-        android:layout_marginTop="24dp"
+        android:id="@+id/tvNicknameLabel"
+        style="@style/text"
+        android:text="@string/hint_nick"
+        android:layout_marginTop="28dp"
         android:layout_marginStart="30dp"
-        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/imgProfile"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etNickname"
+        style="@style/textBox"
+        android:visibility="gone"
+        android:hint="@string/hint_nick"
+        android:inputType="text"
+        android:layout_marginTop="@dimen/minnimal_margin"
+        app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNickname"
+        style="@style/text"
+        tools:text="Juan Cuesta"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etPassword"
+        style="@style/passwordBox"
+        android:visibility="gone"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierNickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="etNickname,tvNickname,etPassword" />
+
+
+    <TextView
+        android:id="@+id/tvLoginLabel"
+        style="@style/text"
+        android:text="@string/log_in_button"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="30dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/barrierNickname"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etLogin"
+        style="@style/textBox"
+        android:visibility="gone"
+        android:hint="@string/log_in_button"
+        android:inputType="text"
+        android:layout_marginTop="@dimen/minnimal_margin"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginLabel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvLogin"
+        style="@style/text"
+        tools:text="juan.cuesta@vasscompany.com"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginLabel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etPasswordConfirm"
+        style="@style/passwordBox"
+        android:visibility="gone"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginLabel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="tvLogin,etLogin,etPasswordConfirm" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAccept"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="48dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="48dp"
+        android:backgroundTint="@color/vassBlue"
+        android:text="@string/change_password"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

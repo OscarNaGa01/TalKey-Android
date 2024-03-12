@@ -8,4 +8,6 @@
     <string name="hint_password">Contraseña</string>
     <string name="hint_confirm_password">Confirmar contraseña</string>
     <string name="accept_terms_and_conditions_dialog">Acepta nuestros términos y condiciones de uso</string>
+    <string name="save">Guardar</string>
+    <string name="change_password">Cambiar contraseña</string>
 </resources>
