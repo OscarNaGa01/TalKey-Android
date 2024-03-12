@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="com.example.talkey_android.ui.HomeFragment"
+        android:name="com.example.talkey_android.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
 
@@ -38,7 +38,7 @@
 
     <fragment
         android:id="@+id/ChatFragment"
-        android:name="com.example.talkey_android.ui.ChatFragment"
+        android:name="com.example.talkey_android.ui.chat.ChatFragment"
         android:label="Chat"
         tools:layout="@layout/fragment_chat">
 
