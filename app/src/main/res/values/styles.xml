@@ -6,4 +6,34 @@
         <item name="cornerSize">50%</item>
         <item name="cardElevation">50dp</item>
     </style>
+
+    <style name="textBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/textboxHeight</item>
+        <item name="android:layout_marginStart">@dimen/common_margin</item>
+        <item name="android:layout_marginEnd">@dimen/common_margin</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:padding">@dimen/common_margin</item>
+    </style>
+
+    <style name="passwordBox" parent="textBox">
+        <item name="android:drawableEnd">@drawable/show_password</item>
+        <item name="android:hint">@string/hint_password</item>
+        <item name="android:inputType">textPassword</item>
+    </style>
+
+    <style name="text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textSize_common</item>
+    </style>
+
+    <style name="button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/common_margin</item>
+        <item name="android:layout_marginEnd">@dimen/common_margin</item>
+        <item name="android:textSize">@dimen/textSize_common</item>
+        <item name="android:backgroundTint">@color/vassBlue</item>
+    </style>
 </resources>
