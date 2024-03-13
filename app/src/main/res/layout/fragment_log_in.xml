@@ -1,14 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.LogInFragment">
+    tools:context=".ui.login.LogInFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
+        android:id="@+id/ivBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/ivLogoTalKey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/logo_talkey"
+        app:layout_constraintStart_toEndOf="@id/ivTalKeyVassCompany"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivTalKeyVassCompany"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        android:src="@drawable/talkey_vasscompany"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivLogoTalKey" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="@dimen/common_margin"
+        android:layout_marginTop="46dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
+        android:padding="@dimen/common_margin"
+        app:layout_constraintTop_toBottomOf="@id/ivTalKeyVassCompany" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etNick"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
+        android:background="@drawable/edit_text_background"
+        android:hint="@string/hint_nick"
+        android:inputType="text"
+        android:padding="@dimen/common_margin"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/etEmail" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
+        android:background="@drawable/edit_text_background"
+        android:drawableEnd="@drawable/show_password"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword"
+        android:padding="@dimen/common_margin"
+        app:layout_constraintTop_toBottomOf="@id/etNick" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etConfirmPassword"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
+        android:background="@drawable/edit_text_background"
+        android:drawableEnd="@drawable/show_password"
+        android:hint="@string/hint_confirm_password"
+        android:inputType="textPassword"
+        android:padding="@dimen/common_margin"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/etPassword" />
+
+    <CheckBox
+        android:id="@+id/cbTermsConditions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:buttonTint="@color/white"
+        android:text="@string/accept_terms_and_conditions_dialog"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAccept"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="48dp"
+        android:backgroundTint="@color/vassBlue"
+        android:text="@string/log_in_button"
+        app:layout_constraintBottom_toTopOf="@id/btnChange"
+        app:layout_constraintTop_toBottomOf="@id/cbTermsConditions" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnChange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/invisible"
+        android:text="@string/sign_up_button"
+        android:textColor="@color/vassBlue"
+        app:layout_constraintTop_toBottomOf="@id/btnAccept" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.talkey_android.ui
+package com.example.talkey_android.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater

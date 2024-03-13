@@ -2,5 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#29BDEF</color>
+    <color name="vassBlue">#29BDEF</color>
+    <color name="vassRed">#DF0000</color>
+    <color name="vassGreyMedium">#999999</color>
+    <color name="vassGreyLight">#BABDC5</color>
+    <color name="vassGreyDark">#4D000000</color>
+    <color name="invisible">#00000000</color>
+    <color name="statusOffline">#FFED4245</color>
+    <color name="statusOnline">#FF3BA55C</color>
 </resources>

@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">talkey_android</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sign_up_button">Sign up</string>
+    <string name="log_in_button">Log in</string>
+    <string name="hint_email">Correo</string>
+    <string name="hint_nick">Nick</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="accept_terms_and_conditions_dialog">Acepta nuestros términos y condiciones de uso</string>
+    <string name="img_profile_description">La imagen de perfil del usuario</string>
     <string name="hint_message">Message</string>
 </resources>
