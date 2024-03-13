@@ -17,7 +17,6 @@ import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
@@ -42,12 +41,7 @@ class LogInFragment : Fragment() {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            combine(
-                logInFragmentViewModel.user,
-                logInFragmentViewModel.registerError
-            ) { user, error ->
-                Pair(user, error)
-            }.collect { (user, error) ->
+            logInFragmentViewModel.user.collect { user ->
                 if (user.token.isNotEmpty()) {
                     findNavController().navigate(
                         LogInFragmentDirections.actionLogInFragmentToProfileFragment(
@@ -56,9 +50,13 @@ class LogInFragment : Fragment() {
                             true
                         )
                     )
-                } else {
-                    Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            logInFragmentViewModel.registerError.collect { error ->
+                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -101,7 +99,7 @@ class LogInFragment : Fragment() {
     }
 
     private fun logIn() {
-//            findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
+        findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
         Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
     }
 
