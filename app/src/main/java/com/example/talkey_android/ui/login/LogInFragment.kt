@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.talkey_android.R
 import com.example.talkey_android.data.constants.Constants.PLATFORM
+import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
@@ -42,7 +43,7 @@ class LogInFragment : Fragment() {
     private fun observeViewModel() {
         lifecycleScope.launch {
             logInFragmentViewModel.user.collect { user ->
-                if (user.token.isNotEmpty()) {
+                if (user.token.isNotEmpty() && !isLogin) {
                     findNavController().navigate(
                         LogInFragmentDirections.actionLogInFragmentToProfileFragment(
                             user.id,
@@ -50,6 +51,8 @@ class LogInFragment : Fragment() {
                             true
                         )
                     )
+                } else if (user.token.isNotEmpty() && isLogin) {
+                    findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment(user.token))
                 }
             }
         }
@@ -99,8 +102,19 @@ class LogInFragment : Fragment() {
     }
 
     private fun logIn() {
-        findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
-        Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
+        if (binding.etEmail.text.toString().isNotEmpty() && binding.etPassword.text.toString().isNotEmpty())
+            lifecycleScope.launch {
+                logInFragmentViewModel.postLogin(
+                    LoginRequestModel(
+                        binding.etPassword.text.toString(),
+                        binding.etEmail.text.toString(),
+                        PLATFORM,
+                        ""
+                    )
+                )
+            } else {
+            Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun signUp() {
