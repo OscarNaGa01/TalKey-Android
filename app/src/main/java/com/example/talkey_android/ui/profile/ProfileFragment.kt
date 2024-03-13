@@ -1,6 +1,7 @@
 package com.example.talkey_android.ui.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,25 +9,45 @@ import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.talkey_android.R
+import com.example.talkey_android.data.domain.model.users.UserProfileModel
+import com.example.talkey_android.data.domain.use_cases.users.GetProfileUseCase
+import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
+import com.example.talkey_android.data.domain.use_cases.users.UpdateProfileUseCase
+import com.example.talkey_android.data.domain.use_cases.users.UploadImgUseCase
 import com.example.talkey_android.databinding.FragmentProfileBinding
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentProfileBinding
+    private val viewModel: ProfileFragmentViewModel =
+        ProfileFragmentViewModel(
+            GetProfileUseCase(), SetOnlineUseCase(),
+            UpdateProfileUseCase(), UploadImgUseCase()
+        )
     private var popupWindow: PopupWindow? = null
 
     //    val args: ProfileFragmentArgs by navArgs()
+    private lateinit var token: String
+
     private var state: ProfileState = ProfileState.ShowProfile
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
 
 //        val isNew = args.isNew
+//        token = args.token
+        token =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3NCIsImlhdCI6MTcwOTcyMDg4MywiZXhw" +
+                    "IjoxNzEyMzEyODgzfQ.dGiM2NuUk9nEluZx_c0QlK6GeSfeEf_BRd-aqlQsReQ"
 //
 //        if (isNew){
 //            state = states[1]
@@ -35,9 +56,35 @@ class ProfileFragment : Fragment() {
         toolBarConfiguration()
         buttonConfiguration()
 
+        observeViewModel()
+        viewModel.getProfile(token)
+
 
 
         return binding.root
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            viewModel.userProfile.collect { user ->
+                Log.d("TAG", user.toString())
+                setData(user)
+            }
+        }
+    }
+
+    private fun setData(user: UserProfileModel) {
+        with(binding) {
+            tvNickname.text = user.nick
+            tvLogin.text = user.login
+        }
+
+        Log.d("TAG", user.avatar)
+        Glide.with(requireContext())
+            .load("https://mock-movilidad.vass.es/chatvass/api/${user.avatar}")
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .error(R.drawable.perfil)
+            .into(binding.imgProfile)
     }
 
     private fun buttonConfiguration() {
