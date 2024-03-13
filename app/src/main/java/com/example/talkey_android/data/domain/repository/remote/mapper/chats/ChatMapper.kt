@@ -7,9 +7,18 @@ import com.example.talkey_android.data.domain.repository.remote.response.chats.C
 class ChatMapper : ResponseMapper<ChatResponse, ChatModel> {
     override fun fromResponse(response: ChatResponse): ChatModel {
         return ChatModel(
-            response.id ?: "",
+            response.chat ?: "",
             response.source ?: "",
-            response.target ?: ""
+            response.sourceNick ?: "",
+            response.sourceAvatar ?: "",
+            response.sourceOnline ?: false,
+            response.sourceToken ?: "",
+            response.target ?: "",
+            response.targetNick ?: "",
+            response.targetAvatar ?: "",
+            response.targetOnline ?: false,
+            response.targetToken ?: "",
+            response.chatCreated ?: ""
         )
     }
 }

@@ -89,8 +89,10 @@ interface RemoteApiService {
 
     //CHATS--------------------------------------
 
-    @GET("chats")
+    @GET("chats/view")
     suspend fun getListChats(
         @Header("Authorization") token: String
     ): Response<List<ChatResponse>>
+
+
 }

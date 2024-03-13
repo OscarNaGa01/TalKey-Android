@@ -6,7 +6,6 @@ import com.example.talkey_android.data.domain.repository.remote.request.users.Re
 import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateProfileRequest
 import com.example.talkey_android.data.domain.repository.remote.response.BaseApiCallService
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
-import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.MessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.SuccessResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
