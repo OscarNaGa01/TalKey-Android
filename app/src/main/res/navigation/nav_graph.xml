@@ -34,6 +34,13 @@
             android:id="@+id/action_home_to_login"
             app:destination="@id/LogInFragment" />
 
+        <argument
+            android:name="id"
+            app:argType="string" />
+
+        <argument
+            android:name="token"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -60,8 +67,8 @@
             app:destination="@id/LogInFragment" />
         <argument
             android:name="isNew"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
         <argument
             android:name="id"
             app:argType="string" />
