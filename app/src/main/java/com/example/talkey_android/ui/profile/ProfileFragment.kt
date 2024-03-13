@@ -1,13 +1,17 @@
 package com.example.talkey_android.ui.profile
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -19,9 +23,13 @@ import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
 import com.example.talkey_android.data.domain.use_cases.users.UpdateProfileUseCase
 import com.example.talkey_android.data.domain.use_cases.users.UploadImgUseCase
 import com.example.talkey_android.databinding.FragmentProfileBinding
+import com.example.talkey_android.ui.profile.popup.PopUpFragment
 import kotlinx.coroutines.launch
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     private lateinit var binding: FragmentProfileBinding
     private val viewModel: ProfileFragmentViewModel =
@@ -33,8 +41,14 @@ class ProfileFragment : Fragment() {
 
     //    val args: ProfileFragmentArgs by navArgs()
     private lateinit var token: String
-
     private var state: ProfileState = ProfileState.ShowProfile
+    private lateinit var imageUri: Uri
+    private val cameraContract = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+
+    }
+    private val galleryContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
+
+    }
 
 
     override fun onCreateView(
@@ -46,8 +60,8 @@ class ProfileFragment : Fragment() {
 //        val isNew = args.isNew
 //        token = args.token
         token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3NCIsImlhdCI6MTcwOTcyMDg4MywiZXhw" +
-                    "IjoxNzEyMzEyODgzfQ.dGiM2NuUk9nEluZx_c0QlK6GeSfeEf_BRd-aqlQsReQ"
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3NCIsImlhdCI6MTcwOTcyMDg4MywiZXhwIjoxNzEyMzEyODgzfQ.dGiM2NuUk9nEluZx_c0QlK6GeSfeEf_BRd-aqlQsReQ"
+        imageUri = createUri()
 //
 //        if (isNew){
 //            state = states[1]
@@ -55,6 +69,8 @@ class ProfileFragment : Fragment() {
 
         toolBarConfiguration()
         buttonConfiguration()
+
+
 
         observeViewModel()
         viewModel.getProfile(token)
@@ -79,6 +95,20 @@ class ProfileFragment : Fragment() {
             tvLogin.text = user.login
         }
 
+        if (user.online) {
+            binding.ivStatus.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(), R.color.statusOnline
+                )
+            )
+        } else {
+            binding.ivStatus.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(), R.color.statusOffline
+                )
+            )
+        }
+
         Log.d("TAG", user.avatar)
         Glide.with(requireContext())
             .load("https://mock-movilidad.vass.es/chatvass/api/${user.avatar}")
@@ -88,6 +118,16 @@ class ProfileFragment : Fragment() {
     }
 
     private fun buttonConfiguration() {
+        binding.ivStatus.setOnClickListener {
+            val showPopUp = PopUpFragment(this, true)
+            showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+        }
+
+        binding.ivImageEdit.setOnClickListener {
+            val showPopUp = PopUpFragment(this, false)
+            showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+        }
+
         binding.btnAccept.setOnClickListener {
             when (state) {
                 is ProfileState.ShowProfile -> { //Edit profile
@@ -113,9 +153,12 @@ class ProfileFragment : Fragment() {
         toolbar.setNavigationIcon(R.drawable.back_arrow_white)
 
         toolbar.setNavigationOnClickListener {
+
             // Your custom action here
-//            requireActivity().onBackPressed()
+//            findNavController().popBackStack()
         }
+
+
 
         binding.actionButton.setOnClickListener {
             toolbarSwitcher()
@@ -215,10 +258,38 @@ class ProfileFragment : Fragment() {
         )
     }
 
+    private fun createUri(): Uri {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val image = File(requireActivity().filesDir, "avatar_$timestamp.png")
+        return FileProvider.getUriForFile(
+            requireContext(),
+            "com.example.talkey_android.FileProvider",
+            image
+        )
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
         popupWindow?.dismiss()
+    }
+
+    override fun onCameraClick() {
+        Log.d("TAG", "Camera")
+    }
+
+    override fun onGalleryClick() {
+        Log.d("TAG", "Gallery")
+    }
+
+    override fun switchOnline() {
+        Log.d("TAG", "Online")
+        viewModel.setOnline(true)
+    }
+
+    override fun switchOffline() {
+        Log.d("TAG", "Offline")
+        viewModel.setOnline(false)
     }
 
 

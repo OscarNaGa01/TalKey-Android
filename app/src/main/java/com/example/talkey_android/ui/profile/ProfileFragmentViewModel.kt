@@ -55,7 +55,7 @@ class ProfileFragmentViewModel(
         {
             val deferreds = listOf(
                 async { updateProfile(UpdateProfileModel(passwd, nick)) },
-                async { setOnline(isOnline) },
+                //async { setOnline(isOnline) },
                 async { uploadImg(file) }
             )
             deferreds.awaitAll()
@@ -96,7 +96,15 @@ class ProfileFragmentViewModel(
         }
     }
 
-    private suspend fun setOnline(isOnline: Boolean) {
+    fun setOnline(isOnline: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val deferred = async { statusSetter(isOnline) }
+            deferred.await()
+            getProfile(_userProfile.value.token)
+        }
+    }
+
+    private suspend fun statusSetter(isOnline: Boolean) {
         val baseResponse = setOnlineUseCase(
             _userProfile.value.token, isOnline
         )
