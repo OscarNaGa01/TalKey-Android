@@ -1,9 +1,11 @@
 package com.example.talkey_android.data.domain.repository.remote
 
+import com.example.talkey_android.data.domain.repository.remote.request.chats.ChatCreationRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.FirebaseTokenRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateProfileRequest
+import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatCreationResponse
 import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.MessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.SuccessResponse
@@ -95,4 +97,9 @@ interface RemoteApiService {
     ): Response<List<ChatResponse>>
 
 
+    @POST("chats")
+    suspend fun createChat(
+        @Header("Authorization") token: String,
+        @Body chatCreationRequest: ChatCreationRequest
+    ): Response<ChatCreationResponse>
 }

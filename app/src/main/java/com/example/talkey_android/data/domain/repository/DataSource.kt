@@ -1,5 +1,7 @@
 package com.example.talkey_android.data.domain.repository
 
+import com.example.talkey_android.data.domain.model.chats.ChatCreationFromResponseModel
+import com.example.talkey_android.data.domain.model.chats.ChatCreationToRequestModel
 import com.example.talkey_android.data.domain.model.chats.ListChatsModel
 import com.example.talkey_android.data.domain.model.common.MessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
@@ -29,5 +31,9 @@ interface DataSource {
     suspend fun putNotification(token: String, firebaseToken: String): BaseResponse<MessageModel>
     suspend fun loginBiometric(firebaseToken: String): BaseResponse<UserModel>
     suspend fun getListChats(token: String): BaseResponse<ListChatsModel>
+    suspend fun createChat(
+        token: String,
+        chatCreationToRequestModel: ChatCreationToRequestModel
+    ): BaseResponse<ChatCreationFromResponseModel>
 
 }

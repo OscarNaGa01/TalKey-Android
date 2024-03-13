@@ -1,5 +1,7 @@
 package com.example.talkey_android.data.domain.repository.remote
 
+import com.example.talkey_android.data.domain.model.chats.ChatCreationFromResponseModel
+import com.example.talkey_android.data.domain.model.chats.ChatCreationToRequestModel
 import com.example.talkey_android.data.domain.model.chats.ListChatsModel
 import com.example.talkey_android.data.domain.model.common.MessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
@@ -11,6 +13,8 @@ import com.example.talkey_android.data.domain.model.users.UpdateProfileModel
 import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.model.users.UserProfileModel
 import com.example.talkey_android.data.domain.repository.DataSource
+import com.example.talkey_android.data.domain.repository.remote.mapper.chats.ChatCreationFromResponseMapper
+import com.example.talkey_android.data.domain.repository.remote.mapper.chats.ChatCreationToRequestMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.chats.ListChatsMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.common.MessageMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.common.SuccessMapper
@@ -163,6 +167,23 @@ object RemoteDataSource : DataSource {
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(ListChatsMapper().fromResponse(apiResult.data))
+
+            is BaseResponse.Error ->
+                BaseResponse.Error(apiResult.error)
+        }
+    }
+
+    override suspend fun createChat(
+        token: String,
+        chatCreationToRequestModel: ChatCreationToRequestModel
+    ): BaseResponse<ChatCreationFromResponseModel> {
+        val apiResult = apiCallService.createChat(
+            token,
+            ChatCreationToRequestMapper().toRequest(chatCreationToRequestModel)
+        )
+        return when (apiResult) {
+            is BaseResponse.Success ->
+                BaseResponse.Success(ChatCreationFromResponseMapper().fromResponse(apiResult.data))
 
             is BaseResponse.Error ->
                 BaseResponse.Error(apiResult.error)
