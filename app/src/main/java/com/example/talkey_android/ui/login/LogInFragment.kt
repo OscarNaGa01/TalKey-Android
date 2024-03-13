@@ -52,7 +52,12 @@ class LogInFragment : Fragment() {
                         )
                     )
                 } else if (user.token.isNotEmpty() && isLogin) {
-                    findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment(user.token))
+                    findNavController().navigate(
+                        LogInFragmentDirections.actionLogInFragmentToHomeFragment(
+                            user.id,
+                            user.token
+                        )
+                    )
                 }
             }
         }

@@ -35,6 +35,10 @@
             app:destination="@id/LogInFragment" />
 
         <argument
+            android:name="id"
+            app:argType="string" />
+
+        <argument
             android:name="token"
             app:argType="string" />
     </fragment>
