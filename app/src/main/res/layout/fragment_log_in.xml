@@ -41,8 +41,8 @@
         android:layout_marginTop="46dp"
         android:hint="@string/hint_email"
         android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@id/ivTalKeyVassCompany"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTalKeyVassCompany" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etNick"
@@ -51,16 +51,16 @@
         android:hint="@string/hint_nick"
         android:inputType="text"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/etEmail"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etPassword"
         style="@style/passwordBox"
         android:layout_marginTop="@dimen/common_margin"
         android:padding="@dimen/common_margin"
-        app:layout_constraintTop_toBottomOf="@id/etNick"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etNick" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etConfirmPassword"
@@ -68,8 +68,8 @@
         android:layout_marginTop="@dimen/common_margin"
         android:hint="@string/hint_confirm_password"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/etPassword"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etPassword" />
 
     <CheckBox
         android:id="@+id/cbTermsConditions"
@@ -89,8 +89,8 @@
         android:layout_marginTop="48dp"
         android:text="@string/log_in_button"
         app:layout_constraintBottom_toTopOf="@id/btnChange"
-        app:layout_constraintTop_toBottomOf="@id/cbTermsConditions"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cbTermsConditions" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnChange"
@@ -99,7 +99,7 @@
         android:backgroundTint="@color/invisible"
         android:text="@string/sign_up_button"
         android:textColor="@color/vassBlue"
-        app:layout_constraintTop_toBottomOf="@id/btnAccept"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnAccept" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
