@@ -1,14 +1,14 @@
 package com.example.talkey_android.data.domain.repository.remote.mapper.chats
 
 import com.example.talkey_android.data.domain.model.chats.ChatBasicInfoModel
-import com.example.talkey_android.data.domain.model.chats.ChatCreationFromResponseModel
+import com.example.talkey_android.data.domain.model.chats.ChatCreationModel
 import com.example.talkey_android.data.domain.repository.remote.mapper.ResponseMapper
 import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatCreationResponse
 
-class ChatCreationFromResponseMapper :
-    ResponseMapper<ChatCreationResponse, ChatCreationFromResponseModel> {
-    override fun fromResponse(response: ChatCreationResponse): ChatCreationFromResponseModel {
-        return ChatCreationFromResponseModel(
+class ChatCreationMapper :
+    ResponseMapper<ChatCreationResponse, ChatCreationModel> {
+    override fun fromResponse(response: ChatCreationResponse): ChatCreationModel {
+        return ChatCreationModel(
             response.success ?: false,
             response.created ?: false,
             createBasicInfoModel(response)

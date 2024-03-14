@@ -1,7 +1,6 @@
 package com.example.talkey_android.data.domain.repository
 
-import com.example.talkey_android.data.domain.model.chats.ChatCreationFromResponseModel
-import com.example.talkey_android.data.domain.model.chats.ChatCreationToRequestModel
+import com.example.talkey_android.data.domain.model.chats.ChatCreationModel
 import com.example.talkey_android.data.domain.model.chats.ListChatsModel
 import com.example.talkey_android.data.domain.model.common.MessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
@@ -71,9 +70,10 @@ object DataProvider : DataSource {
 
     override suspend fun createChat(
         token: String,
-        chatCreationToRequestModel: ChatCreationToRequestModel
-    ): BaseResponse<ChatCreationFromResponseModel> {
-        return RemoteDataSource.createChat(token, chatCreationToRequestModel)
+        source: String,
+        target: String
+    ): BaseResponse<ChatCreationModel> {
+        return RemoteDataSource.createChat(token, source, target)
     }
 
     override suspend fun deleteChat(token: String, idChat: Int): BaseResponse<SuccessModel> {

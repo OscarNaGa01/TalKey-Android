@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ChatResponse(
     @SerializedName("chat")
-    val chat: String?,
+    val idChat: String?,
     @SerializedName("source")
     val source: String?,
     @SerializedName("sourcenick")

@@ -3,7 +3,7 @@ package com.example.talkey_android.data.domain.model.chats
 import com.example.talkey_android.data.domain.model.BaseModel
 
 data class ChatModel(
-    val chat: String = "",
+    val idChat: String = "",
     val source: String = "",
     val sourceNick: String = "",
     val sourceAvatar: String = "",
