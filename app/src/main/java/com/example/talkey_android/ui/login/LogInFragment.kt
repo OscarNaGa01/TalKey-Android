@@ -3,18 +3,24 @@ package com.example.talkey_android.ui.login
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.talkey_android.R
 import com.example.talkey_android.data.constants.Constants.PLATFORM
+import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
+import kotlinx.coroutines.launch
+import java.util.regex.Pattern
+
 
 class LogInFragment : Fragment() {
 
@@ -30,7 +36,37 @@ class LogInFragment : Fragment() {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
         binding.ivBackground.setColorFilter(Color.argb(50, 0, 0, 0), PorterDuff.Mode.SRC_OVER)
         initListeners()
+        observeViewModel()
         return binding.root
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            logInFragmentViewModel.user.collect { user ->
+                if (user.token.isNotEmpty() && !isLogin) {
+                    findNavController().navigate(
+                        LogInFragmentDirections.actionLogInFragmentToProfileFragment(
+                            user.id,
+                            user.token,
+                            true
+                        )
+                    )
+                } else if (user.token.isNotEmpty() && isLogin) {
+                    findNavController().navigate(
+                        LogInFragmentDirections.actionLogInFragmentToHomeFragment(
+                            user.id,
+                            user.token
+                        )
+                    )
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            logInFragmentViewModel.registerError.collect { error ->
+                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun initListeners() {
@@ -45,26 +81,10 @@ class LogInFragment : Fragment() {
     }
 
     private fun setLoginSignupAction(login: Boolean) {
-        if (isLogin) {
-//            findNavController().navigate(LogInFragmentDirections.actionLogInFragmentToHomeFragment())
-            Toast.makeText(requireContext(), "Log in", Toast.LENGTH_SHORT).show()
+        if (login) {
+            logIn()
         } else {
-            logInFragmentViewModel.postRegister(
-                RegisterRequestModel(
-                    binding.etEmail.text.toString(),
-                    binding.etPassword.text.toString(),
-                    binding.etNick.text.toString(),
-                    PLATFORM,
-                    ""
-                )
-            )
-            findNavController().navigate(
-                LogInFragmentDirections.actionLogInFragmentToProfileFragment(
-                    binding.etEmail.text.toString(),
-                    "",
-                    true
-                )
-            )
+            signUp()
         }
     }
 
@@ -83,6 +103,67 @@ class LogInFragment : Fragment() {
                 btnAccept.text = getString(R.string.log_in_button)
                 isLogin = true
             }
+        }
+    }
+
+    private fun logIn() {
+        if (binding.etEmail.text.toString().isNotEmpty() && binding.etPassword.text.toString().isNotEmpty())
+            lifecycleScope.launch {
+                logInFragmentViewModel.postLogin(
+                    LoginRequestModel(
+                        binding.etPassword.text.toString(),
+                        binding.etEmail.text.toString(),
+                        PLATFORM,
+                        ""
+                    )
+                )
+            } else {
+            Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun signUp() {
+        if (isValidEmail(binding.etEmail.text.toString()) && isValidPassword() && binding.etNick.text.toString()
+                .isNotEmpty()
+        ) {
+            lifecycleScope.launch {
+                logInFragmentViewModel.postRegister(
+                    RegisterRequestModel(
+                        binding.etEmail.text.toString(),
+                        binding.etPassword.text.toString(),
+                        binding.etNick.text.toString(),
+                        PLATFORM,
+                        ""
+                    )
+                )
+            }
+        } else if (binding.etNick.text.toString().isEmpty()) {
+            Toast.makeText(requireContext(), "You need a Nickname!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val pattern: Pattern = Patterns.EMAIL_ADDRESS
+        return if (pattern.matcher(email).matches()) {
+            true
+        } else {
+            Toast.makeText(requireContext(), "Invalid Email!", Toast.LENGTH_SHORT).show()
+            false
+        }
+    }
+
+    private fun isValidPassword(): Boolean {
+        val patron = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
+        return if (patron.matches(binding.etPassword.text.toString()) &&
+            binding.etPassword.text.toString() == binding.etConfirmPassword.text.toString()
+        ) {
+            true
+        } else if (binding.etPassword.text.toString() != binding.etConfirmPassword.text.toString()) {
+            Toast.makeText(requireContext(), "Passwords don't match!", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            Toast.makeText(requireContext(), "Check your password!", Toast.LENGTH_SHORT).show()
+            false
         }
     }
 }
