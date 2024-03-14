@@ -14,6 +14,7 @@ import com.example.talkey_android.data.domain.repository.remote.response.users.R
 import com.example.talkey_android.data.domain.repository.remote.response.users.UserFullDataResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -102,4 +103,10 @@ interface RemoteApiService {
         @Header("Authorization") token: String,
         @Body chatCreationRequest: ChatCreationRequest
     ): Response<ChatCreationResponse>
+
+    @DELETE("chats/{idChat}")
+    suspend fun deleteChat(
+        @Header("Authorization") token: String,
+        @Path("idChat") idChat: Int
+    ): Response<SuccessResponse>
 }

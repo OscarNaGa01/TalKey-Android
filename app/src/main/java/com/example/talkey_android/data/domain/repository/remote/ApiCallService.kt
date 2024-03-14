@@ -76,4 +76,11 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
     ): BaseResponse<ChatCreationResponse> {
         return apiCall { remoteApiService.createChat(token, chatCreationRequest) }
     }
+
+    suspend fun deleteChat(
+        token: String,
+        idChat: Int
+    ): BaseResponse<SuccessResponse> {
+        return apiCall { remoteApiService.deleteChat(token, idChat) }
+    }
 }
