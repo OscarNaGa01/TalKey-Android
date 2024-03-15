@@ -2,25 +2,36 @@ package com.example.talkey_android.ui.chat.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.talkey_android.R
-import com.example.talkey_android.data.domain.model.common.CommonMessageModel
+import androidx.viewbinding.ViewBinding
+import com.example.talkey_android.data.domain.model.messages.MessageModel
 import com.example.talkey_android.databinding.ItemChatMeBinding
+import com.example.talkey_android.databinding.ItemChatOtherBinding
 
-class ChatAdapter(private val messageList: List<CommonMessageModel>) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+class ChatAdapter(private val messageList: List<MessageModel>) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     private lateinit var context: Context
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val binding = ItemChatMeBinding.bind(view)
+    companion object {
+        const val SENT_MESSAGE = 0
+        const val RECEIVED_MESSAGE = 1
+    }
+
+    inner class ViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        val view = LayoutInflater.from(context).inflate(R.layout.item_chat_me, parent, false)
-        return (ViewHolder(view))
+        val binding = when (viewType) {
+            SENT_MESSAGE -> ItemChatMeBinding.inflate(LayoutInflater.from(context), parent, false)
+
+            RECEIVED_MESSAGE -> ItemChatOtherBinding.inflate(LayoutInflater.from(context), parent, false)
+
+            else -> ItemChatMeBinding.inflate(LayoutInflater.from(context), parent, false)
+        }
+        return (ViewHolder(binding))
     }
 
     override fun getItemCount(): Int = messageList.size
