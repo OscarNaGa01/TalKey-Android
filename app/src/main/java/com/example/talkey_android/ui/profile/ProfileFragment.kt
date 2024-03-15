@@ -1,7 +1,5 @@
 package com.example.talkey_android.ui.profile
 
-import android.content.ContentResolver
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -23,11 +21,11 @@ import com.example.talkey_android.data.domain.use_cases.users.GetProfileUseCase
 import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
 import com.example.talkey_android.data.domain.use_cases.users.UpdateProfileUseCase
 import com.example.talkey_android.data.domain.use_cases.users.UploadImgUseCase
+import com.example.talkey_android.data.utils.Utils
 import com.example.talkey_android.databinding.FragmentProfileBinding
 import com.example.talkey_android.ui.profile.popup.PopUpFragment
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -47,7 +45,8 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     private val cropActivityResultContract =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            viewModel.handleCropResult(result)
+            viewModel.changeCurrentAvatar(Utils.handleCropResult(result))
+//            viewModel.handleCropResult(result)
         }
     private var imageUri: Uri? = null
     private var finalImageUri: Uri? = null
@@ -58,7 +57,8 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             Log.d("URIREADER", imageUri.toString())
             if (success) {
                 imageUri?.let { uri ->
-                    viewModel.cropImage(uri, cropActivityResultContract)
+
+                    Utils.cropImage(uri, cropActivityResultContract)
                 }
             } else {
                 //TODO("Errores camara")
@@ -69,8 +69,8 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
         if (uri != null) {
             val destUri = createUri()
-            viewModel.copyImageToUri(uri, destUri, requireContext().contentResolver)
-            viewModel.cropImage(destUri, cropActivityResultContract)
+            Utils.copyImageToUri(uri, destUri, requireContext().contentResolver)
+            Utils.cropImage(destUri, cropActivityResultContract)
         } else {
             // TODO: Handle accordingly
         }
@@ -86,7 +86,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 //        val isNew = args.isNew
 //        token = args.token
         token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3NCIsImlhdCI6MTcwOTcyMDg4MywiZXhwIjoxNzEyMzEyODgzfQ.dGiM2NuUk9nEluZx_c0QlK6GeSfeEf_BRd-aqlQsReQ"
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2NiIsImlhdCI6MTcwOTczNTM5MSwiZXhwIjoxNzEyMzI3MzkxfQ.U9TpyrvWd3VuHO3MRZPfkXxQcieeW2-sggJvyMVIWSM"
         Log.d("TAG", imageUri.toString())
 //
 //        if (isNew){
@@ -118,10 +118,12 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
         lifecycleScope.launch {
             viewModel.selectedNewAvatar.collect { uri ->
-                finalImageUri = uri
-                Glide.with(requireContext())
-                    .load(uri)
-                    .into(binding.imgProfile)
+                if (state is ProfileState.EditProfile && uri != null) {
+                    finalImageUri = uri
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .into(binding.imgProfile)
+                }
             }
         }
 
@@ -131,6 +133,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         with(binding) {
             tvNickname.text = user.nick
             tvLogin.text = user.login
+            etNickname.setText(user.nick)
         }
 
         if (user.online) {
@@ -142,7 +145,8 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
         Log.d("TAG", user.avatar)
         Glide.with(requireContext())
-            .load("https://mock-movilidad.vass.es/chatvass/api/${user.avatar}")
+            .load("https://mock-movilidad.vass.es/${user.avatar}")
+            //.load("https://mock-movilidad.vass.es/chatvass/api/${user.avatar}")
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .error(R.drawable.perfil)
             .into(binding.imgProfile)
@@ -221,7 +225,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         with(binding) {
             etNickname.visibility = View.VISIBLE
             tvNickname.visibility = View.GONE
-            tvLogin.visibility = View.GONE
             ivStatus.visibility = View.GONE
             ivImageEdit.visibility = View.VISIBLE
             btnAccept.text = getString(R.string.save)
@@ -237,7 +240,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         with(binding) {
             etNickname.visibility = View.GONE
             tvNickname.visibility = View.VISIBLE
-            tvLogin.visibility = View.VISIBLE
             ivStatus.visibility = View.VISIBLE
             ivImageEdit.visibility = View.GONE
             btnAccept.text = getString(R.string.change_password)
@@ -300,23 +302,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             "com.example.talkey_android.FileProvider",
             image
         )
-    }
-
-    fun uriToFile(context: Context, uri: Uri): File {
-        val contentResolver: ContentResolver = context.contentResolver
-        val inputStream = contentResolver.openInputStream(uri)
-
-        // Create a temporary file
-        val tempFile = File.createTempFile("temp_image", null, context.cacheDir)
-        tempFile.deleteOnExit()
-
-        inputStream?.use { input ->
-            FileOutputStream(tempFile).use { output ->
-                input.copyTo(output)
-            }
-        }
-
-        return tempFile
     }
 
     private fun statusOnline() {
