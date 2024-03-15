@@ -4,6 +4,7 @@ import com.example.talkey_android.data.domain.model.chats.ChatCreationModel
 import com.example.talkey_android.data.domain.model.chats.ListChatsModel
 import com.example.talkey_android.data.domain.model.common.CommonMessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
+import com.example.talkey_android.data.domain.model.messages.ListMessageModel
 import com.example.talkey_android.data.domain.model.users.ListUsersModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
@@ -16,6 +17,7 @@ import com.example.talkey_android.data.domain.repository.remote.mapper.chats.Cha
 import com.example.talkey_android.data.domain.repository.remote.mapper.chats.ListChatsMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.common.CommonMessageMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.common.SuccessMapper
+import com.example.talkey_android.data.domain.repository.remote.mapper.messages.ListMessageMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.FirebaseTokenMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.ListUsersMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.LoginRequestMapper
@@ -216,6 +218,23 @@ object RemoteDataSource : DataSource {
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(SuccessMapper().fromResponse(apiResult.data))
+
+            is BaseResponse.Error ->
+                BaseResponse.Error(apiResult.error)
+        }
+    }
+
+    override suspend fun getMessages(
+        token: String,
+        idChat: Int,
+        limit: Int,
+        offset: Int
+    ): BaseResponse<ListMessageModel> {
+        val apiResult = apiCallService.getMessages(token, idChat, limit, offset)
+
+        return when (apiResult) {
+            is BaseResponse.Success ->
+                BaseResponse.Success(ListMessageMapper().fromResponse(apiResult.data))
 
             is BaseResponse.Error ->
                 BaseResponse.Error(apiResult.error)

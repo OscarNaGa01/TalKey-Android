@@ -12,6 +12,7 @@ import com.example.talkey_android.data.domain.repository.remote.response.chats.C
 import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.CommonMessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.SuccessResponse
+import com.example.talkey_android.data.domain.repository.remote.response.messages.ListMessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.RegisterResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.UserFullDataResponse
@@ -90,5 +91,14 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         sendMessageRequest: SendMessageRequest
     ): BaseResponse<SuccessResponse> {
         return apiCall { remoteApiService.sendMessage(token, sendMessageRequest) }
+    }
+
+    suspend fun getMessages(
+        token: String,
+        idChat: Int,
+        limit: Int,
+        offset: Int
+    ): BaseResponse<ListMessageResponse> {
+        return apiCall { remoteApiService.getMessages(token, idChat, limit, offset) }
     }
 }

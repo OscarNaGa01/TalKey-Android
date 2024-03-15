@@ -4,6 +4,7 @@ import com.example.talkey_android.data.domain.model.chats.ChatCreationModel
 import com.example.talkey_android.data.domain.model.chats.ListChatsModel
 import com.example.talkey_android.data.domain.model.common.CommonMessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
+import com.example.talkey_android.data.domain.model.messages.ListMessageModel
 import com.example.talkey_android.data.domain.model.users.ListUsersModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
@@ -87,5 +88,14 @@ object DataProvider : DataSource {
         message: String
     ): BaseResponse<SuccessModel> {
         return RemoteDataSource.sendMessage(token, chat, source, message)
+    }
+
+    override suspend fun getMessages(
+        token: String,
+        idChat: Int,
+        limit: Int,
+        offset: Int
+    ): BaseResponse<ListMessageModel> {
+        return RemoteDataSource.getMessages(token, idChat, limit, offset)
     }
 }
