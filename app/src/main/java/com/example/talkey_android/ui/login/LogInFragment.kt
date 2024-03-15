@@ -66,8 +66,23 @@ class LogInFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            logInFragmentViewModel.registerError.collect { error ->
+            logInFragmentViewModel.loginError.collect { error ->
                 Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+                if (error.errorCode == "400") {
+                    setEditTextBackground(listOf(binding.etEmail))
+
+                } else if (error.errorCode == "401") {
+                    setEditTextBackground(listOf(binding.etPassword))
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            logInFragmentViewModel.registerError.collect { error ->
+                if (error.errorCode == "401") {
+                    setEditTextBackground(listOf(binding.etEmail))
+                    Toast.makeText(requireContext(), "User exists", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -114,6 +129,7 @@ class LogInFragment : Fragment() {
             cbTermsConditions.isChecked = false
             btnChange.text = getString(R.string.sign_up_button)
             btnAccept.text = getString(R.string.log_in_button)
+            setEditTextBackground(emptyList())
             isLogin = true
         }
     }
@@ -127,25 +143,29 @@ class LogInFragment : Fragment() {
             cbTermsConditions.visibility = View.VISIBLE
             btnChange.text = getString(R.string.log_in_button)
             btnAccept.text = getString(R.string.sign_up_button)
+            setEditTextBackground(emptyList())
             isLogin = false
         }
     }
 
     private fun logIn() {
-        if (binding.etEmail.text.toString().isNotEmpty() && binding.etPassword.text.toString()
-                .isNotEmpty()
-        ) {
-            logInFragmentViewModel.postLogin(
-                LoginRequestModel(
-                    binding.etPassword.text.toString(),
-                    binding.etEmail.text.toString(),
-                    PLATFORM,
-                    ""
-                )
-            )
-        } else {
-            Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT)
-                .show()
+        with(binding) {
+            if (etEmail.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty())
+                lifecycleScope.launch {
+                    logInFragmentViewModel.postLogin(
+                        LoginRequestModel(
+                            etPassword.text.toString(),
+                            etEmail.text.toString(),
+                            PLATFORM,
+                            ""
+                        )
+                    )
+                    setEditTextBackground(emptyList())
+
+                } else {
+                setEditTextBackground(listOf(etEmail, etPassword))
+                Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
