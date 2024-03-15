@@ -22,6 +22,7 @@
         android:layout_margin="@dimen/common_margin"
         app:cardBackgroundColor="@color/vassBlue"
         app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvDateMe">
 
@@ -30,8 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="@dimen/minnimal_margin"
-            android:layout_marginBottom="18dp"
+            android:layout_marginTop="@dimen/minimal_margin"
+            android:layout_marginBottom="24dp"
             android:textColor="@color/white"
             tools:text="Ejemplo de texto" />
 
@@ -40,7 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/minnimal_margin"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="@dimen/minimal_margin"
             android:textColor="@color/white"
             android:textSize="12sp"
             tools:text="12:45" />

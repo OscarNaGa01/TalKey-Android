@@ -15,21 +15,32 @@
         app:titleTextColor="@android:color/white">
 
         <ImageView
+            android:id="@+id/ivBack"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/common_margin"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_back" />
 
         <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/minnimal_margin"
-            android:scaleType="fitStart"
-            android:src="@drawable/image" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="@dimen/minimal_margin"
+            android:src="@drawable/image"
+            app:shapeAppearanceOverlay="@style/circleImageViewShape" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivStatus"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@color/statusOnline"
+            app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
         <TextView
+            android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -41,8 +52,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolBar" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/tilMessage"
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        tools:listitem="@layout/item_chat_me" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilMessage"
@@ -50,8 +63,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="@string/hint_message"
-        app:layout_constrainedWidth="true"
         app:boxStrokeColor="@color/vassBlue"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ivSend"
         app:layout_constraintStart_toStartOf="parent">
