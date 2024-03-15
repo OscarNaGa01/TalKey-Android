@@ -2,7 +2,7 @@ package com.example.talkey_android.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.talkey_android.data.domain.model.common.MessageModel
+import com.example.talkey_android.data.domain.model.common.CommonMessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
 import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.UpdateProfileModel
@@ -36,8 +36,8 @@ class ProfileFragmentViewModel(
 
     private val _setOnlineError = MutableSharedFlow<ErrorModel>()
     val setOnlineError: SharedFlow<ErrorModel> = _setOnlineError
-    private val _setOnlineMessage = MutableStateFlow(MessageModel())
-    val setOnlineMessage: StateFlow<MessageModel> = _setOnlineMessage
+    private val _setOnlineMessage = MutableStateFlow(CommonMessageModel())
+    val setOnlineMessage: StateFlow<CommonMessageModel> = _setOnlineMessage
 
     private val _updateProfileError = MutableSharedFlow<ErrorModel>()
     val updateProfileError: SharedFlow<ErrorModel> = _updateProfileError
@@ -46,8 +46,8 @@ class ProfileFragmentViewModel(
 
     private val _uploadImgError = MutableSharedFlow<ErrorModel>()
     val uploadImgError: SharedFlow<ErrorModel> = _uploadImgError
-    private val _uploadImgMessage = MutableStateFlow(MessageModel())
-    val uploadImgMessage: StateFlow<MessageModel> = _uploadImgMessage
+    private val _uploadImgMessage = MutableStateFlow(CommonMessageModel())
+    val uploadImgMessage: StateFlow<CommonMessageModel> = _uploadImgMessage
 
 
     fun saveData(passwd: String, nick: String, isOnline: Boolean, file: File) {
