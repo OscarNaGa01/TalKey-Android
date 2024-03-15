@@ -26,6 +26,10 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
         "online": true
     }
 }*/
+    private val id = "241"
+    private val token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0MSIsImlhdCI6MTcxMDQ5NzQ4NSwiZXhwIjoxNzEzMDg5NDg1fQ.YVwmg-Cn8X1oWDkNkv07TR6yClM_G5ccm_MU6kFAXL4"
+
     //private val args: HomeFragmentArgs by navArgs()
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var mAdapter: ContactsAdapter
@@ -43,7 +47,21 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
         setupAdapter()
         observeViewModel()
         //mViewHolder.getUsersList(args.token)
-        mViewModel.getUsersList("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0MSIsImlhdCI6MTcxMDQ5NzQ4NSwiZXhwIjoxNzEzMDg5NDg1fQ.YVwmg-Cn8X1oWDkNkv07TR6yClM_G5ccm_MU6kFAXL4")
+        mViewModel.getChatsList(token)
+
+        with(mBinding) {
+            btnChats.setOnClickListener {
+                vSelectedChats.visibility = View.VISIBLE
+                vSelectedContacts.visibility = View.INVISIBLE
+                mViewModel.getChatsList(token)
+            }
+
+            btnContacts.setOnClickListener {
+                vSelectedChats.visibility = View.INVISIBLE
+                vSelectedContacts.visibility = View.VISIBLE
+                mViewModel.getUsersList(token)
+            }
+        }
     }
 
     private fun observeViewModel() {
@@ -70,7 +88,7 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
     }
 
     private fun setupAdapter() {
-        mAdapter = ContactsAdapter(requireContext(), this)
+        mAdapter = ContactsAdapter(requireContext(), this, id)
         val listManager = LinearLayoutManager(requireContext())
 
         with(mBinding) {

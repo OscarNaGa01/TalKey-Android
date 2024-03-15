@@ -10,9 +10,7 @@ import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCas
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class HomeFragmentViewModel(
@@ -20,13 +18,13 @@ class HomeFragmentViewModel(
     private val getListChatsUseCase: GetListChatsUseCase
 ) : ViewModel() {
 
-    private val _users = MutableStateFlow<List<UserItemListModel>>(mutableListOf())
-    val users: StateFlow<List<UserItemListModel>> = _users
+    private val _users = MutableSharedFlow<List<UserItemListModel>>()
+    val users: SharedFlow<List<UserItemListModel>> = _users
     private val _getUsersListError = MutableSharedFlow<ErrorModel>()
     val getUsersListError: SharedFlow<ErrorModel> = _getUsersListError
 
-    private val _chats = MutableStateFlow<List<ChatModel>>(mutableListOf())
-    val chats: StateFlow<List<ChatModel>> = _chats
+    private val _chats = MutableSharedFlow<List<ChatModel>>()
+    val chats: SharedFlow<List<ChatModel>> = _chats
     private val _getChatsListError = MutableSharedFlow<ErrorModel>()
     val getChatsListError: SharedFlow<ErrorModel> = _getChatsListError
 
