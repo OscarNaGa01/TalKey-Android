@@ -1,6 +1,7 @@
 package com.example.talkey_android.data.domain.repository.remote
 
 import com.example.talkey_android.data.domain.repository.remote.request.chats.ChatCreationRequest
+import com.example.talkey_android.data.domain.repository.remote.request.messages.SendMessageRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.FirebaseTokenRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
@@ -82,5 +83,12 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         idChat: Int
     ): BaseResponse<SuccessResponse> {
         return apiCall { remoteApiService.deleteChat(token, idChat) }
+    }
+
+    suspend fun sendMessage(
+        token: String,
+        sendMessageRequest: SendMessageRequest
+    ): BaseResponse<SuccessResponse> {
+        return apiCall { remoteApiService.sendMessage(token, sendMessageRequest) }
     }
 }

@@ -79,4 +79,13 @@ object DataProvider : DataSource {
     override suspend fun deleteChat(token: String, idChat: Int): BaseResponse<SuccessModel> {
         return RemoteDataSource.deleteChat(token, idChat)
     }
+
+    override suspend fun sendMessage(
+        token: String,
+        chat: String,
+        source: String,
+        message: String
+    ): BaseResponse<SuccessModel> {
+        return RemoteDataSource.sendMessage(token, chat, source, message)
+    }
 }

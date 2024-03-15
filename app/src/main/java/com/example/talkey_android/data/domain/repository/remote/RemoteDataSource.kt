@@ -25,6 +25,7 @@ import com.example.talkey_android.data.domain.repository.remote.mapper.users.Reg
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.UpdateProfileMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.UserFullDataToUserProfileMapper
 import com.example.talkey_android.data.domain.repository.remote.request.chats.ChatCreationRequest
+import com.example.talkey_android.data.domain.repository.remote.request.messages.SendMessageRequest
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import java.io.File
 
@@ -193,6 +194,25 @@ object RemoteDataSource : DataSource {
     override suspend fun deleteChat(token: String, idChat: Int): BaseResponse<SuccessModel> {
         val apiResult = apiCallService.deleteChat(token, idChat)
 
+        return when (apiResult) {
+            is BaseResponse.Success ->
+                BaseResponse.Success(SuccessMapper().fromResponse(apiResult.data))
+
+            is BaseResponse.Error ->
+                BaseResponse.Error(apiResult.error)
+        }
+    }
+
+    override suspend fun sendMessage(
+        token: String,
+        chat: String,
+        source: String,
+        message: String
+    ): BaseResponse<SuccessModel> {
+        val apiResult = apiCallService.sendMessage(
+            token,
+            SendMessageRequest(chat, source, message)
+        )
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(SuccessMapper().fromResponse(apiResult.data))
