@@ -18,31 +18,18 @@
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/common_margin"
+            android:layout_marginHorizontal="@dimen/common_margin"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_back" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="@dimen/minimal_margin"
-            android:src="@drawable/image"
-            app:shapeAppearanceOverlay="@style/circleImageViewShape" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivStatus"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@color/statusOnline"
-            app:shapeAppearanceOverlay="@style/circleImageViewShape" />
+        <include layout="@layout/item_profile_image_status_chat" />
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_margin"
             android:textColor="@color/white"
             android:textSize="22sp"
             tools:text="Juan Cuesta" />
