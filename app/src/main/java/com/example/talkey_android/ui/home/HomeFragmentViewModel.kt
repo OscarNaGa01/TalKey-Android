@@ -2,6 +2,7 @@ package com.example.talkey_android.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.talkey_android.data.domain.model.chats.ChatModel
 import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.UserItemListModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
@@ -24,6 +25,11 @@ class HomeFragmentViewModel(
     private val _getUsersListError = MutableSharedFlow<ErrorModel>()
     val getUsersListError: SharedFlow<ErrorModel> = _getUsersListError
 
+    private val _chats = MutableStateFlow<List<ChatModel>>(mutableListOf())
+    val chats: StateFlow<List<ChatModel>> = _chats
+    private val _getChatsListError = MutableSharedFlow<ErrorModel>()
+    val getChatsListError: SharedFlow<ErrorModel> = _getChatsListError
+
 
     fun getUsersList(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -36,6 +42,22 @@ class HomeFragmentViewModel(
 
                 is BaseResponse.Error -> {
                     _getUsersListError.emit(baseResponse.error)
+                }
+            }
+        }
+    }
+
+    fun getChatsList(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val baseResponse = getListChatsUseCase(token)
+
+            when (baseResponse) {
+                is BaseResponse.Success -> {
+                    _chats.emit(baseResponse.data.chats)
+                }
+
+                is BaseResponse.Error -> {
+                    _getChatsListError.emit(baseResponse.error)
                 }
             }
         }
