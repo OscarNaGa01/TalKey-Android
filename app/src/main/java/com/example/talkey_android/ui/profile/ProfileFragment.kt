@@ -1,12 +1,13 @@
 package com.example.talkey_android.ui.profile
 
+import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupWindow
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -26,6 +27,7 @@ import com.example.talkey_android.databinding.FragmentProfileBinding
 import com.example.talkey_android.ui.profile.popup.PopUpFragment
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -37,17 +39,41 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             GetProfileUseCase(), SetOnlineUseCase(),
             UpdateProfileUseCase(), UploadImgUseCase()
         )
-    private var popupWindow: PopupWindow? = null
 
     //    val args: ProfileFragmentArgs by navArgs()
     private lateinit var token: String
     private var state: ProfileState = ProfileState.ShowProfile
-    private lateinit var imageUri: Uri
-    private val cameraContract = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+    private var myUser: UserProfileModel? = null
 
-    }
-    private val galleryContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
+    private val cropActivityResultContract =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            viewModel.handleCropResult(result)
+        }
+    private var imageUri: Uri? = null
+    private var finalImageUri: Uri? = null
 
+    private val cameraContract =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+
+            Log.d("URIREADER", imageUri.toString())
+            if (success) {
+                imageUri?.let { uri ->
+                    viewModel.cropImage(uri, cropActivityResultContract)
+                }
+            } else {
+                //TODO("Errores camara")
+            }
+        }
+
+    private val galleryContract = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+
+        if (uri != null) {
+            val destUri = createUri()
+            viewModel.copyImageToUri(uri, destUri, requireContext().contentResolver)
+            viewModel.cropImage(destUri, cropActivityResultContract)
+        } else {
+            // TODO: Handle accordingly
+        }
     }
 
 
@@ -61,7 +87,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 //        token = args.token
         token =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3NCIsImlhdCI6MTcwOTcyMDg4MywiZXhwIjoxNzEyMzEyODgzfQ.dGiM2NuUk9nEluZx_c0QlK6GeSfeEf_BRd-aqlQsReQ"
-        imageUri = createUri()
+        Log.d("TAG", imageUri.toString())
 //
 //        if (isNew){
 //            state = states[1]
@@ -81,12 +107,24 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     }
 
     private fun observeViewModel() {
+        //TODO("Errores observers")
         lifecycleScope.launch {
             viewModel.userProfile.collect { user ->
                 Log.d("TAG", user.toString())
-                setData(user)
+                myUser = user
+                setData(myUser!!)
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.selectedNewAvatar.collect { uri ->
+                finalImageUri = uri
+                Glide.with(requireContext())
+                    .load(uri)
+                    .into(binding.imgProfile)
+            }
+        }
+
     }
 
     private fun setData(user: UserProfileModel) {
@@ -96,18 +134,11 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         }
 
         if (user.online) {
-            binding.ivStatus.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(), R.color.statusOnline
-                )
-            )
+            statusOnline()
         } else {
-            binding.ivStatus.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(), R.color.statusOffline
-                )
-            )
+            statusOfflinree()
         }
+
 
         Log.d("TAG", user.avatar)
         Glide.with(requireContext())
@@ -115,6 +146,8 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .error(R.drawable.perfil)
             .into(binding.imgProfile)
+
+
     }
 
     private fun buttonConfiguration() {
@@ -130,15 +163,15 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
         binding.btnAccept.setOnClickListener {
             when (state) {
-                is ProfileState.ShowProfile -> { //Edit profile
+                is ProfileState.ShowProfile -> { //Change password
                     showToPassword()
                 }
 
-                is ProfileState.EditProfile -> { //Cancel edit
+                is ProfileState.EditProfile -> { //Confirm edit
                     editToShow()
                 }
 
-                is ProfileState.ChangePassword -> { //Cancel password change
+                is ProfileState.ChangePassword -> { //Confirm password change
                     passwordToShow()
                 }
             }
@@ -153,12 +186,9 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         toolbar.setNavigationIcon(R.drawable.back_arrow_white)
 
         toolbar.setNavigationOnClickListener {
-
-            // Your custom action here
+            //TODO("Back toolbar")
 //            findNavController().popBackStack()
         }
-
-
 
         binding.actionButton.setOnClickListener {
             toolbarSwitcher()
@@ -173,6 +203,9 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
             is ProfileState.EditProfile -> { //Cancel edit
                 editToShow()
+                myUser.let {
+                    setData(myUser!!)
+                }
             }
 
             is ProfileState.ChangePassword -> { //Cancel password change
@@ -209,11 +242,13 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             ivImageEdit.visibility = View.GONE
             btnAccept.text = getString(R.string.change_password)
             etNickname.setText("")
-            toolBar.setNavigationIcon(R.drawable.back_arrow_white)
         }
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
             true
         )
+        binding.toolBar.setNavigationIcon(R.drawable.back_arrow_white)
+
+
     }
 
     private fun passwordToShow() {
@@ -230,16 +265,16 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             btnAccept.text = getString(R.string.change_password)
             etPassword.setText("")
             etPasswordConfirm.setText("")
-            toolBar.setNavigationIcon(R.drawable.back_arrow_white)
         }
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
             true
         )
+        binding.toolBar.setNavigationIcon(R.drawable.back_arrow_white)
     }
 
     private fun showToPassword() {
         state = ProfileState.ChangePassword
-        binding.actionButton.setImageResource(R.drawable.editar_white)
+        binding.actionButton.setImageResource(R.drawable.x_white)
         with(binding) {
             etPassword.visibility = View.VISIBLE
             etPasswordConfirm.visibility = View.VISIBLE
@@ -251,10 +286,9 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             btnAccept.text = getString(R.string.save)
             etPassword.setText("")
             etPasswordConfirm.setText("")
-            toolBar.setNavigationIcon(R.drawable.back_arrow_white)
         }
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
-            true
+            false
         )
     }
 
@@ -268,27 +302,60 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         )
     }
 
+    fun uriToFile(context: Context, uri: Uri): File {
+        val contentResolver: ContentResolver = context.contentResolver
+        val inputStream = contentResolver.openInputStream(uri)
 
-    override fun onDestroy() {
-        super.onDestroy()
-        popupWindow?.dismiss()
+        // Create a temporary file
+        val tempFile = File.createTempFile("temp_image", null, context.cacheDir)
+        tempFile.deleteOnExit()
+
+        inputStream?.use { input ->
+            FileOutputStream(tempFile).use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        return tempFile
     }
+
+    private fun statusOnline() {
+        binding.ivStatus.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(), R.color.statusOnline
+            )
+        )
+    }
+
+    private fun statusOfflinree() {
+        binding.ivStatus.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(), R.color.statusOffline
+            )
+        )
+    }
+
 
     override fun onCameraClick() {
         Log.d("TAG", "Camera")
+        imageUri = createUri()
+        cameraContract.launch(imageUri)
     }
 
     override fun onGalleryClick() {
         Log.d("TAG", "Gallery")
+        galleryContract.launch("image/*")
     }
 
     override fun switchOnline() {
         Log.d("TAG", "Online")
+        statusOnline()
         viewModel.setOnline(true)
     }
 
     override fun switchOffline() {
         Log.d("TAG", "Offline")
+        statusOfflinree()
         viewModel.setOnline(false)
     }
 

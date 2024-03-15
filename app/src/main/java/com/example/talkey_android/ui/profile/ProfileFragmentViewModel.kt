@@ -1,5 +1,13 @@
 package com.example.talkey_android.ui.profile
 
+import android.app.Activity
+import android.content.ContentResolver
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.common.MessageModel
@@ -21,6 +29,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.IOException
 
 class ProfileFragmentViewModel(
     private val getProfileUseCase: GetProfileUseCase,
@@ -49,16 +58,17 @@ class ProfileFragmentViewModel(
     private val _uploadImgMessage = MutableStateFlow(MessageModel())
     val uploadImgMessage: StateFlow<MessageModel> = _uploadImgMessage
 
+    private val _selectedNewAvatar = MutableSharedFlow<Uri?>()
+    val selectedNewAvatar: SharedFlow<Uri?> = _selectedNewAvatar
 
-    fun saveData(passwd: String, nick: String, isOnline: Boolean, file: File) {
+    fun saveData(passwd: String, nick: String, file: File) {
         viewModelScope.launch(Dispatchers.IO)
         {
-            val deferreds = listOf(
+            val deferred = listOf(
                 async { updateProfile(UpdateProfileModel(passwd, nick)) },
-                //async { setOnline(isOnline) },
                 async { uploadImg(file) }
             )
-            deferreds.awaitAll()
+            deferred.awaitAll()
             getProfile(_userProfile.value.token)
         }
     }
@@ -100,7 +110,6 @@ class ProfileFragmentViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val deferred = async { statusSetter(isOnline) }
             deferred.await()
-            getProfile(_userProfile.value.token)
         }
     }
 
@@ -133,4 +142,44 @@ class ProfileFragmentViewModel(
             }
         }
     }
+
+    fun cropImage(uri: Uri, cropActivityResultContract: ActivityResultLauncher<Intent>) {
+        val cropIntent = Intent("com.android.camera.action.CROP").apply {
+            setDataAndType(uri, "image/*")
+            putExtra("crop", "true")
+            putExtra("aspectX", 1)
+            putExtra("aspectY", 1)
+            putExtra("return-data", true)
+            putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString())
+            addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        cropActivityResultContract.launch(cropIntent)
+    }
+
+    fun handleCropResult(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val croppedImageUri = result.data?.data
+                _selectedNewAvatar.emit(croppedImageUri)
+            }
+        } else {
+            //TODO("Errores crop")
+        }
+    }
+
+    fun copyImageToUri(sourceUri: Uri, destUri: Uri, contentResolver: ContentResolver) {
+        try {
+            val inputStream = contentResolver.openInputStream(sourceUri)
+            val outputStream = contentResolver.openOutputStream(destUri)
+            if (inputStream != null && outputStream != null) {
+                inputStream.copyTo(outputStream)
+                inputStream.close()
+                outputStream.close()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
 }
