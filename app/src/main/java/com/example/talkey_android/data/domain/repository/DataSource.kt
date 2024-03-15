@@ -2,7 +2,7 @@ package com.example.talkey_android.data.domain.repository
 
 import com.example.talkey_android.data.domain.model.chats.ChatCreationModel
 import com.example.talkey_android.data.domain.model.chats.ListChatsModel
-import com.example.talkey_android.data.domain.model.common.MessageModel
+import com.example.talkey_android.data.domain.model.common.CommonMessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
 import com.example.talkey_android.data.domain.model.users.ListUsersModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
@@ -17,7 +17,7 @@ import java.io.File
 interface DataSource {
     suspend fun register(registerRequestModel: RegisterRequestModel): BaseResponse<RegisterResponseModel>
     suspend fun login(loginRequestModel: LoginRequestModel): BaseResponse<UserModel>
-    suspend fun logout(token: String): BaseResponse<MessageModel>
+    suspend fun logout(token: String): BaseResponse<CommonMessageModel>
     suspend fun getProfile(token: String): BaseResponse<UserProfileModel>
     suspend fun getListProfiles(token: String): BaseResponse<ListUsersModel>
     suspend fun updateProfile(
@@ -25,9 +25,9 @@ interface DataSource {
         updateProfileModel: UpdateProfileModel
     ): BaseResponse<SuccessModel>
 
-    suspend fun uploadImg(token: String, file: File): BaseResponse<MessageModel>
-    suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel>
-    suspend fun putNotification(token: String, firebaseToken: String): BaseResponse<MessageModel>
+    suspend fun uploadImg(token: String, file: File): BaseResponse<CommonMessageModel>
+    suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<CommonMessageModel>
+    suspend fun putNotification(token: String, firebaseToken: String): BaseResponse<CommonMessageModel>
     suspend fun loginBiometric(firebaseToken: String): BaseResponse<UserModel>
     suspend fun getListChats(token: String): BaseResponse<ListChatsModel>
     suspend fun createChat(

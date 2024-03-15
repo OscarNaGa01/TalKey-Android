@@ -9,7 +9,7 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseApi
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatCreationResponse
 import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatResponse
-import com.example.talkey_android.data.domain.repository.remote.response.common.MessageResponse
+import com.example.talkey_android.data.domain.repository.remote.response.common.CommonMessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.SuccessResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.RegisterResponse
@@ -26,7 +26,7 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         return apiCall { remoteApiService.login(loginRequest) }
     }
 
-    suspend fun logout(token: String): BaseResponse<MessageResponse> {
+    suspend fun logout(token: String): BaseResponse<CommonMessageResponse> {
         return apiCall { remoteApiService.logout(token) }
     }
 
@@ -45,18 +45,18 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         return apiCall { remoteApiService.updateProfile(token, updateProfileRequest) }
     }
 
-    suspend fun uploadImg(token: String, file: File): BaseResponse<MessageResponse> {
+    suspend fun uploadImg(token: String, file: File): BaseResponse<CommonMessageResponse> {
         return apiCall { remoteApiService.uploadImg(token, file) }
     }
 
-    suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<MessageResponse> {
+    suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<CommonMessageResponse> {
         return apiCall { remoteApiService.setOnline(token, isOnline) }
     }
 
     suspend fun putNotification(
         token: String,
         firebaseTokenRequest: FirebaseTokenRequest
-    ): BaseResponse<MessageResponse> {
+    ): BaseResponse<CommonMessageResponse> {
         return apiCall { remoteApiService.putNotification(token, firebaseTokenRequest) }
     }
 

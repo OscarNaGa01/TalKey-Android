@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.talkey_android.R
-import com.example.talkey_android.data.domain.model.common.MessageModel
+import com.example.talkey_android.data.domain.model.common.CommonMessageModel
 import com.example.talkey_android.databinding.ItemChatMeBinding
 
-class ChatAdapter(private val messageList: List<MessageModel>) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+class ChatAdapter(private val messageList: List<CommonMessageModel>) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     private lateinit var context: Context
 

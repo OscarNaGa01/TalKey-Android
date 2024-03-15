@@ -2,7 +2,7 @@ package com.example.talkey_android.data.domain.repository
 
 import com.example.talkey_android.data.domain.model.chats.ChatCreationModel
 import com.example.talkey_android.data.domain.model.chats.ListChatsModel
-import com.example.talkey_android.data.domain.model.common.MessageModel
+import com.example.talkey_android.data.domain.model.common.CommonMessageModel
 import com.example.talkey_android.data.domain.model.common.SuccessModel
 import com.example.talkey_android.data.domain.model.users.ListUsersModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
@@ -26,7 +26,7 @@ object DataProvider : DataSource {
         return RemoteDataSource.login(loginRequestModel)
     }
 
-    override suspend fun logout(token: String): BaseResponse<MessageModel> {
+    override suspend fun logout(token: String): BaseResponse<CommonMessageModel> {
         return RemoteDataSource.logout(token)
     }
 
@@ -45,18 +45,18 @@ object DataProvider : DataSource {
         return RemoteDataSource.updateProfile(token, updateProfileModel)
     }
 
-    override suspend fun uploadImg(token: String, file: File): BaseResponse<MessageModel> {
+    override suspend fun uploadImg(token: String, file: File): BaseResponse<CommonMessageModel> {
         return RemoteDataSource.uploadImg(token, file)
     }
 
-    override suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<MessageModel> {
+    override suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<CommonMessageModel> {
         return RemoteDataSource.setOnline(token, isOnline)
     }
 
     override suspend fun putNotification(
         token: String,
         firebaseToken: String
-    ): BaseResponse<MessageModel> {
+    ): BaseResponse<CommonMessageModel> {
         return RemoteDataSource.putNotification(token, firebaseToken)
     }
 
