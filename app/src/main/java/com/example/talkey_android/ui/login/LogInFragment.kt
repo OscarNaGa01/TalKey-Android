@@ -68,10 +68,10 @@ class LogInFragment : Fragment() {
         lifecycleScope.launch {
             logInFragmentViewModel.loginError.collect { error ->
                 Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
-                if (error.message == "User not found") {
+                if (error.errorCode == "400") {
                     setEditTextBackground(listOf(binding.etEmail))
 
-                } else if (error.message == "Usuario ya registrado") {
+                } else if (error.errorCode == "401") {
                     setEditTextBackground(listOf(binding.etPassword))
                 }
             }
@@ -79,7 +79,10 @@ class LogInFragment : Fragment() {
 
         lifecycleScope.launch {
             logInFragmentViewModel.registerError.collect { error ->
-                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+                if (error.errorCode == "401") {
+                    setEditTextBackground(listOf(binding.etEmail))
+                    Toast.makeText(requireContext(), "User exists", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
