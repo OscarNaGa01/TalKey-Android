@@ -32,8 +32,8 @@ class ProfileFragmentViewModel(
 
     private val _getProfileError = MutableSharedFlow<ErrorModel>()
     val getProfileError: SharedFlow<ErrorModel> = _getProfileError
-    private val _userProfile = MutableStateFlow(UserProfileModel())
-    val userProfile: StateFlow<UserProfileModel> = _userProfile
+    private val _getProfile = MutableStateFlow(UserProfileModel())
+    val getProfile: StateFlow<UserProfileModel> = _getProfile
 
     private val _setOnlineError = MutableSharedFlow<ErrorModel>()
     val setOnlineError: SharedFlow<ErrorModel> = _setOnlineError
@@ -61,14 +61,14 @@ class ProfileFragmentViewModel(
                 async { uploadImg(file) }
             )
             deferred.awaitAll()
-            getProfile(_userProfile.value.token)
+            getProfile(_getProfile.value.token)
         }
     }
 
 
     private suspend fun uploadImg(file: File) {
         val baseResponse = uploadImgUseCase(
-            _userProfile.value.token,
+            _getProfile.value.token,
             file
         )
         when (baseResponse) {
@@ -84,7 +84,7 @@ class ProfileFragmentViewModel(
 
     private suspend fun updateProfile(updateProfileModel: UpdateProfileModel) {
         val baseResponse = updateProfileUseCase(
-            _userProfile.value.token,
+            _getProfile.value.token,
             updateProfileModel
         )
         when (baseResponse) {
@@ -107,7 +107,7 @@ class ProfileFragmentViewModel(
 
     private suspend fun statusSetter(isOnline: Boolean) {
         val baseResponse = setOnlineUseCase(
-            _userProfile.value.token, isOnline
+            _getProfile.value.token, isOnline
         )
         when (baseResponse) {
             is BaseResponse.Success -> {
@@ -125,7 +125,7 @@ class ProfileFragmentViewModel(
             val baseResponse = getProfileUseCase(token)
             when (baseResponse) {
                 is BaseResponse.Success -> {
-                    _userProfile.emit(baseResponse.data)
+                    _getProfile.emit(baseResponse.data)
                 }
 
                 is BaseResponse.Error -> {

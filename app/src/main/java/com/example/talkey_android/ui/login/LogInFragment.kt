@@ -132,19 +132,20 @@ class LogInFragment : Fragment() {
     }
 
     private fun logIn() {
-        if (binding.etEmail.text.toString().isNotEmpty() && binding.etPassword.text.toString().isNotEmpty())
-            lifecycleScope.launch {
-                logInFragmentViewModel.postLogin(
-                    LoginRequestModel(
-                        binding.etPassword.text.toString(),
-                        binding.etEmail.text.toString(),
-                        PLATFORM,
-                        ""
-                    )
+        if (binding.etEmail.text.toString().isNotEmpty() && binding.etPassword.text.toString()
+                .isNotEmpty()
+        ) {
+            logInFragmentViewModel.postLogin(
+                LoginRequestModel(
+                    binding.etPassword.text.toString(),
+                    binding.etEmail.text.toString(),
+                    PLATFORM,
+                    ""
                 )
-
-            } else {
-            Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT).show()
+            )
+        } else {
+            Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -153,7 +154,6 @@ class LogInFragment : Fragment() {
             if (isValidEmail(etEmail.text.toString()) && etNick.text.toString().isNotEmpty() && isValidPassword()
                 && etPassword.text.toString() == etConfirmPassword.text.toString() && cbTermsConditions.isChecked
             ) {
-                lifecycleScope.launch {
                     logInFragmentViewModel.postRegister(
                         RegisterRequestModel(
                             etEmail.text.toString(),
@@ -163,7 +163,6 @@ class LogInFragment : Fragment() {
                             ""
                         )
                     )
-                }
 
             } else if (etEmail.text.toString().isEmpty() && etNick.text.toString()
                     .isEmpty() && etPassword.text.toString()
@@ -192,7 +191,6 @@ class LogInFragment : Fragment() {
                 setEditTextBackground(emptyList())
                 Toast.makeText(requireContext(), "Accept our terms and conditions", Toast.LENGTH_SHORT).show()
 
-            } else {
             }
         }
     }

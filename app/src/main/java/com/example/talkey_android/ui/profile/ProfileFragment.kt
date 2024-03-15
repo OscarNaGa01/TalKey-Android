@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -40,6 +41,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     //    val args: ProfileFragmentArgs by navArgs()
     private lateinit var token: String
+    private var isNew: Boolean = false
     private var state: ProfileState = ProfileState.ShowProfile
     private var myUser: UserProfileModel? = null
 
@@ -57,7 +59,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             Log.d("URIREADER", imageUri.toString())
             if (success) {
                 imageUri?.let { uri ->
-
                     Utils.cropImage(uri, cropActivityResultContract)
                 }
             } else {
@@ -84,6 +85,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
 //        val isNew = args.isNew
+
 //        token = args.token
         token =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2NiIsImlhdCI6MTcwOTczNTM5MSwiZXhwIjoxNzEyMzI3MzkxfQ.U9TpyrvWd3VuHO3MRZPfkXxQcieeW2-sggJvyMVIWSM"
@@ -109,10 +111,17 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     private fun observeViewModel() {
         //TODO("Errores observers")
         lifecycleScope.launch {
-            viewModel.userProfile.collect { user ->
+            viewModel.getProfile.collect { user ->
                 Log.d("TAG", user.toString())
                 myUser = user
                 setData(myUser!!)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.getProfileError.collect { error ->
+                Log.d("TAG", "l> Error: ${error.message}")
+                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -172,6 +181,12 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                 }
 
                 is ProfileState.EditProfile -> { //Confirm edit
+                    if (imageUri != null && myUser != null) {
+                        viewModel.saveData(
+                            myUser!!.password, binding.etNickname.text.toString(),
+                            Utils.uriToFile(requireContext(), imageUri!!)
+                        )
+                    }
                     editToShow()
                 }
 
