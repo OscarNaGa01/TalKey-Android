@@ -7,7 +7,9 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -51,6 +53,7 @@ class LogInFragment : Fragment() {
                             true
                         )
                     )
+
                 } else if (user.token.isNotEmpty() && isLogin) {
                     findNavController().navigate(
                         LogInFragmentDirections.actionLogInFragmentToHomeFragment(
@@ -63,8 +66,23 @@ class LogInFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            logInFragmentViewModel.registerError.collect { error ->
+            logInFragmentViewModel.loginError.collect { error ->
                 Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+                if (error.errorCode == "400") {
+                    setEditTextBackground(listOf(binding.etEmail))
+
+                } else if (error.errorCode == "401") {
+                    setEditTextBackground(listOf(binding.etPassword))
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            logInFragmentViewModel.registerError.collect { error ->
+                if (error.errorCode == "401") {
+                    setEditTextBackground(listOf(binding.etEmail))
+                    Toast.makeText(requireContext(), "User exists", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -83,87 +101,143 @@ class LogInFragment : Fragment() {
     private fun setLoginSignupAction(login: Boolean) {
         if (login) {
             logIn()
+
         } else {
             signUp()
         }
     }
 
-    private fun setLoginSignupView(login: Boolean) {
+    private fun setLoginSignupView(signup: Boolean) {
+        if (signup) {
+            setLoginToSignupView()
+
+        } else {
+            setSetupToLoginView()
+        }
+
+    }
+
+    private fun setSetupToLoginView() {
         with(binding) {
-            if (login) {
-                etConfirmPassword.visibility = View.VISIBLE
-                etNick.visibility = View.VISIBLE
-                btnChange.text = getString(R.string.log_in_button)
-                btnAccept.text = getString(R.string.sign_up_button)
-                isLogin = false
-            } else {
-                etConfirmPassword.visibility = View.GONE
-                etNick.visibility = View.GONE
-                btnChange.text = getString(R.string.sign_up_button)
-                btnAccept.text = getString(R.string.log_in_button)
-                isLogin = true
-            }
+            etEmail.text?.clear()
+            etNick.text?.clear()
+            etPassword.text?.clear()
+            etConfirmPassword.text?.clear()
+            etConfirmPassword.visibility = View.GONE
+            etNick.visibility = View.GONE
+            cbTermsConditions.visibility = View.GONE
+            cbTermsConditions.isChecked = false
+            btnChange.text = getString(R.string.sign_up_button)
+            btnAccept.text = getString(R.string.log_in_button)
+            setEditTextBackground(emptyList())
+            isLogin = true
+        }
+    }
+
+    private fun setLoginToSignupView() {
+        with(binding) {
+            etEmail.text?.clear()
+            etPassword.text?.clear()
+            etConfirmPassword.visibility = View.VISIBLE
+            etNick.visibility = View.VISIBLE
+            cbTermsConditions.visibility = View.VISIBLE
+            btnChange.text = getString(R.string.log_in_button)
+            btnAccept.text = getString(R.string.sign_up_button)
+            setEditTextBackground(emptyList())
+            isLogin = false
         }
     }
 
     private fun logIn() {
-        if (binding.etEmail.text.toString().isNotEmpty() && binding.etPassword.text.toString().isNotEmpty())
-            lifecycleScope.launch {
-                logInFragmentViewModel.postLogin(
-                    LoginRequestModel(
-                        binding.etPassword.text.toString(),
-                        binding.etEmail.text.toString(),
-                        PLATFORM,
-                        ""
+        with(binding) {
+            if (etEmail.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty())
+                lifecycleScope.launch {
+                    logInFragmentViewModel.postLogin(
+                        LoginRequestModel(
+                            etPassword.text.toString(),
+                            etEmail.text.toString(),
+                            PLATFORM,
+                            ""
+                        )
                     )
-                )
-            } else {
-            Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT).show()
+                    setEditTextBackground(emptyList())
+
+                } else {
+                setEditTextBackground(listOf(etEmail, etPassword))
+                Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun signUp() {
-        if (isValidEmail(binding.etEmail.text.toString()) && isValidPassword() && binding.etNick.text.toString()
-                .isNotEmpty()
-        ) {
-            lifecycleScope.launch {
-                logInFragmentViewModel.postRegister(
-                    RegisterRequestModel(
-                        binding.etEmail.text.toString(),
-                        binding.etPassword.text.toString(),
-                        binding.etNick.text.toString(),
-                        PLATFORM,
-                        ""
+        with(binding) {
+            if (isValidEmail(etEmail.text.toString()) && etNick.text.toString().isNotEmpty() && isValidPassword()
+                && etPassword.text.toString() == etConfirmPassword.text.toString() && cbTermsConditions.isChecked
+            ) {
+                lifecycleScope.launch {
+                    logInFragmentViewModel.postRegister(
+                        RegisterRequestModel(
+                            etEmail.text.toString(),
+                            etPassword.text.toString(),
+                            etNick.text.toString(),
+                            PLATFORM,
+                            ""
+                        )
                     )
-                )
+                }
+
+            } else if (etEmail.text.toString().isEmpty() && etNick.text.toString()
+                    .isEmpty() && etPassword.text.toString()
+                    .isEmpty() && etConfirmPassword.text.toString().isEmpty()
+            ) {
+                setEditTextBackground(listOf(etEmail, etNick, etPassword, etConfirmPassword))
+                Toast.makeText(requireContext(), "Complete all fields", Toast.LENGTH_SHORT).show()
+
+            } else if (!isValidEmail(etEmail.text.toString())) {
+                setEditTextBackground(listOf(etEmail))
+                Toast.makeText(requireContext(), "Enter a valid email", Toast.LENGTH_SHORT).show()
+
+            } else if (etNick.text.toString().isEmpty()) {
+                setEditTextBackground(listOf(etNick))
+                Toast.makeText(requireContext(), "You need a nickname", Toast.LENGTH_SHORT).show()
+
+            } else if (!isValidPassword()) {
+                setEditTextBackground(listOf(etPassword, etConfirmPassword))
+                Toast.makeText(requireContext(), "Invalid password", Toast.LENGTH_SHORT).show()
+
+            } else if (etPassword.text.toString() != etConfirmPassword.text.toString()) {
+                setEditTextBackground(listOf(etPassword, etConfirmPassword))
+                Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()
+
+            } else if (!cbTermsConditions.isChecked) {
+                setEditTextBackground(emptyList())
+                Toast.makeText(requireContext(), "Accept our terms and conditions", Toast.LENGTH_SHORT).show()
+
+            } else {
             }
-        } else if (binding.etNick.text.toString().isEmpty()) {
-            Toast.makeText(requireContext(), "You need a Nickname!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setEditTextBackground(currentEditText: List<EditText>) {
+        with(binding) {
+            etEmail.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etNick.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etPassword.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etConfirmPassword.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+
+        }
+        currentEditText.forEach { editText ->
+            editText.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_error_background)
         }
     }
 
     private fun isValidEmail(email: String): Boolean {
         val pattern: Pattern = Patterns.EMAIL_ADDRESS
-        return if (pattern.matcher(email).matches()) {
-            true
-        } else {
-            Toast.makeText(requireContext(), "Invalid Email!", Toast.LENGTH_SHORT).show()
-            false
-        }
+        return pattern.matcher(email).matches()
     }
 
     private fun isValidPassword(): Boolean {
         val patron = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
-        return if (patron.matches(binding.etPassword.text.toString()) &&
-            binding.etPassword.text.toString() == binding.etConfirmPassword.text.toString()
-        ) {
-            true
-        } else if (binding.etPassword.text.toString() != binding.etConfirmPassword.text.toString()) {
-            Toast.makeText(requireContext(), "Passwords don't match!", Toast.LENGTH_SHORT).show()
-            false
-        } else {
-            Toast.makeText(requireContext(), "Check your password!", Toast.LENGTH_SHORT).show()
-            false
-        }
+        return patron.matches(binding.etPassword.text.toString())
     }
 }
