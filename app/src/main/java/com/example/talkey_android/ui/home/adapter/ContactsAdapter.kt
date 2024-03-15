@@ -92,6 +92,7 @@ class ContactsAdapter(
         with(holder.binding) {
             tvName.text = nick
             tvDate.text = chatCreated.substring(0, 10)
+            // TODO: show last message
             tvLastMsg.text = "Último mensaje enviado"
             if (online) {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
