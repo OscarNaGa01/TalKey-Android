@@ -95,7 +95,7 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
 
     suspend fun getMessages(
         token: String,
-        idChat: Int,
+        idChat: String,
         limit: Int,
         offset: Int
     ): BaseResponse<ListMessageResponse> {

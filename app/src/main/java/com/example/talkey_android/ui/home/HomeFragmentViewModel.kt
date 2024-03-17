@@ -2,20 +2,24 @@ package com.example.talkey_android.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.talkey_android.data.domain.model.chats.ChatItemListModel
 import com.example.talkey_android.data.domain.model.chats.ChatModel
 import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.UserItemListModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
+import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 class HomeFragmentViewModel(
     private val getListProfilesUseCase: GetListProfilesUseCase,
-    private val getListChatsUseCase: GetListChatsUseCase
+    private val getListChatsUseCase: GetListChatsUseCase,
+    private val getListMessageUseCase: GetListMessageUseCase
 ) : ViewModel() {
 
     private val _users = MutableSharedFlow<List<UserItemListModel>>()
@@ -23,11 +27,85 @@ class HomeFragmentViewModel(
     private val _getUsersListError = MutableSharedFlow<ErrorModel>()
     val getUsersListError: SharedFlow<ErrorModel> = _getUsersListError
 
-    private val _chats = MutableSharedFlow<List<ChatModel>>()
-    val chats: SharedFlow<List<ChatModel>> = _chats
+    private val _chats = MutableSharedFlow<List<ChatItemListModel>>()
+    val chats: SharedFlow<List<ChatItemListModel>> = _chats
     private val _getChatsListError = MutableSharedFlow<ErrorModel>()
     val getChatsListError: SharedFlow<ErrorModel> = _getChatsListError
 
+    private val chatsList: MutableList<ChatItemListModel> = mutableListOf()
+
+
+    fun getChatsList(token: String, idUser: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val chatsListDeferred = async { getChatsInfo(token, idUser) }
+            chatsListDeferred.await()
+
+            val msgInfoDeferred = async { getMessagesInfo(token) }
+            msgInfoDeferred.await()
+
+            _chats.emit(chatsList)
+        }
+    }
+
+    private suspend fun getMessagesInfo(token: String) {
+        for (chat in chatsList) {
+            val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)
+            when (baseResponse) {
+                is BaseResponse.Success -> {
+                    //_chats.emit(baseResponse.data.chats)
+                    chat.lastMessage = baseResponse.data.rows[0].message
+                    chat.dateLastMessage = baseResponse.data.rows[0].date
+                }
+
+                is BaseResponse.Error -> {
+                    chat.lastMessage = "No se ha podido cargar el último mensaje"
+                    chat.dateLastMessage = "ERROR"
+                }
+            }
+        }
+    }
+
+    private suspend fun getChatsInfo(token: String, idUser: String) {
+        val baseResponse = getListChatsUseCase(token)
+
+        when (baseResponse) {
+            is BaseResponse.Success -> {
+                //_chats.emit(baseResponse.data.chats)
+
+                baseResponse.data.chats.forEach { chatModel ->
+                    chatsList.add(
+                        ChatItemListModel(
+                            chatModel.idChat,
+                            idUser,
+                            selectContactNick(idUser, chatModel),
+                            selectContactOnline(idUser, chatModel)
+                        )
+                    )
+                }
+            }
+
+            is BaseResponse.Error -> {
+                _getChatsListError.emit(baseResponse.error)
+            }
+        }
+    }
+
+
+    private fun selectContactOnline(idUser: String, chatModel: ChatModel): Boolean {
+        return if (idUser == chatModel.source) {
+            chatModel.targetOnline
+        } else {
+            chatModel.sourceOnline
+        }
+    }
+
+    private fun selectContactNick(idUser: String, chatModel: ChatModel): String {
+        return if (idUser == chatModel.source) {
+            chatModel.targetNick
+        } else {
+            chatModel.sourceNick
+        }
+    }
 
     fun getUsersList(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,22 +118,6 @@ class HomeFragmentViewModel(
 
                 is BaseResponse.Error -> {
                     _getUsersListError.emit(baseResponse.error)
-                }
-            }
-        }
-    }
-
-    fun getChatsList(token: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = getListChatsUseCase(token)
-
-            when (baseResponse) {
-                is BaseResponse.Success -> {
-                    _chats.emit(baseResponse.data.chats)
-                }
-
-                is BaseResponse.Error -> {
-                    _getChatsListError.emit(baseResponse.error)
                 }
             }
         }

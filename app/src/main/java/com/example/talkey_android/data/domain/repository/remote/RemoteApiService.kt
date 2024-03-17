@@ -124,7 +124,7 @@ interface RemoteApiService {
     @GET("messages/list/{idChat}")
     suspend fun getMessages(
         @Header("Authorization") token: String,
-        @Path("idChat") idChat: Int,
+        @Path("idChat") idChat: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
     ): Response<ListMessageResponse>
