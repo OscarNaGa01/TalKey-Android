@@ -16,12 +16,14 @@ import com.example.talkey_android.databinding.ItemRecyclerviewUserBinding
 class ContactsAdapter(
     private val context: Context,
     private val listener: CellListener,
-    private val id: String,
+    private val token: String,
+    private val idUser: String,
     private var list: List<Any> = listOf()
 ) : RecyclerView.Adapter<ContactsAdapter.UsersViewHolder>() {
 
     interface CellListener {
         fun onContactClick(token: String)
+        fun onChatClick(token: String, idUser: String, idChat: String)
     }
 
     private val contactType = 1
@@ -30,8 +32,13 @@ class ContactsAdapter(
     inner class UsersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemRecyclerviewUserBinding.bind(view)
 
-        // TODO: think about listener
-        fun setListener(token: String) {
+        fun setListenerToChat(idChat: String) {
+            binding.root.setOnClickListener {
+                listener.onChatClick(token, idUser, idChat)
+            }
+        }
+
+        fun setListenerToContact(idTarget: String) {
             binding.root.setOnClickListener {
                 listener.onContactClick(token)
             }
@@ -55,12 +62,12 @@ class ContactsAdapter(
 
     override fun onBindViewHolder(holder: UsersViewHolder, position: Int) {
         when (holder.itemViewType) {
-            contactType -> showContactData(holder, position)
-            chatType -> showChatData(holder, position)
+            contactType -> showContactDataAndSetListener(holder, position)
+            chatType -> showChatDataAndSetListener(holder, position)
         }
     }
 
-    private fun showChatData(holder: UsersViewHolder, position: Int) {
+    private fun showChatDataAndSetListener(holder: UsersViewHolder, position: Int) {
         val chatItemModel = list[position] as (ChatItemListModel)
 
         with(holder.binding) {
@@ -78,26 +85,28 @@ class ContactsAdapter(
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
+        holder.setListenerToChat(chatItemModel.idChat)
     }
 
 
-    private fun showContactData(holder: UsersViewHolder, position: Int) {
-        val user = list[position] as (UserItemListModel)
+    private fun showContactDataAndSetListener(holder: UsersViewHolder, position: Int) {
+        val contact = list[position] as (UserItemListModel)
         with(holder.binding) {
-            tvName.text = user.nick
+            tvName.text = contact.nick
             tvDate.text = ""
-            tvLastMsg.text = "Dile algo a " + user.nick + "!"
-            if (user.online) {
+            tvLastMsg.text = "Dile algo a " + contact.nick + "!"
+            if (contact.online) {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             } else {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOnline))
             }
             Glide.with(context)
-                .load(user.avatar)
+                .load(contact.avatar)
                 .error(R.drawable.perfil)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
+        holder.setListenerToContact(contact.id)
     }
 
     override fun getItemCount() = list.count()

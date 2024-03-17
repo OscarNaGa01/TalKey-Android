@@ -117,7 +117,7 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
     }
 
     private fun setupAdapter() {
-        mAdapter = ContactsAdapter(requireContext(), this, id)
+        mAdapter = ContactsAdapter(requireContext(), this, token, id)
         val listManager = LinearLayoutManager(requireContext())
 
         with(mBinding) {
@@ -128,5 +128,11 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
     }
 
     override fun onContactClick(token: String) {
+
+    }
+
+    override fun onChatClick(token: String, idUser: String, idChat: String) {
+        // TODO: Pasar los parámetros al otro fragment
+        findNavController().navigate(HomeFragmentDirections.actionHomeToChat())
     }
 }

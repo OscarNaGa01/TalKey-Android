@@ -84,8 +84,6 @@ class HomeFragmentViewModel(
 
         when (baseResponse) {
             is BaseResponse.Success -> {
-                //_chats.emit(baseResponse.data.chats)
-
                 baseResponse.data.chats.forEach { chatModel ->
                     chatsList.add(
                         ChatItemListModel(
