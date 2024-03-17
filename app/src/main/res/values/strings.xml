@@ -11,6 +11,7 @@
     <string name="img_profile_description">La imagen de perfil del usuario</string>
     <string name="save">Guardar</string>
     <string name="change_password">Cambiar contraseña</string>
+    <string name="hint_message">Mensaje</string>
     <string name="contacts">Contactos</string>
     <string name="chats">Chats</string>
 </resources>

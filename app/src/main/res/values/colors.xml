@@ -4,8 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="vassBlue">#29BDEF</color>
     <color name="vassRed">#DF0000</color>
-    <color name="vassGreyMedium">#999999</color>
-    <color name="vassGreyLight">#BABDC5</color>
+    <color name="vassGreyMedium">#4D999999</color>
+    <color name="vassGreyLight">#4DBABDC5</color>
     <color name="vassGreyDark">#4D000000</color>
     <color name="invisible">#00000000</color>
     <color name="statusOffline">#FFED4245</color>
