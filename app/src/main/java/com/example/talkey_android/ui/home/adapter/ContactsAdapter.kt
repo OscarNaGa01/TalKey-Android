@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.talkey_android.R
-import com.example.talkey_android.data.domain.model.chats.ChatModel
+import com.example.talkey_android.data.domain.model.chats.ChatItemListModel
 import com.example.talkey_android.data.domain.model.users.UserItemListModel
 import com.example.talkey_android.databinding.ItemRecyclerviewUserBinding
 
@@ -41,7 +41,7 @@ class ContactsAdapter(
     override fun getItemViewType(position: Int): Int {
         return when {
             list[position] is UserItemListModel -> contactType
-            list[position] is ChatModel -> chatType
+            list[position] is ChatItemListModel -> chatType
             else -> throw IllegalArgumentException("Tipo de elemento desconocido en la posición $position")
         }
     }
@@ -61,51 +61,25 @@ class ContactsAdapter(
     }
 
     private fun showChatData(holder: UsersViewHolder, position: Int) {
-        val chatModel = list[position] as (ChatModel)
+        val chatItemModel = list[position] as (ChatItemListModel)
 
-        if (id == chatModel.source) {
-            showOtherUserData(
-                holder,
-                chatModel.targetNick,
-                chatModel.targetOnline,
-                chatModel.chatCreated,
-                chatModel.targetAvatar
-            )
-        } else {
-            showOtherUserData(
-                holder,
-                chatModel.sourceNick,
-                chatModel.sourceOnline,
-                chatModel.chatCreated,
-                chatModel.sourceAvatar
-            )
-        }
-    }
-
-    private fun showOtherUserData(
-        holder: UsersViewHolder,
-        nick: String,
-        online: Boolean,
-        chatCreated: String,
-        avatar: String
-    ) {
         with(holder.binding) {
-            tvName.text = nick
-            tvDate.text = chatCreated.substring(0, 10)
-            // TODO: show last message
-            tvLastMsg.text = "Último mensaje enviado"
-            if (online) {
+            tvName.text = chatItemModel.contactNick
+            tvDate.text = chatItemModel.dateLastMessage
+            tvLastMsg.text = chatItemModel.lastMessage
+            if (chatItemModel.contactOnline) {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             } else {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOnline))
             }
             Glide.with(context)
-                .load(avatar)
+                .load(chatItemModel.contactAvatar)
                 .error(R.drawable.perfil)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
     }
+
 
     private fun showContactData(holder: UsersViewHolder, position: Int) {
         val user = list[position] as (UserItemListModel)

@@ -36,13 +36,20 @@ class HomeFragmentViewModel(
 
 
     fun getChatsList(token: String, idUser: String) {
+        chatsList.clear()
+        println("antes de empezar el viewModel")
         viewModelScope.launch(Dispatchers.IO) {
+            println("Ha empezado a coger chatsInfo")
             val chatsListDeferred = async { getChatsInfo(token, idUser) }
             chatsListDeferred.await()
+            println("Ha terminado de coger chatInfo")
 
+            println("empieza a coger msgInfo")
             val msgInfoDeferred = async { getMessagesInfo(token) }
+            println("Terminó de coger msgInfo")
             msgInfoDeferred.await()
 
+            println("Emite el valor de chatList")
             _chats.emit(chatsList)
         }
     }
@@ -52,9 +59,16 @@ class HomeFragmentViewModel(
             val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)
             when (baseResponse) {
                 is BaseResponse.Success -> {
-                    //_chats.emit(baseResponse.data.chats)
-                    chat.lastMessage = baseResponse.data.rows[0].message
-                    chat.dateLastMessage = baseResponse.data.rows[0].date
+                    println("Ha cogido el caso de uso de ${chat.idChat}")
+
+                    println("Número de elementos en la lista es " + baseResponse.data.rows.count())
+                    if (baseResponse.data.count > 0) {
+                        chat.lastMessage = baseResponse.data.rows[0].message
+                        chat.dateLastMessage = baseResponse.data.rows[0].date.substring(0, 10)
+                    } else {
+                        chat.lastMessage = "Dile algo a ${chat.contactNick}"
+                        chat.dateLastMessage = ""
+                    }
                 }
 
                 is BaseResponse.Error -> {
@@ -78,7 +92,8 @@ class HomeFragmentViewModel(
                             chatModel.idChat,
                             idUser,
                             selectContactNick(idUser, chatModel),
-                            selectContactOnline(idUser, chatModel)
+                            selectContactOnline(idUser, chatModel),
+                            selectContactAvatar(idUser, chatModel)
                         )
                     )
                 }
@@ -104,6 +119,14 @@ class HomeFragmentViewModel(
             chatModel.targetNick
         } else {
             chatModel.sourceNick
+        }
+    }
+
+    private fun selectContactAvatar(idUser: String, chatModel: ChatModel): String {
+        return if (idUser == chatModel.source) {
+            chatModel.targetAvatar
+        } else {
+            chatModel.sourceAvatar
         }
     }
 

@@ -9,6 +9,7 @@ data class ChatItemListModel(
     val idUser: String = "",
     val contactNick: String = "",
     val contactOnline: Boolean = false,
+    val contactAvatar: String = "",
     var lastMessage: String = "",
     var dateLastMessage: String = ""
 ) : BaseModel()

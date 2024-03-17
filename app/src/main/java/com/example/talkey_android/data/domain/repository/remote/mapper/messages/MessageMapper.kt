@@ -11,6 +11,7 @@ class MessageMapper : ResponseMapper<MessageResponse, MessageModel> {
             response.chat ?: "",
             response.source ?: "",
             response.message ?: "",
+            response.date ?: ""
         )
     }
 }

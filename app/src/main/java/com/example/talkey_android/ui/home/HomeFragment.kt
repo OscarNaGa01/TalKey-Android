@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
+import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
 import com.example.talkey_android.databinding.FragmentHomeBinding
 import com.example.talkey_android.ui.home.adapter.ContactsAdapter
@@ -35,7 +36,12 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
     //private val args: HomeFragmentArgs by navArgs()
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var mAdapter: ContactsAdapter
-    private val mViewModel = HomeFragmentViewModel(GetListProfilesUseCase(), GetListChatsUseCase())
+    private val mViewModel = HomeFragmentViewModel(
+        GetListProfilesUseCase(),
+        GetListChatsUseCase(),
+        GetListMessageUseCase()
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,13 +76,13 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
         setupAdapter()
         observeViewModel()
         //mViewHolder.getUsersList(args.token)
-        mViewModel.getChatsList(token)
+        mViewModel.getChatsList(token, id)
 
         with(mBinding) {
             btnChats.setOnClickListener {
                 vSelectedChats.visibility = View.VISIBLE
                 vSelectedContacts.visibility = View.INVISIBLE
-                mViewModel.getChatsList(token)
+                mViewModel.getChatsList(token, id)
             }
 
             btnContacts.setOnClickListener {
