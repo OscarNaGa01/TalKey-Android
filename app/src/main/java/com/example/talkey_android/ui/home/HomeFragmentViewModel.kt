@@ -1,5 +1,6 @@
 package com.example.talkey_android.ui.home
 
+import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.chats.ChatItemListModel
@@ -16,6 +17,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class HomeFragmentViewModel(
     private val getListProfilesUseCase: GetListProfilesUseCase,
@@ -77,6 +81,7 @@ class HomeFragmentViewModel(
     }
 
     private suspend fun getMessagesInfo(token: String) {
+        chatsList.sortByDescending { it.dateLastMessage }
         for (chat in chatsList) {
             val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)
             when (baseResponse) {
@@ -86,7 +91,9 @@ class HomeFragmentViewModel(
                     println("Número de elementos en la lista es " + baseResponse.data.rows.count())
                     if (baseResponse.data.count > 0) {
                         chat.lastMessage = baseResponse.data.rows[0].message
-                        chat.dateLastMessage = baseResponse.data.rows[0].date.substring(0, 10)
+                        //chat.dateLastMessage = baseResponse.data.rows[0].date.substring(0, 10)
+                        chat.dateLastMessage = checkDateAndTime(baseResponse.data.rows[0].date)
+                        println(baseResponse.data.rows[0].date)
                     } else {
                         chat.lastMessage = "Dile algo a ${chat.contactNick}"
                         chat.dateLastMessage = ""
@@ -99,6 +106,26 @@ class HomeFragmentViewModel(
                 }
             }
         }
+        chatsList.removeAll { it.dateLastMessage == "" }
+    }
+
+    // TODO: Mover esta función a la clase Utils cuando la añadan en un merge con develop 
+    private fun checkDateAndTime(lastMsgDate: String): String {
+        return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            val formatter = DateTimeFormatter.ISO_DATE_TIME
+            val dateTime = LocalDateTime.parse(lastMsgDate, formatter)
+            val date = dateTime.toLocalDate()
+            val currentDate = LocalDate.now()
+
+            if (date == currentDate) {
+                lastMsgDate.substring(11, 16)
+            } else {
+                lastMsgDate.substring(0, 10)
+            }
+        } else {
+            lastMsgDate.substring(0, 10)
+        }
+
     }
 
     private suspend fun getChatsInfo(token: String, idUser: String) {
