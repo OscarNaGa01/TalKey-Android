@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.chats.CreateChatUseCase
@@ -30,11 +31,7 @@ class HomeFragment
         CHATS
     }
 
-    private val id = "241"
-    private val token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0MSIsImlhdCI6MTcxMDQ5NzQ4NSwiZXhwIjoxNzEzMDg5NDg1fQ.YVwmg-Cn8X1oWDkNkv07TR6yClM_G5ccm_MU6kFAXL4"
-
-    //private val args: HomeFragmentArgs by navArgs()
+    private val args: HomeFragmentArgs by navArgs()
     private var listType = ListType.CHATS
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var mAdapter: ContactsAdapter
@@ -72,8 +69,8 @@ class HomeFragment
         mBinding.toolBar.menu.getItem(editProfileIndex).setOnMenuItemClickListener {
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToProfileFragment(
-                    id,
-                    token,
+                    args.id,
+                    args.token,
                     false
                 )
             )
@@ -94,20 +91,20 @@ class HomeFragment
         }
         setupAdapter()
         observeViewModel()
-        mViewModel.getChatsList(token, id)
+        mViewModel.getChatsList(args.token, args.id)
 
         with(mBinding) {
             btnChats.setOnClickListener {
                 vSelectedChats.visibility = View.VISIBLE
                 vSelectedContacts.visibility = View.INVISIBLE
-                mViewModel.getChatsList(token, id)
+                mViewModel.getChatsList(args.token, args.id)
                 listType = ListType.CHATS
             }
 
             btnContacts.setOnClickListener {
                 vSelectedChats.visibility = View.INVISIBLE
                 vSelectedContacts.visibility = View.VISIBLE
-                mViewModel.getUsersList(token)
+                mViewModel.getUsersList(args.token)
                 listType = ListType.CONTACTS
             }
         }
@@ -116,8 +113,13 @@ class HomeFragment
     private fun observeViewModel() {
         lifecycleScope.launch {
             mViewModel.idNewChat.collect { idNewChat ->
-                // TODO: Pasar los parámetros al otro fragment
-                findNavController().navigate(HomeFragmentDirections.actionHomeToChat())
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeToChat(
+                        args.token,
+                        args.id,
+                        idNewChat
+                    )
+                )
             }
         }
         lifecycleScope.launch {
@@ -148,7 +150,7 @@ class HomeFragment
     }
 
     private fun setupAdapter() {
-        mAdapter = ContactsAdapter(requireContext(), this, token, id)
+        mAdapter = ContactsAdapter(requireContext(), this, args.token, args.id)
         val listManager = LinearLayoutManager(requireContext())
 
         with(mBinding) {
@@ -159,12 +161,17 @@ class HomeFragment
     }
 
     override fun onContactClick(idContact: String) {
-        mViewModel.createChat(token, id, idContact)
+        mViewModel.createChat(args.token, args.id, idContact)
     }
 
     override fun onChatClick(idChat: String) {
-        // TODO: Pasar los parámetros al otro fragment
-        findNavController().navigate(HomeFragmentDirections.actionHomeToChat())
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeToChat(
+                args.token,
+                args.id,
+                idChat
+            )
+        )
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

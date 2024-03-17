@@ -57,6 +57,15 @@
         <action
             android:id="@+id/action_chat_to_home"
             app:destination="@id/HomeFragment" />
+        <argument
+            android:name="token"
+            app:argType="string" />
+        <argument
+            android:name="idUser"
+            app:argType="string" />
+        <argument
+            android:name="idChat"
+            app:argType="string" />
 
     </fragment>
     <fragment
