@@ -39,6 +39,7 @@ class HomeFragmentViewModel(
     val getChatsListError: SharedFlow<ErrorModel> = _getChatsListError
 
     private val chatsList: MutableList<ChatItemListModel> = mutableListOf()
+    private var usersList: List<UserItemListModel> = listOf()
 
     private val _idNewChat = MutableSharedFlow<String>()
     val idNewChat: SharedFlow<String> = _idNewChat
@@ -47,9 +48,8 @@ class HomeFragmentViewModel(
 
     fun createChat(token: String, source: String, target: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = createChatUseCase(token, source, target)
 
-            when (baseResponse) {
+            when (val baseResponse = createChatUseCase(token, source, target)) {
                 is BaseResponse.Success -> {
                     _idNewChat.emit(baseResponse.data.chatBasicInfoModel.id)
                 }
@@ -63,19 +63,13 @@ class HomeFragmentViewModel(
 
     fun getChatsList(token: String, idUser: String) {
         chatsList.clear()
-        println("antes de empezar el viewModel")
         viewModelScope.launch(Dispatchers.IO) {
-            println("Ha empezado a coger chatsInfo")
             val chatsListDeferred = async { getChatsInfo(token, idUser) }
             chatsListDeferred.await()
-            println("Ha terminado de coger chatInfo")
 
-            println("empieza a coger msgInfo")
             val msgInfoDeferred = async { getMessagesInfo(token) }
-            println("Terminó de coger msgInfo")
             msgInfoDeferred.await()
 
-            println("Emite el valor de chatList")
             _chats.emit(chatsList)
         }
     }
@@ -83,12 +77,9 @@ class HomeFragmentViewModel(
     private suspend fun getMessagesInfo(token: String) {
         chatsList.sortByDescending { it.dateLastMessage }
         for (chat in chatsList) {
-            val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)
-            when (baseResponse) {
+            when (val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)) {
                 is BaseResponse.Success -> {
-                    println("Ha cogido el caso de uso de ${chat.idChat}")
 
-                    println("Número de elementos en la lista es " + baseResponse.data.rows.count())
                     if (baseResponse.data.count > 0) {
                         chat.lastMessage = baseResponse.data.rows[0].message
                         //chat.dateLastMessage = baseResponse.data.rows[0].date.substring(0, 10)
@@ -109,7 +100,7 @@ class HomeFragmentViewModel(
         chatsList.removeAll { it.dateLastMessage == "" }
     }
 
-    // TODO: Mover esta función a la clase Utils cuando la añadan en un merge con develop 
+    // TODO: Mover esta función a la clase Utils cuando la añadan en un merge con develop
     private fun checkDateAndTime(lastMsgDate: String): String {
         return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
             val formatter = DateTimeFormatter.ISO_DATE_TIME
@@ -129,9 +120,8 @@ class HomeFragmentViewModel(
     }
 
     private suspend fun getChatsInfo(token: String, idUser: String) {
-        val baseResponse = getListChatsUseCase(token)
 
-        when (baseResponse) {
+        when (val baseResponse = getListChatsUseCase(token)) {
             is BaseResponse.Success -> {
                 baseResponse.data.chats.forEach { chatModel ->
                     chatsList.add(
@@ -160,6 +150,7 @@ class HomeFragmentViewModel(
             chatModel.sourceOnline
         }
     }
+
     private fun selectContactNick(idUser: String, chatModel: ChatModel): String {
         return if (idUser == chatModel.source) {
             chatModel.targetNick
@@ -167,6 +158,7 @@ class HomeFragmentViewModel(
             chatModel.sourceNick
         }
     }
+
     private fun selectContactAvatar(idUser: String, chatModel: ChatModel): String {
         return if (idUser == chatModel.source) {
             chatModel.targetAvatar
@@ -177,11 +169,10 @@ class HomeFragmentViewModel(
 
     fun getUsersList(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = getListProfilesUseCase(token)
-
-            when (baseResponse) {
+            when (val baseResponse = getListProfilesUseCase(token)) {
                 is BaseResponse.Success -> {
-                    _users.emit(baseResponse.data.users)
+                    usersList = baseResponse.data.users
+                    _users.emit(usersList)
                 }
 
                 is BaseResponse.Error -> {
@@ -191,4 +182,33 @@ class HomeFragmentViewModel(
         }
     }
 
+    fun filterListByName(name: String, listType: HomeFragment.ListType) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            when (listType) {
+                HomeFragment.ListType.CHATS -> {
+                    _chats.emit(
+                        chatsList.filter {
+                            it.contactNick.lowercase().contains(name.lowercase())
+                        }
+                    )
+                }
+
+                HomeFragment.ListType.CONTACTS -> {
+                    _users.emit(usersList.filter { it.nick.lowercase().contains(name.lowercase()) })
+                }
+            }
+
+        }
+    }
+
+    fun removeFilters(listType: HomeFragment.ListType) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (listType) {
+                HomeFragment.ListType.CHATS -> _chats.emit(chatsList)
+                HomeFragment.ListType.CONTACTS -> _users.emit(usersList)
+            }
+
+        }
+    }
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,23 +19,23 @@ import com.example.talkey_android.databinding.FragmentHomeBinding
 import com.example.talkey_android.ui.home.adapter.ContactsAdapter
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment(), ContactsAdapter.CellListener {
+class HomeFragment
+    : Fragment(),
+    ContactsAdapter.CellListener,
+    androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
 
-    /*{
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0MSIsImlhdCI6MTcxMDQ5NzQ4NSwiZXhwIjoxNzEzMDg5NDg1fQ.YVwmg-Cn8X1oWDkNkv07TR6yClM_G5ccm_MU6kFAXL4",
-    "user": {
-        "id": "241",
-        "nick": "nigiri",
-        "avatar": "",
-        "online": true
+    enum class ListType {
+        CONTACTS,
+        CHATS
     }
-}*/
+
     private val id = "241"
     private val token =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0MSIsImlhdCI6MTcxMDQ5NzQ4NSwiZXhwIjoxNzEzMDg5NDg1fQ.YVwmg-Cn8X1oWDkNkv07TR6yClM_G5ccm_MU6kFAXL4"
 
     //private val args: HomeFragmentArgs by navArgs()
+    private var listType = ListType.CHATS
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var mAdapter: ContactsAdapter
     private val mViewModel = HomeFragmentViewModel(
@@ -57,6 +58,17 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
         val editProfileIndex = 0
         val logoutIndex = 1
         mBinding.toolBar.inflateMenu(R.menu.menu_fragment_home)
+        mBinding.icSearch.setOnClickListener {
+            with(mBinding.searchView) {
+                if (isVisible) {
+                    visibility = View.GONE
+                } else {
+                    visibility = View.VISIBLE
+                    isIconified = false
+                    requestFocus()
+                }
+            }
+        }
         mBinding.toolBar.menu.getItem(editProfileIndex).setOnMenuItemClickListener {
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToProfileFragment(
@@ -75,9 +87,13 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        mBinding.searchView.setOnQueryTextListener(this)
+        mBinding.searchView.setOnCloseListener {
+            mViewModel.removeFilters(listType)
+            true
+        }
         setupAdapter()
         observeViewModel()
-        //mViewHolder.getUsersList(args.token)
         mViewModel.getChatsList(token, id)
 
         with(mBinding) {
@@ -85,12 +101,14 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
                 vSelectedChats.visibility = View.VISIBLE
                 vSelectedContacts.visibility = View.INVISIBLE
                 mViewModel.getChatsList(token, id)
+                listType = ListType.CHATS
             }
 
             btnContacts.setOnClickListener {
                 vSelectedChats.visibility = View.INVISIBLE
                 vSelectedContacts.visibility = View.VISIBLE
                 mViewModel.getUsersList(token)
+                listType = ListType.CONTACTS
             }
         }
     }
@@ -148,4 +166,13 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
         // TODO: Pasar los parámetros al otro fragment
         findNavController().navigate(HomeFragmentDirections.actionHomeToChat())
     }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (!query.isNullOrEmpty()) {
+            mViewModel.filterListByName(query, listType)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?) = true
 }
