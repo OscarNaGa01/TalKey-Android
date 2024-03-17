@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
@@ -45,7 +46,23 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
     }
 
     private fun setupToolbar() {
+        val editProfileIndex = 0
+        val logoutIndex = 1
         mBinding.toolBar.inflateMenu(R.menu.menu_fragment_home)
+        mBinding.toolBar.menu.getItem(editProfileIndex).setOnMenuItemClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToProfileFragment(
+                    id,
+                    token,
+                    false
+                )
+            )
+            true
+        }
+        mBinding.toolBar.menu.getItem(logoutIndex).setOnMenuItemClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeToLogin())
+            true
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
