@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
 import com.example.talkey_android.databinding.FragmentHomeBinding
@@ -39,7 +40,12 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
+        setupToolbar()
         return mBinding.root
+    }
+
+    private fun setupToolbar() {
+        mBinding.toolBar.inflateMenu(R.menu.menu_fragment_home)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

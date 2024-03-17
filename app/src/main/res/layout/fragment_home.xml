@@ -24,16 +24,6 @@
             android:textColor="@android:color/white"
             android:textSize="28sp" />
 
-        <ImageButton
-            android:id="@+id/icMenu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginEnd="12dp"
-            android:background="#00FFFFFF"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_menu"
-            android:importantForAccessibility="no" />
 
         <ImageButton
             android:id="@+id/icSearch"

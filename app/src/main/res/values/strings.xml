@@ -14,4 +14,6 @@
     <string name="hint_message">Mensaje</string>
     <string name="contacts">Contactos</string>
     <string name="chats">Chats</string>
+    <string name="edtiProfile">Editar perfil</string>
+    <string name="logout">Cerrar sesión</string>
 </resources>

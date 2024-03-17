@@ -36,4 +36,8 @@
         <item name="android:textSize">@dimen/textSize_common</item>
         <item name="android:backgroundTint">@color/vassBlue</item>
     </style>
+
+    <style name="menuOverflowToolbar" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/white</item>
+    </style>
 </resources>
