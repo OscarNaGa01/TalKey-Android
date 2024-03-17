@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.talkey_android.R
+import com.example.talkey_android.data.domain.use_cases.chats.CreateChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
@@ -39,7 +40,8 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
     private val mViewModel = HomeFragmentViewModel(
         GetListProfilesUseCase(),
         GetListChatsUseCase(),
-        GetListMessageUseCase()
+        GetListMessageUseCase(),
+        CreateChatUseCase()
     )
 
     override fun onCreateView(
@@ -95,6 +97,17 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
+            mViewModel.idNewChat.collect { idNewChat ->
+                // TODO: Pasar los parámetros al otro fragment
+                findNavController().navigate(HomeFragmentDirections.actionHomeToChat())
+            }
+        }
+        lifecycleScope.launch {
+            mViewModel.createNewChatError.collect {
+                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+        lifecycleScope.launch {
             mViewModel.users.collect {
                 mAdapter.refreshData(it)
             }
@@ -127,11 +140,11 @@ class HomeFragment : Fragment(), ContactsAdapter.CellListener {
         }
     }
 
-    override fun onContactClick(token: String) {
-
+    override fun onContactClick(idContact: String) {
+        mViewModel.createChat(token, id, idContact)
     }
 
-    override fun onChatClick(token: String, idUser: String, idChat: String) {
+    override fun onChatClick(idChat: String) {
         // TODO: Pasar los parámetros al otro fragment
         findNavController().navigate(HomeFragmentDirections.actionHomeToChat())
     }

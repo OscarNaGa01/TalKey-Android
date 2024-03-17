@@ -22,8 +22,8 @@ class ContactsAdapter(
 ) : RecyclerView.Adapter<ContactsAdapter.UsersViewHolder>() {
 
     interface CellListener {
-        fun onContactClick(token: String)
-        fun onChatClick(token: String, idUser: String, idChat: String)
+        fun onContactClick(idContact: String)
+        fun onChatClick(idChat: String)
     }
 
     private val contactType = 1
@@ -31,16 +31,14 @@ class ContactsAdapter(
 
     inner class UsersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemRecyclerviewUserBinding.bind(view)
-
         fun setListenerToChat(idChat: String) {
             binding.root.setOnClickListener {
-                listener.onChatClick(token, idUser, idChat)
+                listener.onChatClick(idChat)
             }
         }
-
         fun setListenerToContact(idTarget: String) {
             binding.root.setOnClickListener {
-                listener.onContactClick(token)
+                listener.onContactClick(idTarget)
             }
         }
     }

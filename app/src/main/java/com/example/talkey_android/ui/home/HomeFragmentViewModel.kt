@@ -7,6 +7,7 @@ import com.example.talkey_android.data.domain.model.chats.ChatModel
 import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.UserItemListModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
+import com.example.talkey_android.data.domain.use_cases.chats.CreateChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 class HomeFragmentViewModel(
     private val getListProfilesUseCase: GetListProfilesUseCase,
     private val getListChatsUseCase: GetListChatsUseCase,
-    private val getListMessageUseCase: GetListMessageUseCase
+    private val getListMessageUseCase: GetListMessageUseCase,
+    private val createChatUseCase: CreateChatUseCase
 ) : ViewModel() {
 
     private val _users = MutableSharedFlow<List<UserItemListModel>>()
@@ -34,6 +36,26 @@ class HomeFragmentViewModel(
 
     private val chatsList: MutableList<ChatItemListModel> = mutableListOf()
 
+    private val _idNewChat = MutableSharedFlow<String>()
+    val idNewChat: SharedFlow<String> = _idNewChat
+    private val _createNewChatError = MutableSharedFlow<ErrorModel>()
+    val createNewChatError: SharedFlow<ErrorModel> = _createNewChatError
+
+    fun createChat(token: String, source: String, target: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val baseResponse = createChatUseCase(token, source, target)
+
+            when (baseResponse) {
+                is BaseResponse.Success -> {
+                    _idNewChat.emit(baseResponse.data.chatBasicInfoModel.id)
+                }
+
+                is BaseResponse.Error -> {
+                    _createNewChatError.emit(baseResponse.error)
+                }
+            }
+        }
+    }
 
     fun getChatsList(token: String, idUser: String) {
         chatsList.clear()
@@ -111,7 +133,6 @@ class HomeFragmentViewModel(
             chatModel.sourceOnline
         }
     }
-
     private fun selectContactNick(idUser: String, chatModel: ChatModel): String {
         return if (idUser == chatModel.source) {
             chatModel.targetNick
@@ -119,7 +140,6 @@ class HomeFragmentViewModel(
             chatModel.sourceNick
         }
     }
-
     private fun selectContactAvatar(idUser: String, chatModel: ChatModel): String {
         return if (idUser == chatModel.source) {
             chatModel.targetAvatar
