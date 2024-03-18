@@ -7,7 +7,7 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 class GetListMessageUseCase {
     suspend operator fun invoke(
         token: String,
-        idChat: Int,
+        idChat: String,
         limit: Int,
         offset: Int
     ): BaseResponse<ListMessageModel> {

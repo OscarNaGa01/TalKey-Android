@@ -226,7 +226,7 @@ object RemoteDataSource : DataSource {
 
     override suspend fun getMessages(
         token: String,
-        idChat: Int,
+        idChat: String,
         limit: Int,
         offset: Int
     ): BaseResponse<ListMessageModel> {

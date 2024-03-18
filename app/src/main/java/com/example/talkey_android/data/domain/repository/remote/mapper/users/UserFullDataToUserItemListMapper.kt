@@ -11,6 +11,7 @@ class UserFullDataToUserItemListMapper : ResponseMapper<UserFullDataResponse, Us
             response.nick ?: "",
             response.avatar ?: "",
             response.online ?: false,
+            response.created ?: ""
         )
     }
 }
