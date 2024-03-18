@@ -29,7 +29,7 @@ class HomeFragmentViewModel(
     private val getListMessageUseCase: GetListMessageUseCase,
     private val createChatUseCase: CreateChatUseCase
 ) : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow<HomeFragmentUiState>(HomeFragmentUiState.Loading)
     val uiState: StateFlow<HomeFragmentUiState> = _uiState
 
@@ -60,17 +60,17 @@ class HomeFragmentViewModel(
         chatsList.clear()
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.emit(HomeFragmentUiState.Loading)
-            val chatsListDeferred = async { getChatsInfo(token, idUser) }
+            val chatsListDeferred = async { getChatsData(token, idUser) }
             chatsListDeferred.await()
 
-            val msgInfoDeferred = async { getMessagesInfo(token) }
+            val msgInfoDeferred = async { getMessagesData(token) }
             msgInfoDeferred.await()
 
             _uiState.emit(HomeFragmentUiState.Success(chatsList))
         }
     }
 
-    private suspend fun getMessagesInfo(token: String) {
+    private suspend fun getMessagesData(token: String) {
         chatsList.sortByDescending { it.dateLastMessage }
         for (chat in chatsList) {
             when (val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)) {
@@ -115,7 +115,7 @@ class HomeFragmentViewModel(
 
     }
 
-    private suspend fun getChatsInfo(token: String, idUser: String) {
+    private suspend fun getChatsData(token: String, idUser: String) {
 
         when (val baseResponse = getListChatsUseCase(token)) {
             is BaseResponse.Success -> {

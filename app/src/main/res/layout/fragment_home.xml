@@ -1,127 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipToRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/vassBlue"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-16dp">
-        <TextView
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/vassBlue"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="-16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="28sp" />
+
+            <ImageButton
+                android:id="@+id/icSearch"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="12dp"
+                android:background="#00FFFFFF"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_search" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="28sp" />
-        <ImageButton
-            android:id="@+id/icSearch"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginEnd="12dp"
-            android:background="#00FFFFFF"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_search"
-            android:importantForAccessibility="no" />
-    </androidx.appcompat.widget.Toolbar>
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        <TextView
+            android:id="@+id/tvContacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/contacts"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/btnContacts"
+            app:layout_constraintEnd_toEndOf="@id/btnContacts"
+            app:layout_constraintStart_toStartOf="@id/btnContacts" />
 
-    <TextView
-        android:id="@+id/tvContacts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/contacts"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/btnContacts"
-        app:layout_constraintEnd_toEndOf="@id/btnContacts"
-        app:layout_constraintStart_toStartOf="@id/btnContacts" />
+        <View
+            android:id="@+id/vSelectedContacts"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:background="#D8DADD"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/btnContacts"
+            app:layout_constraintEnd_toEndOf="@id/btnContacts"
+            app:layout_constraintStart_toStartOf="@id/btnContacts" />
 
-    <View
-        android:id="@+id/vSelectedContacts"
-        android:layout_width="0dp"
-        android:layout_height="3dp"
-        android:background="#D8DADD"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/btnContacts"
-        app:layout_constraintEnd_toEndOf="@id/btnContacts"
-        app:layout_constraintStart_toStartOf="@id/btnContacts" />
+        <Button
+            android:id="@+id/btnContacts"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:background="#00000000"
+            app:layout_constraintBottom_toBottomOf="@id/toolBar"
+            app:layout_constraintEnd_toEndOf="@id/guideline"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btnContacts"
-        android:layout_width="0dp"
-        android:layout_height="15dp"
-        android:background="#00000000"
-        app:layout_constraintBottom_toBottomOf="@id/toolBar"
-        app:layout_constraintEnd_toEndOf="@id/guideline"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/tvChats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chats"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/btnChats"
+            app:layout_constraintEnd_toEndOf="@id/btnChats"
+            app:layout_constraintStart_toStartOf="@id/btnChats" />
 
-    <TextView
-        android:id="@+id/tvChats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chats"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/btnChats"
-        app:layout_constraintEnd_toEndOf="@id/btnChats"
-        app:layout_constraintStart_toStartOf="@id/btnChats" />
+        <View
+            android:id="@+id/vSelectedChats"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:background="#D8DADD"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/btnChats"
+            app:layout_constraintEnd_toEndOf="@id/btnChats"
+            app:layout_constraintStart_toStartOf="@id/btnChats" />
 
-    <View
-        android:id="@+id/vSelectedChats"
-        android:layout_width="0dp"
-        android:layout_height="3dp"
-        android:background="#D8DADD"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/btnChats"
-        app:layout_constraintEnd_toEndOf="@id/btnChats"
-        app:layout_constraintStart_toStartOf="@id/btnChats" />
+        <Button
+            android:id="@+id/btnChats"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:background="#00000000"
+            app:layout_constraintBottom_toBottomOf="@id/toolBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline" />
 
-    <Button
-        android:id="@+id/btnChats"
-        android:layout_width="0dp"
-        android:layout_height="15dp"
-        android:background="#00000000"
-        app:layout_constraintBottom_toBottomOf="@id/toolBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline" />
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vSelectedChats" />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/vSelectedChats"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/searchView"
+            tools:listitem="@layout/item_recyclerview_user" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
-        tools:listitem="@layout/item_recyclerview_user" />
+        <ProgressBar
+            android:id="@+id/progressBarr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/progressBarr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

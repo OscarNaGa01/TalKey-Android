@@ -94,6 +94,14 @@ class HomeFragment
         mViewModel.getChatsList(args.token, args.id)
 
         with(mBinding) {
+            swipToRefresh.setOnRefreshListener {
+                when (listType) {
+                    ListType.CHATS -> mViewModel.getChatsList(args.token, args.id)
+                    ListType.CONTACTS -> mViewModel.getUsersList(args.token)
+                }
+                swipToRefresh.isRefreshing = false
+            }
+
             btnChats.setOnClickListener {
                 vSelectedChats.visibility = View.VISIBLE
                 vSelectedContacts.visibility = View.INVISIBLE
