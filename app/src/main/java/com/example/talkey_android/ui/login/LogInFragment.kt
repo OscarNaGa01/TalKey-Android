@@ -13,8 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.talkey_android.R
 import com.example.talkey_android.data.constants.Constants.PLATFORM
+import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
+import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
@@ -41,46 +43,68 @@ class LogInFragment : Fragment() {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            logInFragmentViewModel.user.collect { user ->
-                if (user.token.isNotEmpty() && !isLogin) {
-                    findNavController().navigate(
-                        LogInFragmentDirections.actionLogInFragmentToProfileFragment(
-                            user.id,
-                            user.token,
-                            true
-                        )
-                    )
+            logInFragmentViewModel.uiState.collect { uiState ->
+                when (uiState) {
+                    is LogInFragmentUiState.Start -> {
+                        binding.progressBar.visibility = View.GONE
+                    }
 
-                } else if (user.token.isNotEmpty() && isLogin) {
-                    findNavController().navigate(
-                        LogInFragmentDirections.actionLogInFragmentToHomeFragment(
-                            user.id,
-                            user.token
-                        )
-                    )
+                    is LogInFragmentUiState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+
+                    is LogInFragmentUiState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        doNavigation(uiState.userModel)
+                    }
+
+                    is LogInFragmentUiState.LoginError -> {
+                        binding.progressBar.visibility = View.GONE
+                        showLoginError(uiState.errorModel)
+                    }
+
+                    is LogInFragmentUiState.RegisterError -> {
+                        binding.progressBar.visibility = View.GONE
+                        showRegisterError(uiState.errorModel)
+                    }
                 }
             }
         }
+    }
 
-        lifecycleScope.launch {
-            logInFragmentViewModel.loginError.collect { error ->
-                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
-                if (error.errorCode == "400") {
-                    setEditTextBackground(listOf(binding.etEmail))
-
-                } else if (error.errorCode == "401") {
-                    setEditTextBackground(listOf(binding.etPassword))
-                }
-            }
+    private fun showRegisterError(error: ErrorModel) {
+        if (error.errorCode == "401") {
+            setEditTextBackground(listOf(binding.etEmail))
+            Toast.makeText(requireContext(), "User exists", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        lifecycleScope.launch {
-            logInFragmentViewModel.registerError.collect { error ->
-                if (error.errorCode == "401") {
-                    setEditTextBackground(listOf(binding.etEmail))
-                    Toast.makeText(requireContext(), "User exists", Toast.LENGTH_SHORT).show()
-                }
-            }
+    private fun showLoginError(error: ErrorModel) {
+        Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+        if (error.errorCode == "400") {
+            setEditTextBackground(listOf(binding.etEmail))
+
+        } else if (error.errorCode == "401") {
+            setEditTextBackground(listOf(binding.etPassword))
+        }
+    }
+
+    private fun doNavigation(user: UserModel) {
+        if (user.token.isNotEmpty() && !isLogin) {
+            findNavController().navigate(
+                LogInFragmentDirections.actionLogInFragmentToProfileFragment(
+                    user.id,
+                    user.token,
+                    true
+                )
+            )
+        } else if (user.token.isNotEmpty() && isLogin) {
+            findNavController().navigate(
+                LogInFragmentDirections.actionLogInFragmentToHomeFragment(
+                    user.id,
+                    user.token
+                )
+            )
         }
     }
 
