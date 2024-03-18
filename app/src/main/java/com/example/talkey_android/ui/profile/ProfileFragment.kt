@@ -88,7 +88,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
 //        token = args.token
         token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2NiIsImlhdCI6MTcwOTczNTM5MSwiZXhwIjoxNzEyMzI3MzkxfQ.U9TpyrvWd3VuHO3MRZPfkXxQcieeW2-sggJvyMVIWSM"
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwNCIsImlhdCI6MTcxMDUwNjQ3MSwiZXhwIjoxNzEzMDk4NDcxfQ.RREu20ObT22x7qBZi_x5Czt87Z1rw9vmpkHXxQf-7tQ"
         Log.d("TAG", imageUri.toString())
 //
 //        if (isNew){
@@ -96,7 +96,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 //        }
 
         toolBarConfiguration()
-        buttonConfiguration()
+        initListeners()
 
 
 
@@ -136,6 +136,16 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.updateProfileError.collect {
+                Toast.makeText(
+                    requireContext(),
+                    getText(R.string.photo_upload_error),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
     }
 
     private fun setData(user: UserProfileModel) {
@@ -163,15 +173,13 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     }
 
-    private fun buttonConfiguration() {
+    private fun initListeners() {
         binding.ivStatus.setOnClickListener {
-            val showPopUp = PopUpFragment(this, true)
-            showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+            displayPopUp(true)
         }
 
         binding.ivImageEdit.setOnClickListener {
-            val showPopUp = PopUpFragment(this, false)
-            showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+            displayPopUp(false)
         }
 
         binding.btnAccept.setOnClickListener {
@@ -181,10 +189,15 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                 }
 
                 is ProfileState.EditProfile -> { //Confirm edit
-                    if (imageUri != null && myUser != null) {
+                    if (finalImageUri != null && myUser != null) {
                         viewModel.saveData(
                             myUser!!.password, binding.etNickname.text.toString(),
-                            Utils.uriToFile(requireContext(), imageUri!!)
+                            Utils.uriToFile(requireContext(), finalImageUri!!)
+                        )
+                    } else if (finalImageUri == null && myUser != null) {
+                        viewModel.saveData(
+                            myUser!!.password, binding.etNickname.text.toString(),
+                            null
                         )
                     }
                     editToShow()
@@ -195,6 +208,11 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                 }
             }
         }
+    }
+
+    private fun displayPopUp(isStatus: Boolean) {
+        val showPopUp = PopUpFragment(this, isStatus)
+        showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }
 
 

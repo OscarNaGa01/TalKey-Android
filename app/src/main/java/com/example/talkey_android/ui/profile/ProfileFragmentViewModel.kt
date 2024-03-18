@@ -53,7 +53,7 @@ class ProfileFragmentViewModel(
     private val _selectedNewAvatar = MutableSharedFlow<Uri?>()
     val selectedNewAvatar: SharedFlow<Uri?> = _selectedNewAvatar
 
-    fun saveData(passwd: String, nick: String, file: File) {
+    fun saveData(passwd: String, nick: String, file: File?) {
         viewModelScope.launch(Dispatchers.IO)
         {
             val deferred = listOf(
@@ -66,18 +66,21 @@ class ProfileFragmentViewModel(
     }
 
 
-    private suspend fun uploadImg(file: File) {
-        val baseResponse = uploadImgUseCase(
-            _getProfile.value.token,
-            file
-        )
-        when (baseResponse) {
-            is BaseResponse.Success -> {
-                _uploadImgMessage.emit(baseResponse.data)
-            }
+    private suspend fun uploadImg(file: File?) {
+        if (file != null) {
+            val baseResponse = uploadImgUseCase(
+                _getProfile.value.token,
+                file
+            )
 
-            is BaseResponse.Error -> {
-                _uploadImgError.emit(baseResponse.error)
+            when (baseResponse) {
+                is BaseResponse.Success -> {
+                    _uploadImgMessage.emit(baseResponse.data)
+                }
+
+                is BaseResponse.Error -> {
+                    _uploadImgError.emit(baseResponse.error)
+                }
             }
         }
     }

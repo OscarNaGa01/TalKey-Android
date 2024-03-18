@@ -11,9 +11,10 @@
     <string name="img_profile_description">La imagen de perfil del usuario</string>
     <string name="save">Guardar</string>
     <string name="change_password">Cambiar contraseña</string>
-
     <string name="status_online">Online</string>
     <string name="status_offline">Offline</string>
     <string name="camera_button">Cámara</string>
     <string name="gallery_button">Galería</string>
+
+    <string name="photo_upload_error">No se pudo subir el avatar</string>
 </resources>

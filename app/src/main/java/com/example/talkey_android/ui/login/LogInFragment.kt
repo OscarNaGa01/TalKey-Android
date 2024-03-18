@@ -150,21 +150,23 @@ class LogInFragment : Fragment() {
 
     private fun logIn() {
         with(binding) {
-            if (etEmail.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty())
-                lifecycleScope.launch {
-                    logInFragmentViewModel.postLogin(
-                        LoginRequestModel(
-                            etPassword.text.toString(),
-                            etEmail.text.toString(),
-                            PLATFORM,
-                            ""
-                        )
+            if (etEmail.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty()) {
+                logInFragmentViewModel.postLogin(
+                    LoginRequestModel(
+                        etPassword.text.toString(),
+                        etEmail.text.toString(),
+                        PLATFORM,
+                        ""
                     )
-                    setEditTextBackground(emptyList())
-
-                } else {
+                )
+                setEditTextBackground(emptyList())
+            } else {
                 setEditTextBackground(listOf(etEmail, etPassword))
-                Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Check your email and password",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
