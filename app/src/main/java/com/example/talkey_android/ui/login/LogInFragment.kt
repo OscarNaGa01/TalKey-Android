@@ -5,8 +5,10 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +38,7 @@ class LogInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
+
         initListeners()
         observeViewModel()
         return binding.root
@@ -110,12 +113,23 @@ class LogInFragment : Fragment() {
 
     private fun initListeners() {
         with(binding) {
+            constraintLayout.setOnClickListener {
+                hideKeyboard()
+            }
             btnChange.setOnClickListener {
                 setLoginSignupView(isLogin)
             }
             btnAccept.setOnClickListener {
                 setLoginSignupAction(isLogin)
             }
+        }
+    }
+
+    private fun hideKeyboard() {
+        val imm: InputMethodManager =
+            requireActivity().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (imm.isAcceptingText) {
+            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         }
     }
 
@@ -261,4 +275,5 @@ class LogInFragment : Fragment() {
         val patron = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
         return patron.matches(binding.etPassword.text.toString())
     }
+
 }

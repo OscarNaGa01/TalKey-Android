@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -94,6 +96,9 @@ class HomeFragment
         mViewModel.getChatsList(args.token, args.id)
 
         with(mBinding) {
+            constraintLayout.setOnClickListener {
+                hideKeyboard()
+            }
             swipToRefresh.setOnRefreshListener {
                 when (listType) {
                     ListType.CHATS -> mViewModel.getChatsList(args.token, args.id)
@@ -115,6 +120,14 @@ class HomeFragment
                 mViewModel.getUsersList(args.token)
                 listType = ListType.CONTACTS
             }
+        }
+    }
+
+    private fun hideKeyboard() {
+        val imm: InputMethodManager =
+            requireActivity().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (imm.isAcceptingText) {
+            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         }
     }
 

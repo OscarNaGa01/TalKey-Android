@@ -17,15 +17,6 @@ class LogInFragmentViewModel(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
-    /*private val _registerError = MutableSharedFlow<ErrorModel>()
-    val registerError: SharedFlow<ErrorModel> = _registerError
-
-    private val _loginError = MutableSharedFlow<ErrorModel>()
-    val loginError: SharedFlow<ErrorModel> = _loginError
-
-    private val _user = MutableStateFlow(UserModel())
-    val user: StateFlow<UserModel> = _user*/
-
     private val _uiState = MutableStateFlow<LogInFragmentUiState>(LogInFragmentUiState.Start)
     val uiState: StateFlow<LogInFragmentUiState> = _uiState
 
@@ -50,7 +41,6 @@ class LogInFragmentViewModel(
 
                 is BaseResponse.Error -> {
                     _uiState.emit(LogInFragmentUiState.RegisterError(baseResponse.error))
-                    //_registerError.emit(baseResponse.error)
                 }
             }
         }
@@ -61,12 +51,10 @@ class LogInFragmentViewModel(
             _uiState.emit(LogInFragmentUiState.Loading)
             when (val baseResponse = loginUseCase(loginRequestModel)) {
                 is BaseResponse.Success -> {
-                    //_user.emit(baseResponse.data)
                     _uiState.emit(LogInFragmentUiState.Success(baseResponse.data))
                 }
 
                 is BaseResponse.Error -> {
-                    //_loginError.emit(baseResponse.error)
                     _uiState.emit(LogInFragmentUiState.LoginError(baseResponse.error))
                 }
             }
