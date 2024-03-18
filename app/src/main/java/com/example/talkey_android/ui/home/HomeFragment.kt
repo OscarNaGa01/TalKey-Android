@@ -127,24 +127,23 @@ class HomeFragment
                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
             }
         }
+
         lifecycleScope.launch {
-            mViewModel.users.collect {
-                mAdapter.refreshData(it)
-            }
-        }
-        lifecycleScope.launch {
-            mViewModel.getUsersListError.collect {
-                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-            }
-        }
-        lifecycleScope.launch {
-            mViewModel.chats.collect {
-                mAdapter.refreshData(it)
-            }
-        }
-        lifecycleScope.launch {
-            mViewModel.getChatsListError.collect {
-                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+            mViewModel.uiState.collect {
+                when (it) {
+                    is HomeFragmentUiState.Loading -> {
+                        mBinding.progressBarr.visibility = View.VISIBLE
+                    }
+
+                    is HomeFragmentUiState.Success -> {
+                        mBinding.progressBarr.visibility = View.GONE
+                        mAdapter.refreshData(it.dataList)
+                    }
+
+                    is HomeFragmentUiState.Error -> {
+                        Toast.makeText(requireContext(), it.msg, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }

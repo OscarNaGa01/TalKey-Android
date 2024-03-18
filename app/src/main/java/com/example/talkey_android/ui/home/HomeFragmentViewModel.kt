@@ -15,7 +15,9 @@ import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -27,16 +29,9 @@ class HomeFragmentViewModel(
     private val getListMessageUseCase: GetListMessageUseCase,
     private val createChatUseCase: CreateChatUseCase
 ) : ViewModel() {
-
-    private val _users = MutableSharedFlow<List<UserItemListModel>>()
-    val users: SharedFlow<List<UserItemListModel>> = _users
-    private val _getUsersListError = MutableSharedFlow<ErrorModel>()
-    val getUsersListError: SharedFlow<ErrorModel> = _getUsersListError
-
-    private val _chats = MutableSharedFlow<List<ChatItemListModel>>()
-    val chats: SharedFlow<List<ChatItemListModel>> = _chats
-    private val _getChatsListError = MutableSharedFlow<ErrorModel>()
-    val getChatsListError: SharedFlow<ErrorModel> = _getChatsListError
+    
+    private val _uiState = MutableStateFlow<HomeFragmentUiState>(HomeFragmentUiState.Loading)
+    val uiState: StateFlow<HomeFragmentUiState> = _uiState
 
     private val chatsList: MutableList<ChatItemListModel> = mutableListOf()
     private var usersList: List<UserItemListModel> = listOf()
@@ -64,13 +59,14 @@ class HomeFragmentViewModel(
     fun getChatsList(token: String, idUser: String) {
         chatsList.clear()
         viewModelScope.launch(Dispatchers.IO) {
+            _uiState.emit(HomeFragmentUiState.Loading)
             val chatsListDeferred = async { getChatsInfo(token, idUser) }
             chatsListDeferred.await()
 
             val msgInfoDeferred = async { getMessagesInfo(token) }
             msgInfoDeferred.await()
 
-            _chats.emit(chatsList)
+            _uiState.emit(HomeFragmentUiState.Success(chatsList))
         }
     }
 
@@ -137,7 +133,7 @@ class HomeFragmentViewModel(
             }
 
             is BaseResponse.Error -> {
-                _getChatsListError.emit(baseResponse.error)
+                _uiState.emit(HomeFragmentUiState.Error(baseResponse.error.message))
             }
         }
     }
@@ -169,14 +165,16 @@ class HomeFragmentViewModel(
 
     fun getUsersList(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _uiState.emit(HomeFragmentUiState.Loading)
             when (val baseResponse = getListProfilesUseCase(token)) {
                 is BaseResponse.Success -> {
                     usersList = baseResponse.data.users
-                    _users.emit(usersList)
+
+                    _uiState.emit(HomeFragmentUiState.Success(usersList))
                 }
 
                 is BaseResponse.Error -> {
-                    _getUsersListError.emit(baseResponse.error)
+                    _uiState.emit(HomeFragmentUiState.Error(baseResponse.error.message))
                 }
             }
         }
@@ -185,17 +183,20 @@ class HomeFragmentViewModel(
     fun filterListByName(name: String, listType: HomeFragment.ListType) {
 
         viewModelScope.launch(Dispatchers.IO) {
+            _uiState.emit(HomeFragmentUiState.Loading)
             when (listType) {
                 HomeFragment.ListType.CHATS -> {
-                    _chats.emit(
+                    _uiState.emit(HomeFragmentUiState.Success(
                         chatsList.filter {
                             it.contactNick.lowercase().contains(name.lowercase())
                         }
-                    )
+                    ))
                 }
 
                 HomeFragment.ListType.CONTACTS -> {
-                    _users.emit(usersList.filter { it.nick.lowercase().contains(name.lowercase()) })
+                    _uiState.emit(HomeFragmentUiState.Success(
+                        usersList.filter { it.nick.lowercase().contains(name.lowercase()) }
+                    ))
                 }
             }
 
@@ -205,8 +206,11 @@ class HomeFragmentViewModel(
     fun removeFilters(listType: HomeFragment.ListType) {
         viewModelScope.launch(Dispatchers.IO) {
             when (listType) {
-                HomeFragment.ListType.CHATS -> _chats.emit(chatsList)
-                HomeFragment.ListType.CONTACTS -> _users.emit(usersList)
+                HomeFragment.ListType.CHATS ->
+                    _uiState.emit(HomeFragmentUiState.Success(chatsList))
+
+                HomeFragment.ListType.CONTACTS ->
+                    _uiState.emit(HomeFragmentUiState.Success(usersList))
             }
 
         }
