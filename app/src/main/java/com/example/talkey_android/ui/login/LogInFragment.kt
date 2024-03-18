@@ -1,7 +1,5 @@
 package com.example.talkey_android.ui.login
 
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -36,7 +34,6 @@ class LogInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
-        binding.ivBackground.setColorFilter(Color.argb(50, 0, 0, 0), PorterDuff.Mode.SRC_OVER)
         initListeners()
         observeViewModel()
         return binding.root

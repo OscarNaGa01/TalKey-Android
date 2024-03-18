@@ -34,9 +34,7 @@ class LogInFragmentViewModel(
     fun postRegister(registerRequestModel: RegisterRequestModel) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val baseResponse = registerUseCase(registerRequestModel)
-
-            when (baseResponse) {
+            when (val baseResponse = registerUseCase(registerRequestModel)) {
                 is BaseResponse.Success -> {
 
                     with(registerRequestModel) {
@@ -60,9 +58,8 @@ class LogInFragmentViewModel(
 
     fun postLogin(loginRequestModel: LoginRequestModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = loginUseCase(loginRequestModel)
 
-            when (baseResponse) {
+            when (val baseResponse = loginUseCase(loginRequestModel)) {
                 is BaseResponse.Success -> {
                     _user.emit(baseResponse.data)
                 }

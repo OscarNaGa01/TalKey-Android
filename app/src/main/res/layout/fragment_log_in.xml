@@ -1,105 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.login.LogInFragment">
+    tools:context=".ui.login.LogInFragment"
+    android:background="@drawable/login_background">
 
-    <ImageView
-        android:id="@+id/ivBackground"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:importantForAccessibility="no"
-        android:scaleType="centerCrop"
-        android:src="@drawable/login_background" />
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/ivLogoTalKey"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:importantForAccessibility="no"
-        android:src="@drawable/logo_talkey"
-        app:layout_constraintStart_toEndOf="@id/ivTalKeyVassCompany"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/ivLogoTalKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/logo_talkey"
+            app:layout_constraintStart_toEndOf="@id/ivTalKeyVassCompany"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/ivTalKeyVassCompany"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:importantForAccessibility="no"
-        android:scaleType="centerCrop"
-        android:src="@drawable/talkey_vasscompany"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivLogoTalKey" />
+        <ImageView
+            android:id="@+id/ivTalKeyVassCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:src="@drawable/talkey_vasscompany"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivLogoTalKey" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etEmail"
-        style="@style/textBox"
-        android:layout_marginTop="46dp"
-        android:hint="@string/hint_email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTalKeyVassCompany" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etEmail"
+            style="@style/textBox"
+            android:layout_marginTop="46dp"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivTalKeyVassCompany" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etNick"
-        style="@style/textBox"
-        android:layout_marginTop="@dimen/common_margin"
-        android:hint="@string/hint_nick"
-        android:inputType="text"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etEmail" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etNick"
+            style="@style/textBox"
+            android:layout_marginTop="@dimen/common_margin"
+            android:hint="@string/hint_nick"
+            android:inputType="text"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etPassword"
-        style="@style/passwordBox"
-        android:layout_marginTop="@dimen/common_margin"
-        android:padding="@dimen/common_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etNick" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etPassword"
+            style="@style/passwordBox"
+            android:layout_marginTop="@dimen/common_margin"
+            android:padding="@dimen/common_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etNick" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etConfirmPassword"
-        style="@style/passwordBox"
-        android:layout_marginTop="@dimen/common_margin"
-        android:hint="@string/hint_confirm_password"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etPassword" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etConfirmPassword"
+            style="@style/passwordBox"
+            android:layout_marginTop="@dimen/common_margin"
+            android:hint="@string/hint_confirm_password"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etPassword" />
 
-    <CheckBox
-        android:id="@+id/cbTermsConditions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:buttonTint="@color/white"
-        android:text="@string/accept_terms_and_conditions_dialog"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
+        <CheckBox
+            android:id="@+id/cbTermsConditions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:buttonTint="@color/white"
+            android:text="@string/accept_terms_and_conditions_dialog"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAccept"
-        style="@style/button"
-        android:layout_marginTop="48dp"
-        android:text="@string/log_in_button"
-        app:layout_constraintBottom_toTopOf="@id/btnChange"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cbTermsConditions" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAccept"
+            style="@style/button"
+            android:layout_marginTop="48dp"
+            android:text="@string/log_in_button"
+            app:layout_constraintBottom_toTopOf="@id/btnChange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbTermsConditions" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnChange"
-        style="@style/button"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/invisible"
-        android:text="@string/sign_up_button"
-        android:textColor="@color/vassBlue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnAccept" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnChange"
+            style="@style/button"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/invisible"
+            android:text="@string/sign_up_button"
+            android:textColor="@color/vassBlue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnAccept" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
