@@ -5,14 +5,13 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
 import com.example.talkey_android.data.constants.Constants.PLATFORM
 import com.example.talkey_android.data.domain.model.error.ErrorModel
@@ -32,13 +31,14 @@ class LogInFragment : Fragment() {
     private var isLogin: Boolean = true
     private val logInFragmentViewModel: LogInFragmentViewModel =
         LogInFragmentViewModel(RegisterUseCase(), LoginUseCase())
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
-
+        mainActivity = requireActivity() as MainActivity
         initListeners()
         observeViewModel()
         return binding.root
@@ -114,7 +114,8 @@ class LogInFragment : Fragment() {
     private fun initListeners() {
         with(binding) {
             constraintLayout.setOnClickListener {
-                hideKeyboard()
+
+                mainActivity.hideKeyBoard()
             }
             btnChange.setOnClickListener {
                 setLoginSignupView(isLogin)
@@ -125,13 +126,6 @@ class LogInFragment : Fragment() {
         }
     }
 
-    private fun hideKeyboard() {
-        val imm: InputMethodManager =
-            requireActivity().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (imm.isAcceptingText) {
-            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
-        }
-    }
 
     private fun setLoginSignupAction(login: Boolean) {
         if (login) {
