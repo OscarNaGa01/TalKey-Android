@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.profile.ProfileFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
-        android:background="@color/vassBlue"
-        app:title="Perfil"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/vassBlue"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Perfil"
+        app:titleTextColor="@android:color/white">
 
         <ImageView
             android:id="@+id/actionButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginEnd="12dp"
             android:layout_gravity="end|center_vertical"
-            android:src="@drawable/editar_white"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:layout_marginEnd="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/editar_white" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -32,10 +32,10 @@
         android:layout_height="160dp"
         android:layout_marginTop="50dp"
         android:src="@drawable/perfil"
-        app:shapeAppearanceOverlay="@style/circleImageViewShape"
-        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivStatus"
@@ -43,9 +43,9 @@
         android:layout_height="30dp"
         android:layout_marginEnd="10dp"
         android:background="@color/statusOnline"
-        app:shapeAppearanceOverlay="@style/circleImageViewShape"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
-        app:layout_constraintEnd_toEndOf="@id/imgProfile" />
+        app:layout_constraintEnd_toEndOf="@id/imgProfile"
+        app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivImageEdit"
@@ -53,46 +53,46 @@
         android:layout_height="50dp"
         android:src="@drawable/camara_small"
         android:visibility="gone"
-        app:shapeAppearanceOverlay="@style/circleImageViewShape"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
-        app:layout_constraintEnd_toEndOf="@id/imgProfile" />
+        app:layout_constraintEnd_toEndOf="@id/imgProfile"
+        app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
     <TextView
         android:id="@+id/tvNicknameLabel"
         style="@style/text"
-        android:text="@string/hint_nick"
-        android:layout_marginTop="28dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/hint_nick"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/imgProfile"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgProfile" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etNickname"
         style="@style/textBox"
-        android:visibility="gone"
+        android:layout_marginTop="@dimen/minimal_margin"
         android:hint="@string/hint_nick"
         android:inputType="text"
-        android:layout_marginTop="@dimen/minnimal_margin"
-        app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel" />
 
     <TextView
         android:id="@+id/tvNickname"
         style="@style/text"
-        tools:text="Juan Cuesta"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:text="Juan Cuesta" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etPassword"
         style="@style/passwordBox"
-        android:visibility="gone"
         android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierNickname"
@@ -105,30 +105,30 @@
     <TextView
         android:id="@+id/tvLoginLabel"
         style="@style/text"
-        android:text="@string/log_in_button"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/log_in_button"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/barrierNickname"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrierNickname" />
 
     <TextView
         android:id="@+id/tvLogin"
         style="@style/text"
-        tools:text="juan.cuesta@vasscompany.com"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvLoginLabel"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:text="juan.cuesta@vasscompany.com" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etPasswordConfirm"
         style="@style/passwordBox"
-        android:visibility="gone"
+        android:layout_marginTop="@dimen/minimal_margin"
         android:hint="@string/hint_confirm_password"
-        android:layout_marginTop="@dimen/minnimal_margin"
-        app:layout_constraintTop_toBottomOf="@id/tvLoginLabel"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginLabel" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierLogin"

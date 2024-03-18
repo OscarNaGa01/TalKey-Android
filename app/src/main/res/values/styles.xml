@@ -9,7 +9,7 @@
 
     <style name="textBox">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/textboxHeight</item>
+        <item name="android:layout_height">@dimen/textBoxHeight</item>
         <item name="android:layout_marginStart">@dimen/common_margin</item>
         <item name="android:layout_marginEnd">@dimen/common_margin</item>
         <item name="android:background">@drawable/edit_text_background</item>
@@ -35,5 +35,9 @@
         <item name="android:layout_marginEnd">@dimen/common_margin</item>
         <item name="android:textSize">@dimen/textSize_common</item>
         <item name="android:backgroundTint">@color/vassBlue</item>
+    </style>
+
+    <style name="menuOverflowToolbar" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/white</item>
     </style>
 </resources>

@@ -1,14 +1,16 @@
 package com.example.talkey_android.data.domain.repository.remote
 
 import com.example.talkey_android.data.domain.repository.remote.request.chats.ChatCreationRequest
+import com.example.talkey_android.data.domain.repository.remote.request.messages.SendMessageRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.FirebaseTokenRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.LoginRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.RegisterRequest
 import com.example.talkey_android.data.domain.repository.remote.request.users.UpdateProfileRequest
 import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatCreationResponse
 import com.example.talkey_android.data.domain.repository.remote.response.chats.ChatResponse
-import com.example.talkey_android.data.domain.repository.remote.response.common.MessageResponse
+import com.example.talkey_android.data.domain.repository.remote.response.common.CommonMessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.common.SuccessResponse
+import com.example.talkey_android.data.domain.repository.remote.response.messages.ListMessageResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.RegisterResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.UserFullDataResponse
@@ -20,6 +22,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.io.File
 
 interface RemoteApiService {
@@ -48,19 +51,19 @@ interface RemoteApiService {
     @POST("users/logout")
     suspend fun logout(
         @Header("Authorization") token: String
-    ): Response<MessageResponse>
+    ): Response<CommonMessageResponse>
 
     @PUT("users/online/{isOnline}")
     suspend fun setOnline(
         @Header("Authorization") token: String,
         @Path("isOnline") isOnline: Boolean
-    ): Response<MessageResponse>
+    ): Response<CommonMessageResponse>
 
     @PUT("users/notification")
     suspend fun putNotification(
         @Header("Authorization") token: String,
         @Body firebaseTokenRequest: FirebaseTokenRequest
-    ): Response<MessageResponse>
+    ): Response<CommonMessageResponse>
 
 
     //Profile/s----------------------------------
@@ -87,7 +90,7 @@ interface RemoteApiService {
     suspend fun uploadImg(
         @Header("Authorization") token: String,
         @Body file: File
-    ): Response<MessageResponse>
+    ): Response<CommonMessageResponse>
 
 
     //CHATS--------------------------------------
@@ -109,4 +112,20 @@ interface RemoteApiService {
         @Header("Authorization") token: String,
         @Path("idChat") idChat: Int
     ): Response<SuccessResponse>
+
+    //MESSAGES--------------------------------------
+
+    @POST("messages/new")
+    suspend fun sendMessage(
+        @Header("Authorization") token: String,
+        @Body sendMessageRequest: SendMessageRequest
+    ): Response<SuccessResponse>
+
+    @GET("messages/list/{idChat}")
+    suspend fun getMessages(
+        @Header("Authorization") token: String,
+        @Path("idChat") idChat: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+    ): Response<ListMessageResponse>
 }
