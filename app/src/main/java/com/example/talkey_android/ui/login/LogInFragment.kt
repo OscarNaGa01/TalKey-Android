@@ -180,6 +180,7 @@ class LogInFragment : Fragment() {
             btnAccept.text = getString(R.string.log_in_button)
             setEditTextBackground(emptyList())
             isLogin = true
+            btnFingerPrint.visibility = View.VISIBLE
         }
     }
 
@@ -194,6 +195,7 @@ class LogInFragment : Fragment() {
             btnAccept.text = getString(R.string.sign_up_button)
             setEditTextBackground(emptyList())
             isLogin = false
+            btnFingerPrint.visibility = View.GONE
         }
     }
 
