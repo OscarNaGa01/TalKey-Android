@@ -42,8 +42,8 @@ class ProfileFragmentViewModel(
 
     private val _updateProfileError = MutableSharedFlow<ErrorModel>()
     val updateProfileError: SharedFlow<ErrorModel> = _updateProfileError
-    private val _updateProfileSuccess = MutableStateFlow(SuccessModel())
-    val updateProfileSuccess: StateFlow<SuccessModel> = _updateProfileSuccess
+    private val _updateProfileSuccess = MutableSharedFlow<SuccessModel>()
+    val updateProfileSuccess: SharedFlow<SuccessModel> = _updateProfileSuccess
 
     private val _uploadImgError = MutableSharedFlow<ErrorModel>()
     val uploadImgError: SharedFlow<ErrorModel> = _uploadImgError

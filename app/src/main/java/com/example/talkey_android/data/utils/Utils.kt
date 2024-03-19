@@ -20,7 +20,7 @@ object Utils {
         val inputStream = contentResolver.openInputStream(uri)
 
         // Create a temporary file
-        val tempFile = File.createTempFile("temp_image", null, context.cacheDir)
+        val tempFile = File.createTempFile("temp_image", ".png", context.cacheDir)
         tempFile.deleteOnExit()
 
         inputStream?.use { input ->

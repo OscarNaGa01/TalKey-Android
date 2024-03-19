@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -15,6 +16,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.talkey_android.R
@@ -40,7 +43,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             UpdateProfileUseCase(), UploadImgUseCase()
         )
 
-    //    val args: ProfileFragmentArgs by navArgs()
+    val args: ProfileFragmentArgs by navArgs()
     private lateinit var token: String
     private lateinit var id: String
     private var isNew: Boolean = false
@@ -85,13 +88,13 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-//        val isNew = args.isNew
-        isNew = false
-//        id = args.id
-        id = "123"
-//        token = args.token
-        token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwNCIsImlhdCI6MTcxMDUwNjQ3MSwiZXhwIjoxNzEzMDk4NDcxfQ.RREu20ObT22x7qBZi_x5Czt87Z1rw9vmpkHXxQf-7tQ"
+        isNew = args.isNew
+//        isNew = false
+        id = args.id
+//        id = "123"
+        token = args.token
+//        token =
+//            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwNCIsImlhdCI6MTcxMDUwNjQ3MSwiZXhwIjoxNzEzMDk4NDcxfQ.RREu20ObT22x7qBZi_x5Czt87Z1rw9vmpkHXxQf-7tQ"
         Log.d("TAG", imageUri.toString())
 
         observeViewModel()
@@ -105,11 +108,12 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             showToEdit()
         }
 
+        manageBack(isNew)
+
         return binding.root
     }
 
     private fun observeViewModel() {
-        //TODO("Errores observers")
         lifecycleScope.launch {
             viewModel.getProfile.collect { user ->
                 Log.d("TAG", user.toString())
@@ -139,8 +143,11 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         lifecycleScope.launch {
             viewModel.updateProfileSuccess.collect {
                 if (isNew) {
-                    Log.d("TAG", "Navigation")
-                    ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
+                    findNavController().navigate(
+                        ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
+                    )
+                } else {
+                    editToShow()
                 }
             }
         }
@@ -202,7 +209,11 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         toolbar.setNavigationIcon(R.drawable.back_arrow_white)
 
         toolbar.setNavigationOnClickListener {
-            ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
+            findNavController().popBackStack()
+//            findNavController().navigate(
+//                ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
+//            )
+
         }
 
     }
@@ -484,5 +495,15 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         viewModel.setOnline(false)
     }
 
+    private fun manageBack(isNew: Boolean) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (!isNew) {
+                        findNavController().popBackStack()
+                    }
+                }
+            })
+    }
 
 }
