@@ -21,4 +21,8 @@
     <string name="camera_button">Cámara</string>
     <string name="gallery_button">Galería</string>
     <string name="photo_upload_error">No se pudo subir el avatar</string>
+    <string name="profile_updated">Perfil Actualizado</string>
+    <string name="fill_all_fields">Rellena todos los campos</string>
+    <string name="user_exists">El usuario ya existe</string>
+    <string name="status_update_error">No fué posible cambiar el status de usuario</string>
 </resources>

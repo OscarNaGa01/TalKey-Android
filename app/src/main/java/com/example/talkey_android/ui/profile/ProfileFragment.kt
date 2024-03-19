@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -41,6 +42,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     //    val args: ProfileFragmentArgs by navArgs()
     private lateinit var token: String
+    private lateinit var id: String
     private var isNew: Boolean = false
     private var state: ProfileState = ProfileState.ShowProfile
     private var myUser: UserProfileModel? = null
@@ -48,7 +50,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     private val cropActivityResultContract =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             viewModel.changeCurrentAvatar(Utils.handleCropResult(result))
-//            viewModel.handleCropResult(result)
         }
     private var imageUri: Uri? = null
     private var finalImageUri: Uri? = null
@@ -62,7 +63,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                     Utils.cropImage(uri, cropActivityResultContract)
                 }
             } else {
-                //TODO("Errores camara")
+                //TODO: Handle accordingly
             }
         }
 
@@ -85,25 +86,24 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
 //        val isNew = args.isNew
-
+        isNew = false
+//        id = args.id
+        id = "123"
 //        token = args.token
         token =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwNCIsImlhdCI6MTcxMDUwNjQ3MSwiZXhwIjoxNzEzMDk4NDcxfQ.RREu20ObT22x7qBZi_x5Czt87Z1rw9vmpkHXxQf-7tQ"
         Log.d("TAG", imageUri.toString())
-//
-//        if (isNew){
-//            state = states[1]
-//        }
-
-        toolBarConfiguration()
-        initListeners()
-
-
 
         observeViewModel()
         viewModel.getProfile(token)
 
+        toolBarConfiguration()
+        initListeners()
 
+        if (isNew) {
+            state = ProfileState.EditProfile
+            showToEdit()
+        }
 
         return binding.root
     }
@@ -137,11 +137,36 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         }
 
         lifecycleScope.launch {
-            viewModel.updateProfileError.collect {
+            viewModel.updateProfileSuccess.collect {
+                if (isNew) {
+                    Log.d("TAG", "Navigation")
+                    ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.updateProfileError.collect { error ->
+                if (error.errorCode == "401") {
+                    setEditTextBackground(listOf(binding.etNickname))
+                    Toast.makeText(requireContext(), R.string.user_exists, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.uploadImgError.collect {
                 Toast.makeText(
-                    requireContext(),
-                    getText(R.string.photo_upload_error),
-                    Toast.LENGTH_SHORT
+                    requireContext(), getText(R.string.photo_upload_error), Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.setOnlineError.collect {
+                Toast.makeText(
+                    requireContext(), getText(R.string.status_update_error), Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -165,11 +190,20 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         Log.d("TAG", user.avatar)
         Glide.with(requireContext())
             .load("https://mock-movilidad.vass.es/${user.avatar}")
-            //.load("https://mock-movilidad.vass.es/chatvass/api/${user.avatar}")
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .error(R.drawable.perfil)
             .into(binding.imgProfile)
+    }
 
+    private fun toolBarConfiguration() {
+        val toolbar: Toolbar = binding.toolBar
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationIcon(R.drawable.back_arrow_white)
+
+        toolbar.setNavigationOnClickListener {
+            ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
+        }
 
     }
 
@@ -182,62 +216,103 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             displayPopUp(false)
         }
 
+        binding.editButton.setOnClickListener {
+            showToEdit()
+        }
+
+        binding.cancelButton.setOnClickListener {
+            cancelSwitcher()
+        }
+
         binding.btnAccept.setOnClickListener {
-            when (state) {
-                is ProfileState.ShowProfile -> { //Change password
-                    showToPassword()
-                }
+            if (isNew) {
+                updatingProfile()
 
-                is ProfileState.EditProfile -> { //Confirm edit
-                    if (finalImageUri != null && myUser != null) {
-                        viewModel.saveData(
-                            myUser!!.password, binding.etNickname.text.toString(),
-                            Utils.uriToFile(requireContext(), finalImageUri!!)
-                        )
-                    } else if (finalImageUri == null && myUser != null) {
-                        viewModel.saveData(
-                            myUser!!.password, binding.etNickname.text.toString(),
-                            null
-                        )
-                    }
-                    editToShow()
-                }
-
-                is ProfileState.ChangePassword -> { //Confirm password change
-                    passwordToShow()
-                }
+            } else {
+                accpetSwitcher()
             }
         }
     }
+
 
     private fun displayPopUp(isStatus: Boolean) {
         val showPopUp = PopUpFragment(this, isStatus)
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }
 
+    private fun accpetSwitcher() {
+        when (state) {
+            is ProfileState.ShowProfile -> { //Change password
+                showToPassword()
+            }
 
-    private fun toolBarConfiguration() {
-        val toolbar: Toolbar = binding.toolBar
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
-        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationIcon(R.drawable.back_arrow_white)
+            is ProfileState.EditProfile -> { //Confirm edit
+                updatingProfile()
+            }
 
-        toolbar.setNavigationOnClickListener {
-            //TODO("Back toolbar")
-//            findNavController().popBackStack()
-        }
-
-        binding.actionButton.setOnClickListener {
-            toolbarSwitcher()
+            is ProfileState.ChangePassword -> { //Confirm password change
+                updatingPassword()
+            }
         }
     }
 
-    private fun toolbarSwitcher() {
-        when (state) {
-            is ProfileState.ShowProfile -> { //Edit profile
-                showToEdit()
-            }
+    private fun updatingProfile() {
+        with(binding) {
+            if (finalImageUri != null && myUser != null && etNickname.text.toString()
+                    .isNotEmpty()
+            ) {
+                setEditTextBackground(emptyList())
+                viewModel.saveData(
+                    myUser!!.password, etNickname.text.toString(),
+                    Utils.uriToFile(requireContext(), finalImageUri!!)
+                )
 
+            } else if (finalImageUri == null && myUser != null && etNickname.text.toString()
+                    .isNotEmpty()
+            ) {
+                setEditTextBackground(emptyList())
+                viewModel.saveData(
+                    myUser!!.password, etNickname.text.toString(),
+                    null
+                )
+
+            } else {
+                Toast.makeText(requireContext(), R.string.fill_all_fields, Toast.LENGTH_SHORT)
+                    .show()
+                setEditTextBackground(listOf(etNickname))
+            }
+        }
+    }
+
+    private fun updatingPassword() {
+        with(binding) {
+            if (isValidPassword() && etPassword.text.toString() == etPasswordConfirm.text.toString()) {
+                setEditTextBackground(emptyList())
+                viewModel.saveData(
+                    etPassword.text.toString(), myUser!!.nick, null
+                )
+
+            } else if (!isValidPassword()) {
+                setEditTextBackground(listOf(etPassword, etPasswordConfirm))
+                Toast.makeText(requireContext(), "Invalid password", Toast.LENGTH_SHORT).show()
+
+            } else if (etPassword.text.toString() != etPasswordConfirm.text.toString()) {
+                setEditTextBackground(listOf(etPassword, etPasswordConfirm))
+                Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+    }
+
+    private fun isValidPassword(): Boolean {
+        val patron =
+            Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
+        return patron.matches(binding.etPassword.text.toString())
+    }
+
+
+    private fun cancelSwitcher() {
+        when (state) {
             is ProfileState.EditProfile -> { //Cancel edit
                 editToShow()
                 myUser.let {
@@ -248,18 +323,51 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             is ProfileState.ChangePassword -> { //Cancel password change
                 passwordToShow()
             }
+
+            else -> {}
         }
     }
 
+    private fun setEditTextBackground(currentEditText: List<EditText>) {
+        with(binding) {
+            etPassword.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etPasswordConfirm.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etNickname.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+
+        }
+        currentEditText.forEach { editText ->
+            editText.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_error_background)
+        }
+    }
+
+    private fun createUri(): Uri {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val image = File(requireActivity().filesDir, "avatar_$timestamp.png")
+        return FileProvider.getUriForFile(
+            requireContext(),
+            "com.example.talkey_android.FileProvider",
+            image
+        )
+    }
 
     private fun showToEdit() {
         state = ProfileState.EditProfile
-        binding.actionButton.setImageResource(R.drawable.x_white)
         with(binding) {
             etNickname.visibility = View.VISIBLE
+            ivImageEdit.visibility = View.VISIBLE
+
+            if (!isNew) {
+                cancelButton.visibility = View.VISIBLE
+            }
+
+            editButton.visibility = View.GONE
             tvNickname.visibility = View.GONE
             ivStatus.visibility = View.GONE
-            ivImageEdit.visibility = View.VISIBLE
+
             btnAccept.text = getString(R.string.save)
         }
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
@@ -269,12 +377,15 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     private fun editToShow() {
         state = ProfileState.ShowProfile
-        binding.actionButton.setImageResource(R.drawable.editar_white)
         with(binding) {
-            etNickname.visibility = View.GONE
+            editButton.visibility = View.VISIBLE
             tvNickname.visibility = View.VISIBLE
             ivStatus.visibility = View.VISIBLE
+
+            cancelButton.visibility = View.GONE
+            etNickname.visibility = View.GONE
             ivImageEdit.visibility = View.GONE
+
             btnAccept.text = getString(R.string.change_password)
             etNickname.setText("")
         }
@@ -288,15 +399,18 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     private fun passwordToShow() {
         state = ProfileState.ShowProfile
-        binding.actionButton.setImageResource(R.drawable.editar_white)
         with(binding) {
-            etPassword.visibility = View.GONE
-            etPasswordConfirm.visibility = View.GONE
-            tvNicknameLabel.text = getString(R.string.hint_nick)
-            tvLoginLabel.text = getString(R.string.log_in_button)
+            editButton.visibility = View.VISIBLE
             tvNickname.visibility = View.VISIBLE
             tvLogin.visibility = View.VISIBLE
             ivStatus.visibility = View.VISIBLE
+
+            cancelButton.visibility = View.GONE
+            etPassword.visibility = View.GONE
+            etPasswordConfirm.visibility = View.GONE
+
+            tvNicknameLabel.text = getString(R.string.hint_nick)
+            tvLoginLabel.text = getString(R.string.log_in_button)
             btnAccept.text = getString(R.string.change_password)
             etPassword.setText("")
             etPasswordConfirm.setText("")
@@ -309,31 +423,24 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     private fun showToPassword() {
         state = ProfileState.ChangePassword
-        binding.actionButton.setImageResource(R.drawable.x_white)
         with(binding) {
+            cancelButton.visibility = View.VISIBLE
             etPassword.visibility = View.VISIBLE
             etPasswordConfirm.visibility = View.VISIBLE
-            tvNicknameLabel.text = getString(R.string.hint_password)
-            tvLoginLabel.text = getString(R.string.hint_confirm_password)
+
+            editButton.visibility = View.GONE
             tvNickname.visibility = View.GONE
             tvLogin.visibility = View.GONE
             ivStatus.visibility = View.GONE
+
+            tvNicknameLabel.text = getString(R.string.hint_password)
+            tvLoginLabel.text = getString(R.string.hint_confirm_password)
             btnAccept.text = getString(R.string.save)
             etPassword.setText("")
             etPasswordConfirm.setText("")
         }
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
             false
-        )
-    }
-
-    private fun createUri(): Uri {
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val image = File(requireActivity().filesDir, "avatar_$timestamp.png")
-        return FileProvider.getUriForFile(
-            requireContext(),
-            "com.example.talkey_android.FileProvider",
-            image
         )
     }
 

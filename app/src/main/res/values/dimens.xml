@@ -3,6 +3,6 @@
     <dimen name="common_margin">16dp</dimen>
     <dimen name="textBoxHeight">56dp</dimen>
     <dimen name="medium_margin">12dp</dimen>
-    <dimen name="minnimal_margin">4dp</dimen>
+    <dimen name="minimal_margin">4dp</dimen>
     <dimen name="textSize_common">16sp</dimen>
 </resources>
