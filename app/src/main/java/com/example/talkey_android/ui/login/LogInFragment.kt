@@ -252,7 +252,11 @@ class LogInFragment : Fragment() {
 
             } else if (!isValidPassword()) {
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
-                Toast.makeText(requireContext(), "Invalid password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Invalid password. It must be composed of 8 characters, a capital letter and a special character.",
+                    Toast.LENGTH_LONG
+                ).show()
 
             } else if (etPassword.text.toString() != etConfirmPassword.text.toString()) {
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
