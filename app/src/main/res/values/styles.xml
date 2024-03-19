@@ -17,7 +17,7 @@
     </style>
 
     <style name="passwordBox" parent="textBox">
-        <item name="android:drawableEnd">@drawable/show_password</item>
+<!--        <item name="android:drawableEnd">@drawable/show_password</item>-->
         <item name="android:hint">@string/hint_password</item>
         <item name="android:inputType">textPassword</item>
     </style>

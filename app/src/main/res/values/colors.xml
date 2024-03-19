@@ -10,4 +10,5 @@
     <color name="invisible">#00000000</color>
     <color name="statusOffline">#FFED4245</color>
     <color name="statusOnline">#FF3BA55C</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>
