@@ -199,21 +199,23 @@ class LogInFragment : Fragment() {
 
     private fun logIn() {
         with(binding) {
-            if (etEmail.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty())
-                lifecycleScope.launch {
-                    logInFragmentViewModel.postLogin(
-                        LoginRequestModel(
-                            etPassword.text.toString(),
-                            etEmail.text.toString(),
-                            PLATFORM,
-                            ""
-                        )
+            if (etEmail.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty()) {
+                logInFragmentViewModel.postLogin(
+                    LoginRequestModel(
+                        etPassword.text.toString(),
+                        etEmail.text.toString(),
+                        PLATFORM,
+                        ""
                     )
-                    setEditTextBackground(emptyList())
-
-                } else {
+                )
+                setEditTextBackground(emptyList())
+            } else {
                 setEditTextBackground(listOf(etEmail, etPassword))
-                Toast.makeText(requireContext(), "Check your email and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Check your email and password",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -223,7 +225,6 @@ class LogInFragment : Fragment() {
             if (isValidEmail(etEmail.text.toString()) && etNick.text.toString().isNotEmpty() && isValidPassword()
                 && etPassword.text.toString() == etConfirmPassword.text.toString() && cbTermsConditions.isChecked
             ) {
-                lifecycleScope.launch {
                     logInFragmentViewModel.postRegister(
                         RegisterRequestModel(
                             etEmail.text.toString(),
@@ -233,7 +234,6 @@ class LogInFragment : Fragment() {
                             ""
                         )
                     )
-                }
 
             } else if (etEmail.text.toString().isEmpty() && etNick.text.toString()
                     .isEmpty() && etPassword.text.toString()
@@ -266,7 +266,6 @@ class LogInFragment : Fragment() {
                 setEditTextBackground(emptyList())
                 Toast.makeText(requireContext(), "Accept our terms and conditions", Toast.LENGTH_SHORT).show()
 
-            } else {
             }
         }
     }

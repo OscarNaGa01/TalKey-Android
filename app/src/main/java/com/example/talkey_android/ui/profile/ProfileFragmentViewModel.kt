@@ -1,5 +1,6 @@
 package com.example.talkey_android.ui.profile
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.common.CommonMessageModel
@@ -31,8 +32,8 @@ class ProfileFragmentViewModel(
 
     private val _getProfileError = MutableSharedFlow<ErrorModel>()
     val getProfileError: SharedFlow<ErrorModel> = _getProfileError
-    private val _userProfile = MutableStateFlow(UserProfileModel())
-    val userProfile: StateFlow<UserProfileModel> = _userProfile
+    private val _getProfile = MutableStateFlow(UserProfileModel())
+    val getProfile: StateFlow<UserProfileModel> = _getProfile
 
     private val _setOnlineError = MutableSharedFlow<ErrorModel>()
     val setOnlineError: SharedFlow<ErrorModel> = _setOnlineError
@@ -41,48 +42,55 @@ class ProfileFragmentViewModel(
 
     private val _updateProfileError = MutableSharedFlow<ErrorModel>()
     val updateProfileError: SharedFlow<ErrorModel> = _updateProfileError
-    private val _updateProfileSuccess = MutableStateFlow(SuccessModel())
-    val updateProfileSuccess: StateFlow<SuccessModel> = _updateProfileSuccess
+    private val _updateProfileSuccess = MutableSharedFlow<SuccessModel>()
+    val updateProfileSuccess: SharedFlow<SuccessModel> = _updateProfileSuccess
 
     private val _uploadImgError = MutableSharedFlow<ErrorModel>()
     val uploadImgError: SharedFlow<ErrorModel> = _uploadImgError
     private val _uploadImgMessage = MutableStateFlow(CommonMessageModel())
     val uploadImgMessage: StateFlow<CommonMessageModel> = _uploadImgMessage
 
+    private val _selectedNewAvatar = MutableSharedFlow<Uri?>()
+    val selectedNewAvatar: SharedFlow<Uri?> = _selectedNewAvatar
 
-    fun saveData(passwd: String, nick: String, isOnline: Boolean, file: File) {
+    private val loadMutableStateFlow = MutableSharedFlow<Boolean>()
+    val loadStateFlow: SharedFlow<Boolean> = loadMutableStateFlow
+
+    fun saveData(passwd: String, nick: String, file: File?) {
         viewModelScope.launch(Dispatchers.IO)
         {
-            val deferreds = listOf(
+            val deferred = listOf(
                 async { updateProfile(UpdateProfileModel(passwd, nick)) },
-                async { setOnline(isOnline) },
                 async { uploadImg(file) }
             )
-            deferreds.awaitAll()
-            getProfile(_userProfile.value.token)
+            deferred.awaitAll()
+            getProfile(_getProfile.value.token)
         }
     }
 
 
-    private suspend fun uploadImg(file: File) {
-        val baseResponse = uploadImgUseCase(
-            _userProfile.value.token,
-            file
-        )
-        when (baseResponse) {
-            is BaseResponse.Success -> {
-                _uploadImgMessage.emit(baseResponse.data)
-            }
+    private suspend fun uploadImg(file: File?) {
+        if (file != null) {
+            val baseResponse = uploadImgUseCase(
+                _getProfile.value.token,
+                file
+            )
 
-            is BaseResponse.Error -> {
-                _uploadImgError.emit(baseResponse.error)
+            when (baseResponse) {
+                is BaseResponse.Success -> {
+                    _uploadImgMessage.emit(baseResponse.data)
+                }
+
+                is BaseResponse.Error -> {
+                    _uploadImgError.emit(baseResponse.error)
+                }
             }
         }
     }
 
     private suspend fun updateProfile(updateProfileModel: UpdateProfileModel) {
         val baseResponse = updateProfileUseCase(
-            _userProfile.value.token,
+            _getProfile.value.token,
             updateProfileModel
         )
         when (baseResponse) {
@@ -96,9 +104,16 @@ class ProfileFragmentViewModel(
         }
     }
 
-    private suspend fun setOnline(isOnline: Boolean) {
+    fun setOnline(isOnline: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val deferred = async { statusSetter(isOnline) }
+            deferred.await()
+        }
+    }
+
+    private suspend fun statusSetter(isOnline: Boolean) {
         val baseResponse = setOnlineUseCase(
-            _userProfile.value.token, isOnline
+            _getProfile.value.token, isOnline
         )
         when (baseResponse) {
             is BaseResponse.Success -> {
@@ -116,7 +131,7 @@ class ProfileFragmentViewModel(
             val baseResponse = getProfileUseCase(token)
             when (baseResponse) {
                 is BaseResponse.Success -> {
-                    _userProfile.emit(baseResponse.data)
+                    _getProfile.emit(baseResponse.data)
                 }
 
                 is BaseResponse.Error -> {
@@ -125,4 +140,26 @@ class ProfileFragmentViewModel(
             }
         }
     }
+
+    fun changeCurrentAvatar(uri: Uri?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (uri != null) {
+                _selectedNewAvatar.emit(uri)
+            } else {
+                _selectedNewAvatar.emit(null)
+            }
+        }
+    }
+
+    fun setLoad(loading: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (loading) {
+                loadMutableStateFlow.emit(true)
+            } else {
+                loadMutableStateFlow.emit(false)
+            }
+        }
+
+    }
+
 }

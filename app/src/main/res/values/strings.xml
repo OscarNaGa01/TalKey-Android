@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">talkey</string>
+    <string name="app_name">Talkey</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sign_up_button">Sign up</string>
     <string name="log_in_button">Log in</string>
@@ -16,4 +16,13 @@
     <string name="chats">Chats</string>
     <string name="edtiProfile">Editar perfil</string>
     <string name="logout">Cerrar sesión</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="camera_button">Cámara</string>
+    <string name="gallery_button">Galería</string>
+    <string name="photo_upload_error">No se pudo subir el avatar</string>
+    <string name="profile_updated">Perfil Actualizado</string>
+    <string name="fill_all_fields">Rellena todos los campos</string>
+    <string name="user_exists">El usuario ya existe</string>
+    <string name="status_update_error">No fué posible cambiar el status de usuario</string>
 </resources>
