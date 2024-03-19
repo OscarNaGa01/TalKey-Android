@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.chats.CreateChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
@@ -31,6 +32,7 @@ class HomeFragment
         CHATS
     }
 
+    private lateinit var mainActivity: MainActivity
     private val args: HomeFragmentArgs by navArgs()
     private var listType = ListType.CHATS
     private lateinit var mBinding: FragmentHomeBinding
@@ -47,6 +49,7 @@ class HomeFragment
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
+        mainActivity = requireActivity() as MainActivity
         setupToolbar()
         return mBinding.root
     }
@@ -94,6 +97,9 @@ class HomeFragment
         mViewModel.getChatsList(args.token, args.id)
 
         with(mBinding) {
+            constraintLayout.setOnClickListener {
+                mainActivity.hideKeyBoard()
+            }
             swipToRefresh.setOnRefreshListener {
                 when (listType) {
                     ListType.CHATS -> mViewModel.getChatsList(args.token, args.id)
