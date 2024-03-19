@@ -1,12 +1,15 @@
 package com.example.talkey_android.ui.login
 
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -43,6 +46,7 @@ class LogInFragment : Fragment() {
         observeViewModel()
         return binding.root
     }
+
 
     private fun observeViewModel() {
         lifecycleScope.launch {
@@ -113,8 +117,16 @@ class LogInFragment : Fragment() {
 
     private fun initListeners() {
         with(binding) {
-            constraintLayout.setOnClickListener {
 
+            chbShowConfirmPasswdText.setOnCheckedChangeListener { _, isChecked ->
+                showOrHideText(isChecked, etConfirmPassword)
+            }
+
+            chbShowPasswdText.setOnCheckedChangeListener { _, isChecked ->
+                showOrHideText(isChecked, etPassword)
+            }
+
+            constraintLayout.setOnClickListener {
                 mainActivity.hideKeyBoard()
             }
             btnChange.setOnClickListener {
@@ -123,6 +135,14 @@ class LogInFragment : Fragment() {
             btnAccept.setOnClickListener {
                 setLoginSignupAction(isLogin)
             }
+        }
+    }
+
+    private fun showOrHideText(checked: Boolean, editText: AppCompatEditText) {
+        if (checked) {
+            editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+        } else {
+            editText.transformationMethod = PasswordTransformationMethod.getInstance()
         }
     }
 
