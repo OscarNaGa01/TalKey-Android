@@ -1,22 +1,26 @@
 package com.example.talkey_android.ui.login
 
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
 import com.example.talkey_android.data.constants.Constants.PLATFORM
+import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
+import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.databinding.FragmentLogInBinding
@@ -30,65 +34,101 @@ class LogInFragment : Fragment() {
     private var isLogin: Boolean = true
     private val logInFragmentViewModel: LogInFragmentViewModel =
         LogInFragmentViewModel(RegisterUseCase(), LoginUseCase())
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
-        binding.ivBackground.setColorFilter(Color.argb(50, 0, 0, 0), PorterDuff.Mode.SRC_OVER)
+        mainActivity = requireActivity() as MainActivity
         initListeners()
         observeViewModel()
         return binding.root
     }
 
+
     private fun observeViewModel() {
         lifecycleScope.launch {
-            logInFragmentViewModel.user.collect { user ->
-                if (user.token.isNotEmpty() && !isLogin) {
-                    findNavController().navigate(
-                        LogInFragmentDirections.actionLogInFragmentToProfileFragment(
-                            user.id,
-                            user.token,
-                            true
-                        )
-                    )
+            logInFragmentViewModel.uiState.collect { uiState ->
+                when (uiState) {
+                    is LogInFragmentUiState.Start -> {
+                        binding.progressBar.visibility = View.GONE
+                    }
 
-                } else if (user.token.isNotEmpty() && isLogin) {
-                    findNavController().navigate(
-                        LogInFragmentDirections.actionLogInFragmentToHomeFragment(
-                            user.id,
-                            user.token
-                        )
-                    )
-                }
-            }
-        }
+                    is LogInFragmentUiState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
 
-        lifecycleScope.launch {
-            logInFragmentViewModel.loginError.collect { error ->
-                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
-                if (error.errorCode == "400") {
-                    setEditTextBackground(listOf(binding.etEmail))
+                    is LogInFragmentUiState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        doNavigation(uiState.userModel)
+                    }
 
-                } else if (error.errorCode == "401") {
-                    setEditTextBackground(listOf(binding.etPassword))
-                }
-            }
-        }
+                    is LogInFragmentUiState.LoginError -> {
+                        binding.progressBar.visibility = View.GONE
+                        showLoginError(uiState.errorModel)
+                    }
 
-        lifecycleScope.launch {
-            logInFragmentViewModel.registerError.collect { error ->
-                if (error.errorCode == "401") {
-                    setEditTextBackground(listOf(binding.etEmail))
-                    Toast.makeText(requireContext(), "User exists", Toast.LENGTH_SHORT).show()
+                    is LogInFragmentUiState.RegisterError -> {
+                        binding.progressBar.visibility = View.GONE
+                        showRegisterError(uiState.errorModel)
+                    }
                 }
             }
         }
     }
 
+    private fun showRegisterError(error: ErrorModel) {
+        if (error.errorCode == "401") {
+            setEditTextBackground(listOf(binding.etEmail))
+            Toast.makeText(requireContext(), "User exists", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showLoginError(error: ErrorModel) {
+        Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+        if (error.errorCode == "400") {
+            setEditTextBackground(listOf(binding.etEmail))
+
+        } else if (error.errorCode == "401") {
+            setEditTextBackground(listOf(binding.etPassword))
+        }
+    }
+
+    private fun doNavigation(user: UserModel) {
+        if (user.token.isNotEmpty() && !isLogin) {
+            findNavController().navigate(
+                LogInFragmentDirections.actionLogInFragmentToProfileFragment(
+                    user.id,
+                    user.token,
+                    true
+                )
+            )
+        } else if (user.token.isNotEmpty() && isLogin) {
+            findNavController().navigate(
+                LogInFragmentDirections.actionLogInFragmentToHomeFragment(
+                    user.id,
+                    user.token
+                )
+            )
+        }
+    }
+
     private fun initListeners() {
         with(binding) {
+
+            chbShowConfirmPasswdText.setOnCheckedChangeListener { _, isChecked ->
+                showOrHideText(isChecked, etConfirmPassword)
+            }
+
+            chbShowPasswdText.setOnCheckedChangeListener { _, isChecked ->
+                showOrHideText(isChecked, etPassword)
+            }
+
+            constraintLayout.setOnClickListener {
+                mainActivity.hideKeyBoard()
+            }
             btnChange.setOnClickListener {
                 setLoginSignupView(isLogin)
             }
@@ -97,6 +137,15 @@ class LogInFragment : Fragment() {
             }
         }
     }
+
+    private fun showOrHideText(checked: Boolean, editText: AppCompatEditText) {
+        if (checked) {
+            editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+        } else {
+            editText.transformationMethod = PasswordTransformationMethod.getInstance()
+        }
+    }
+
 
     private fun setLoginSignupAction(login: Boolean) {
         if (login) {
@@ -203,7 +252,11 @@ class LogInFragment : Fragment() {
 
             } else if (!isValidPassword()) {
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
-                Toast.makeText(requireContext(), "Invalid password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Invalid password. It must be composed of 8 characters, a capital letter and a special character.",
+                    Toast.LENGTH_LONG
+                ).show()
 
             } else if (etPassword.text.toString() != etConfirmPassword.text.toString()) {
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
@@ -240,4 +293,5 @@ class LogInFragment : Fragment() {
         val patron = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
         return patron.matches(binding.etPassword.text.toString())
     }
+
 }
