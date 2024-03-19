@@ -53,13 +53,13 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     private val cropActivityResultContract =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             viewModel.changeCurrentAvatar(Utils.handleCropResult(result))
+            viewModel.setLoad(false)
         }
     private var imageUri: Uri? = null
     private var finalImageUri: Uri? = null
 
     private val cameraContract =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-
             Log.d("URIREADER", imageUri.toString())
             if (success) {
                 imageUri?.let { uri ->
@@ -70,16 +70,16 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             }
         }
 
-    private val galleryContract = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-
-        if (uri != null) {
-            val destUri = createUri()
-            Utils.copyImageToUri(uri, destUri, requireContext().contentResolver)
-            Utils.cropImage(destUri, cropActivityResultContract)
-        } else {
-            // TODO: Handle accordingly
+    private val galleryContract =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                val destUri = createUri()
+                Utils.copyImageToUri(uri, destUri, requireContext().contentResolver)
+                Utils.cropImage(destUri, cropActivityResultContract)
+            } else {
+                // TODO: Handle accordingly
+            }
         }
-    }
 
 
     override fun onCreateView(
@@ -88,13 +88,15 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        isNew = args.isNew
-//        isNew = false
         id = args.id
-//        id = "123"
+        isNew = args.isNew
         token = args.token
+
+//        isNew = false
+//        id = "123"
 //        token =
 //            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwNCIsImlhdCI6MTcxMDUwNjQ3MSwiZXhwIjoxNzEzMDk4NDcxfQ.RREu20ObT22x7qBZi_x5Czt87Z1rw9vmpkHXxQf-7tQ"
+
         Log.d("TAG", imageUri.toString())
 
         observeViewModel()
@@ -148,6 +150,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                     )
                 } else {
                     editToShow()
+                    viewModel.getProfile(token)
                 }
             }
         }
@@ -178,7 +181,18 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.loadStateFlow.collect { isLoading ->
+                if (isLoading) {
+                    switchToLoading(true)
+                } else {
+                    switchToLoading(false)
+                }
+            }
+        }
+
     }
+
 
     private fun setData(user: UserProfileModel) {
         with(binding) {
@@ -329,10 +343,12 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                 myUser.let {
                     setData(myUser!!)
                 }
+                setEditTextBackground(emptyList())
             }
 
             is ProfileState.ChangePassword -> { //Cancel password change
                 passwordToShow()
+                setEditTextBackground(emptyList())
             }
 
             else -> {}
@@ -455,6 +471,28 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         )
     }
 
+    private fun switchToLoading(isLoading: Boolean) {
+        with(binding) {
+            if (isLoading) {
+                loadingBackground.visibility = View.VISIBLE
+                loadingProgressBar.visibility = View.VISIBLE
+
+                cancelButton.visibility = View.GONE
+                btnAccept.visibility = View.GONE
+                etNickname.visibility = View.GONE
+                ivImageEdit.visibility = View.GONE
+            } else {
+                cancelButton.visibility = View.VISIBLE
+                btnAccept.visibility = View.VISIBLE
+                etNickname.visibility = View.VISIBLE
+                ivImageEdit.visibility = View.VISIBLE
+
+                loadingBackground.visibility = View.GONE
+                loadingProgressBar.visibility = View.GONE
+            }
+        }
+    }
+
     private fun statusOnline() {
         binding.ivStatus.setBackgroundColor(
             ContextCompat.getColor(
@@ -475,11 +513,13 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     override fun onCameraClick() {
         Log.d("TAG", "Camera")
         imageUri = createUri()
+        viewModel.setLoad(true)
         cameraContract.launch(imageUri)
     }
 
     override fun onGalleryClick() {
         Log.d("TAG", "Gallery")
+        viewModel.setLoad(true)
         galleryContract.launch("image/*")
     }
 

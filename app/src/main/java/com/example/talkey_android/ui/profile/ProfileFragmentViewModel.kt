@@ -53,6 +53,9 @@ class ProfileFragmentViewModel(
     private val _selectedNewAvatar = MutableSharedFlow<Uri?>()
     val selectedNewAvatar: SharedFlow<Uri?> = _selectedNewAvatar
 
+    private val loadMutableStateFlow = MutableSharedFlow<Boolean>()
+    val loadStateFlow: SharedFlow<Boolean> = loadMutableStateFlow
+
     fun saveData(passwd: String, nick: String, file: File?) {
         viewModelScope.launch(Dispatchers.IO)
         {
@@ -148,5 +151,15 @@ class ProfileFragmentViewModel(
         }
     }
 
+    fun setLoad(loading: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (loading) {
+                loadMutableStateFlow.emit(true)
+            } else {
+                loadMutableStateFlow.emit(false)
+            }
+        }
+
+    }
 
 }
