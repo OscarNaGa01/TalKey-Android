@@ -13,6 +13,7 @@ class UserFullDataToUserProfileMapper : ResponseMapper<UserFullDataResponse, Use
             response.avatar ?: "",
             response.token ?: "",
             response.online ?: false,
+            response.password ?: ""
         )
     }
 }

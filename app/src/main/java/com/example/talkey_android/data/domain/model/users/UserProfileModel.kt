@@ -10,4 +10,5 @@ data class UserProfileModel(
     val avatar: String = "",
     val token: String = "",
     val online: Boolean = false,
+    val password: String = ""
 ) : BaseModel()

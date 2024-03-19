@@ -45,6 +45,7 @@
             android:id="@+id/action_HomeFragment_to_profileFragment"
             app:destination="@id/profileFragment"
             app:launchSingleTop="false"
+            app:popUpTo="@id/HomeFragment"
             app:popUpToInclusive="false" />
     </fragment>
 
