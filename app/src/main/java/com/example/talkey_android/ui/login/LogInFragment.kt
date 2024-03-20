@@ -43,74 +43,6 @@ class LogInFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
 
 
-    //biometric----------------------------------------------
-    private lateinit var executor: Executor
-    private lateinit var biometricPrompt: BiometricPrompt
-    private lateinit var promptInfo: PromptInfo
-    private fun checkDeviceBiometric() {
-        val biometricManager = BiometricManager.from(requireContext())
-        when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
-            BiometricManager.BIOMETRIC_SUCCESS -> {
-                Toast.makeText(requireContext(), "Puede hacerlo", Toast.LENGTH_SHORT).show()
-                createBiometricListener()
-                createPromptInfo()
-                biometricPrompt.authenticate(promptInfo)
-            }
-
-            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-
-                Toast.makeText(requireContext(), "No existe sensor biométrico", Toast.LENGTH_SHORT)
-                    .show()
-
-            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-
-                Toast.makeText(requireContext(), "No está disponible el sensor", Toast.LENGTH_SHORT)
-                    .show()
-
-            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-
-                Toast.makeText(
-                    requireContext(),
-                    "No se puede conectar con el sensor",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-            }
-        }
-    }
-
-    private fun createBiometricListener() {
-        executor = ContextCompat.getMainExecutor(requireContext())
-        biometricPrompt =
-            BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    Toast.makeText(requireContext(), errString, Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    Toast.makeText(requireContext(), "La huella no coincide", Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    Toast.makeText(requireContext(), "Éxito", Toast.LENGTH_SHORT).show()
-                }
-            })
-    }
-
-    private fun createPromptInfo() {
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Título")
-            .setSubtitle("Subtítulo")
-            .setNegativeButtonText("Cancelar")
-            .build()
-    }
-    //biometric----------------------------------------------
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -388,5 +320,72 @@ class LogInFragment : Fragment() {
             Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
         return patron.matches(binding.etPassword.text.toString())
     }
+
+    //biometric----------------------------------------------
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: PromptInfo
+    private fun checkDeviceBiometric() {
+        val biometricManager = BiometricManager.from(requireContext())
+        when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                Toast.makeText(requireContext(), "Puede hacerlo", Toast.LENGTH_SHORT).show()
+                createBiometricListener()
+                createPromptInfo()
+                biometricPrompt.authenticate(promptInfo)
+            }
+
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+
+                Toast.makeText(requireContext(), "No existe sensor biométrico", Toast.LENGTH_SHORT)
+                    .show()
+
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
+
+                Toast.makeText(requireContext(), "No está disponible el sensor", Toast.LENGTH_SHORT)
+                    .show()
+
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+
+                Toast.makeText(
+                    requireContext(),
+                    "No se puede conectar con el sensor",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            }
+        }
+    }
+
+    private fun createBiometricListener() {
+        executor = ContextCompat.getMainExecutor(requireContext())
+        biometricPrompt =
+            BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(requireContext(), errString, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(requireContext(), "La huella no coincide", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    Toast.makeText(requireContext(), "Éxito", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    private fun createPromptInfo() {
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Login")
+            .setSubtitle("Usa tu huella para acceder a la aplicación")
+            .setNegativeButtonText("Cancelar")
+            .build()
+    }
+    //biometric----------------------------------------------
 
 }
