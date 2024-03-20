@@ -1,5 +1,6 @@
 package com.example.talkey_android.ui.login
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -28,6 +29,7 @@ import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
+import com.example.talkey_android.data.utils.Prefs
 import com.example.talkey_android.databinding.FragmentLogInBinding
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executor
@@ -42,6 +44,9 @@ class LogInFragment : Fragment() {
         LogInFragmentViewModel(RegisterUseCase(), LoginUseCase())
     private lateinit var mainActivity: MainActivity
 
+    private lateinit var prefs: Prefs
+    private var isTryingBiometricAccess: Boolean = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,12 +54,14 @@ class LogInFragment : Fragment() {
     ): View {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
+        prefs = Prefs(requireContext())
         initListeners()
         observeViewModel()
 
         //biometric----------------------------------------------
         binding.btnFingerPrint.setOnClickListener {
-            checkDeviceBiometric()
+            isTryingBiometricAccess = true
+            checkDeviceBiometric(prefs.getToken())
         }
         //biometric----------------------------------------------
 
@@ -77,6 +84,8 @@ class LogInFragment : Fragment() {
 
                     is LogInFragmentUiState.Success -> {
                         binding.progressBar.visibility = View.GONE
+                        isTryingBiometricAccess = false
+                        checkDeviceBiometric(uiState.userModel.token)
                         doNavigation(uiState.userModel)
                     }
 
@@ -325,39 +334,55 @@ class LogInFragment : Fragment() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: PromptInfo
-    private fun checkDeviceBiometric() {
+    private fun checkDeviceBiometric(token: String) {
         val biometricManager = BiometricManager.from(requireContext())
         when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
-                Toast.makeText(requireContext(), "Puede hacerlo", Toast.LENGTH_SHORT).show()
-                createBiometricListener()
-                createPromptInfo()
-                biometricPrompt.authenticate(promptInfo)
+
+                if (isTryingBiometricAccess) {
+                    createBiometricListener(token)
+                    createPromptInfo()
+                    biometricPrompt.authenticate(promptInfo)
+
+                } else {
+                    showDialogToSaveAcount(token)
+                }
             }
 
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-
-                Toast.makeText(requireContext(), "No existe sensor biométrico", Toast.LENGTH_SHORT)
-                    .show()
+                if (isTryingBiometricAccess) {
+                    Toast.makeText(
+                        requireContext(),
+                        "No existe sensor biométrico",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
 
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-
-                Toast.makeText(requireContext(), "No está disponible el sensor", Toast.LENGTH_SHORT)
-                    .show()
+                if (isTryingBiometricAccess) {
+                    Toast.makeText(
+                        requireContext(),
+                        "No está disponible el sensor",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
 
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-
-                Toast.makeText(
-                    requireContext(),
-                    "No se puede conectar con el sensor",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (isTryingBiometricAccess) {
+                    Toast.makeText(
+                        requireContext(),
+                        "No se puede conectar con el sensor",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
             }
         }
     }
 
-    private fun createBiometricListener() {
+    private fun createBiometricListener(token: String) {
         executor = ContextCompat.getMainExecutor(requireContext())
         biometricPrompt =
             BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -374,6 +399,7 @@ class LogInFragment : Fragment() {
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
+                    // TODO: hacer aquí la navegación
                     Toast.makeText(requireContext(), "Éxito", Toast.LENGTH_SHORT).show()
                 }
             })
@@ -388,4 +414,24 @@ class LogInFragment : Fragment() {
     }
     //biometric----------------------------------------------
 
+    private fun showDialogToSaveAcount(token: String) {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setTitle("Confirmación")
+        builder.setMessage("¿Quieres asociar esta cuenta a tu sensor biométrico?")
+
+        builder.setPositiveButton("Sí") { _, _ ->
+            prefs.saveToken(token)
+            Toast.makeText(
+                requireContext(),
+                "Se ha asociado esta cuenta a su huella",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        builder.setNegativeButton("No") { _, _ -> }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
 }
