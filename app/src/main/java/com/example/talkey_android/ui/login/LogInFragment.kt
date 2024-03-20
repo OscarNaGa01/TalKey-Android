@@ -175,6 +175,7 @@ class LogInFragment : Fragment() {
         } else {
             editText.transformationMethod = PasswordTransformationMethod.getInstance()
         }
+        editText.setSelection(editText.text.toString().length)
     }
 
 
@@ -420,6 +421,7 @@ class LogInFragment : Fragment() {
             .setNegativeButtonText("Cancelar")
             .build()
     }
+
     //biometric----------------------------------------------
 
     private fun showDialogToSaveAccount(token: String) {

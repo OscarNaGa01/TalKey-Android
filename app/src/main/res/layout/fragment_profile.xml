@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+    tools:context=".ui.profile.ProfileFragment"
+    android:id="@+id/constraintLayout">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -41,6 +42,17 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgProfileBackground"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/perfil"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:shapeAppearanceOverlay="@style/circleImageViewShape" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgProfile"
         android:layout_width="160dp"
         android:layout_height="160dp"
@@ -75,7 +87,7 @@
         android:id="@+id/tvNicknameLabel"
         style="@style/text"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="40dp"
         android:text="@string/hint_nick"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -108,6 +120,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel" />
 
+    <CheckBox
+        android:id="@+id/chbShowPasswdText"
+        style="@style/passwordCheckBox"
+        app:layout_constraintTop_toTopOf="@id/etPassword"
+        app:layout_constraintBottom_toBottomOf="@id/etPassword"
+        app:layout_constraintEnd_toEndOf="@id/etPassword" />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierNickname"
         android:layout_width="wrap_content"
@@ -120,7 +139,7 @@
         android:id="@+id/tvLoginLabel"
         style="@style/text"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="28dp"
         android:text="@string/log_in_button"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -143,6 +162,13 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvLoginLabel" />
+
+    <CheckBox
+        android:id="@+id/chbShowConfirmPasswdText"
+        style="@style/passwordCheckBox"
+        app:layout_constraintTop_toTopOf="@id/etPasswordConfirm"
+        app:layout_constraintBottom_toBottomOf="@id/etPasswordConfirm"
+        app:layout_constraintEnd_toEndOf="@id/etPasswordConfirm" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierLogin"

@@ -2,6 +2,8 @@ package com.example.talkey_android.ui.profile
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -20,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.model.users.UserProfileModel
 import com.example.talkey_android.data.domain.use_cases.users.GetProfileUseCase
@@ -49,6 +53,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     private var isNew: Boolean = false
     private var state: ProfileState = ProfileState.ShowProfile
     private var myUser: UserProfileModel? = null
+    private lateinit var mainActivity: MainActivity
 
     private val cropActivityResultContract =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -66,7 +71,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                     Utils.cropImage(uri, cropActivityResultContract)
                 }
             } else {
-                //TODO: Handle accordingly
+                viewModel.setLoad(false)
             }
         }
 
@@ -75,9 +80,10 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             if (uri != null) {
                 val destUri = createUri()
                 Utils.copyImageToUri(uri, destUri, requireContext().contentResolver)
+                viewModel.setLoad(true)
                 Utils.cropImage(destUri, cropActivityResultContract)
             } else {
-                // TODO: Handle accordingly
+                viewModel.setLoad(false)
             }
         }
 
@@ -87,15 +93,11 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
+        mainActivity = requireActivity() as MainActivity
 
         id = args.id
         isNew = args.isNew
         token = args.token
-
-//        isNew = false
-//        id = "123"
-//        token =
-//            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwNCIsImlhdCI6MTcxMDUwNjQ3MSwiZXhwIjoxNzEzMDk4NDcxfQ.RREu20ObT22x7qBZi_x5Czt87Z1rw9vmpkHXxQf-7tQ"
 
         Log.d("TAG", imageUri.toString())
 
@@ -149,6 +151,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                         ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
                     )
                 } else {
+                    Log.d("TAG", it.success.toString())
                     editToShow()
                     viewModel.getProfile(token)
                 }
@@ -170,6 +173,8 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                 Toast.makeText(
                     requireContext(), getText(R.string.photo_upload_error), Toast.LENGTH_SHORT
                 ).show()
+                finalImageUri = null
+                setData(myUser!!)
             }
         }
 
@@ -190,7 +195,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                 }
             }
         }
-
     }
 
 
@@ -224,37 +228,46 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
         toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
-//            findNavController().navigate(
-//                ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
-//            )
-
         }
-
     }
 
     private fun initListeners() {
-        binding.ivStatus.setOnClickListener {
-            displayPopUp(true)
-        }
+        with(binding) {
+            constraintLayout.setOnClickListener {
+                mainActivity.hideKeyBoard()
+            }
 
-        binding.ivImageEdit.setOnClickListener {
-            displayPopUp(false)
-        }
+            ivStatus.setOnClickListener {
+                displayPopUp(true)
+            }
 
-        binding.editButton.setOnClickListener {
-            showToEdit()
-        }
+            ivImageEdit.setOnClickListener {
+                displayPopUp(false)
+            }
 
-        binding.cancelButton.setOnClickListener {
-            cancelSwitcher()
-        }
+            editButton.setOnClickListener {
+                showToEdit()
+            }
 
-        binding.btnAccept.setOnClickListener {
-            if (isNew) {
-                updatingProfile()
+            cancelButton.setOnClickListener {
+                cancelSwitcher()
+            }
 
-            } else {
-                accpetSwitcher()
+            chbShowPasswdText.setOnCheckedChangeListener { _, isChecked ->
+                showOrHideText(isChecked, etPassword)
+            }
+
+            chbShowConfirmPasswdText.setOnCheckedChangeListener { _, isChecked ->
+                showOrHideText(isChecked, etPasswordConfirm)
+            }
+
+            btnAccept.setOnClickListener {
+                if (isNew) {
+                    updatingProfile()
+
+                } else {
+                    accpetSwitcher()
+                }
             }
         }
     }
@@ -369,6 +382,15 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             editText.background =
                 ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_error_background)
         }
+    }
+
+    private fun showOrHideText(checked: Boolean, editText: AppCompatEditText) {
+        if (checked) {
+            editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+        } else {
+            editText.transformationMethod = PasswordTransformationMethod.getInstance()
+        }
+        editText.setSelection(editText.text.toString().length)
     }
 
     private fun createUri(): Uri {
@@ -519,7 +541,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     override fun onGalleryClick() {
         Log.d("TAG", "Gallery")
-        viewModel.setLoad(true)
         galleryContract.launch("image/*")
     }
 
