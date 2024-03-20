@@ -28,8 +28,12 @@ interface DataSource {
 
     suspend fun uploadImg(token: String, file: File): BaseResponse<CommonMessageModel>
     suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<CommonMessageModel>
-    suspend fun putNotification(token: String, firebaseToken: String): BaseResponse<CommonMessageModel>
-    suspend fun loginBiometric(firebaseToken: String): BaseResponse<UserModel>
+    suspend fun putNotification(
+        token: String,
+        firebaseToken: String
+    ): BaseResponse<CommonMessageModel>
+
+    suspend fun loginBiometric(token: String): BaseResponse<UserModel>
     suspend fun getListChats(token: String): BaseResponse<ListChatsModel>
     suspend fun createChat(
         token: String,

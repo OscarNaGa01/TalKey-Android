@@ -45,7 +45,7 @@ interface RemoteApiService {
      */
     @POST("users/biometric")
     suspend fun loginBiometric(
-        @Body firebaseTokenRequest: FirebaseTokenRequest
+        @Header("Authorization") token: String,
     ): Response<LoginResponse>
 
     @POST("users/logout")

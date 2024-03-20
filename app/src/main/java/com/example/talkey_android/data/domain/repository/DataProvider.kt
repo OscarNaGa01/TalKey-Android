@@ -61,8 +61,8 @@ object DataProvider : DataSource {
         return RemoteDataSource.putNotification(token, firebaseToken)
     }
 
-    override suspend fun loginBiometric(firebaseToken: String): BaseResponse<UserModel> {
-        return RemoteDataSource.loginBiometric(firebaseToken)
+    override suspend fun loginBiometric(token: String): BaseResponse<UserModel> {
+        return RemoteDataSource.loginBiometric(token)
     }
 
     override suspend fun getListChats(token: String): BaseResponse<ListChatsModel> {

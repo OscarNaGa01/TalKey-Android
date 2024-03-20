@@ -1,5 +1,6 @@
 package com.example.talkey_android.ui.login
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -10,6 +11,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+import androidx.biometric.BiometricPrompt
+import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -21,10 +27,13 @@ import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.UserModel
+import com.example.talkey_android.data.domain.use_cases.users.LoginBiometricUseCase
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
+import com.example.talkey_android.data.utils.Prefs
 import com.example.talkey_android.databinding.FragmentLogInBinding
 import kotlinx.coroutines.launch
+import java.util.concurrent.Executor
 import java.util.regex.Pattern
 
 
@@ -33,8 +42,12 @@ class LogInFragment : Fragment() {
     private lateinit var binding: FragmentLogInBinding
     private var isLogin: Boolean = true
     private val logInFragmentViewModel: LogInFragmentViewModel =
-        LogInFragmentViewModel(RegisterUseCase(), LoginUseCase())
+        LogInFragmentViewModel(RegisterUseCase(), LoginUseCase(), LoginBiometricUseCase())
     private lateinit var mainActivity: MainActivity
+
+    private lateinit var prefs: Prefs
+    private var isTryingBiometricAccess: Boolean = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +55,18 @@ class LogInFragment : Fragment() {
     ): View {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
+        prefs = Prefs(requireContext())
         initListeners()
         observeViewModel()
+
+        //biometric----------------------------------------------
+        binding.btnFingerPrint.setOnClickListener {
+            isTryingBiometricAccess = true
+            checkDeviceBiometric(prefs.getToken())
+        }
+        //biometric----------------------------------------------
+
+
         return binding.root
     }
 
@@ -62,7 +85,15 @@ class LogInFragment : Fragment() {
 
                     is LogInFragmentUiState.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        doNavigation(uiState.userModel)
+
+                        if (isTryingBiometricAccess) {
+                            prefs.saveToken(uiState.userModel.token)
+                            doNavigation(uiState.userModel)
+                        } else {
+                            isTryingBiometricAccess = false
+                            checkDeviceBiometric(uiState.userModel.token)
+                            doNavigation(uiState.userModel)
+                        }
                     }
 
                     is LogInFragmentUiState.LoginError -> {
@@ -180,6 +211,7 @@ class LogInFragment : Fragment() {
             btnAccept.text = getString(R.string.log_in_button)
             setEditTextBackground(emptyList())
             isLogin = true
+            btnFingerPrint.visibility = View.VISIBLE
         }
     }
 
@@ -194,6 +226,7 @@ class LogInFragment : Fragment() {
             btnAccept.text = getString(R.string.sign_up_button)
             setEditTextBackground(emptyList())
             isLogin = false
+            btnFingerPrint.visibility = View.GONE
         }
     }
 
@@ -222,18 +255,19 @@ class LogInFragment : Fragment() {
 
     private fun signUp() {
         with(binding) {
-            if (isValidEmail(etEmail.text.toString()) && etNick.text.toString().isNotEmpty() && isValidPassword()
+            if (isValidEmail(etEmail.text.toString()) && etNick.text.toString()
+                    .isNotEmpty() && isValidPassword()
                 && etPassword.text.toString() == etConfirmPassword.text.toString() && cbTermsConditions.isChecked
             ) {
-                    logInFragmentViewModel.postRegister(
-                        RegisterRequestModel(
-                            etEmail.text.toString(),
-                            etPassword.text.toString(),
-                            etNick.text.toString(),
-                            PLATFORM,
-                            ""
-                        )
+                logInFragmentViewModel.postRegister(
+                    RegisterRequestModel(
+                        etEmail.text.toString(),
+                        etPassword.text.toString(),
+                        etNick.text.toString(),
+                        PLATFORM,
+                        ""
                     )
+                )
 
             } else if (etEmail.text.toString().isEmpty() && etNick.text.toString()
                     .isEmpty() && etPassword.text.toString()
@@ -264,7 +298,11 @@ class LogInFragment : Fragment() {
 
             } else if (!cbTermsConditions.isChecked) {
                 setEditTextBackground(emptyList())
-                Toast.makeText(requireContext(), "Accept our terms and conditions", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Accept our terms and conditions",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             }
         }
@@ -272,14 +310,19 @@ class LogInFragment : Fragment() {
 
     private fun setEditTextBackground(currentEditText: List<EditText>) {
         with(binding) {
-            etEmail.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
-            etNick.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
-            etPassword.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
-            etConfirmPassword.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etEmail.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etNick.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etPassword.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
+            etConfirmPassword.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_background)
 
         }
         currentEditText.forEach { editText ->
-            editText.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_error_background)
+            editText.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_error_background)
         }
     }
 
@@ -289,8 +332,115 @@ class LogInFragment : Fragment() {
     }
 
     private fun isValidPassword(): Boolean {
-        val patron = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
+        val patron =
+            Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
         return patron.matches(binding.etPassword.text.toString())
     }
 
+    //biometric----------------------------------------------
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: PromptInfo
+    private fun checkDeviceBiometric(token: String) {
+        val biometricManager = BiometricManager.from(requireContext())
+        when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+
+                if (isTryingBiometricAccess) {
+                    createBiometricListener(token)
+                    createPromptInfo()
+                    biometricPrompt.authenticate(promptInfo)
+
+                } else if (binding.etEmail.text.toString() != prefs.getMail()) {
+                    showDialogToSaveAccount(token)
+                } else {
+                    prefs.saveToken(token)
+                }
+            }
+
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+                if (isTryingBiometricAccess) {
+                    Toast.makeText(
+                        requireContext(),
+                        "No existe sensor biométrico",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
+                if (isTryingBiometricAccess) {
+                    Toast.makeText(
+                        requireContext(),
+                        "No está disponible el sensor",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                if (isTryingBiometricAccess) {
+                    Toast.makeText(
+                        requireContext(),
+                        "No se puede conectar con el sensor",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            }
+        }
+    }
+
+    private fun createBiometricListener(token: String) {
+        executor = ContextCompat.getMainExecutor(requireContext())
+        biometricPrompt =
+            BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(requireContext(), errString, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(requireContext(), "La huella no coincide", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    logInFragmentViewModel.doBiometricLogin(token)
+                }
+            })
+    }
+
+    private fun createPromptInfo() {
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Login")
+            .setSubtitle("Usa tu huella para acceder a la aplicación")
+            .setNegativeButtonText("Cancelar")
+            .build()
+    }
+    //biometric----------------------------------------------
+
+    private fun showDialogToSaveAccount(token: String) {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setTitle("Cuenta desconocida")
+        builder.setMessage("¿Quieres asociar esta cuenta a tu sensor biométrico?")
+
+        builder.setPositiveButton("Sí") { _, _ ->
+            prefs.saveToken(token)
+            prefs.saveMail(binding.etEmail.text.toString())
+            Toast.makeText(
+                requireContext(),
+                "Se ha asociado esta cuenta a su huella",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        builder.setNegativeButton("No") { _, _ -> }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
 }
