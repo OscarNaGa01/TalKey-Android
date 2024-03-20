@@ -40,4 +40,14 @@
     <style name="menuOverflowToolbar" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">@color/white</item>
     </style>
+
+    <style name="passwordCheckBox">
+        <item name="android:layout_width">45dp</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:background">@drawable/show_passwd_check_box</item>
+        <item name="android:button">@null</item>
+        <item name="android:layout_marginEnd">12dp</item>
+
+
+    </style>
 </resources>
