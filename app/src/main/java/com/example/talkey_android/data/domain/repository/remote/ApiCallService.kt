@@ -63,9 +63,9 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
     }
 
     suspend fun loginBiometric(
-        firebaseTokenRequest: FirebaseTokenRequest
+        token: String
     ): BaseResponse<LoginResponse> {
-        return apiCall { remoteApiService.loginBiometric(firebaseTokenRequest) }
+        return apiCall { remoteApiService.loginBiometric(token) }
     }
 
     suspend fun getListChats(token: String): BaseResponse<List<ChatResponse>> {

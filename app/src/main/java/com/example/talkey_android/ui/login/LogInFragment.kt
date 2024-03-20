@@ -27,6 +27,7 @@ import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
 import com.example.talkey_android.data.domain.model.users.UserModel
+import com.example.talkey_android.data.domain.use_cases.users.LoginBiometricUseCase
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.data.utils.Prefs
@@ -41,7 +42,7 @@ class LogInFragment : Fragment() {
     private lateinit var binding: FragmentLogInBinding
     private var isLogin: Boolean = true
     private val logInFragmentViewModel: LogInFragmentViewModel =
-        LogInFragmentViewModel(RegisterUseCase(), LoginUseCase())
+        LogInFragmentViewModel(RegisterUseCase(), LoginUseCase(), LoginBiometricUseCase())
     private lateinit var mainActivity: MainActivity
 
     private lateinit var prefs: Prefs
@@ -84,9 +85,15 @@ class LogInFragment : Fragment() {
 
                     is LogInFragmentUiState.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        isTryingBiometricAccess = false
-                        checkDeviceBiometric(uiState.userModel.token)
-                        doNavigation(uiState.userModel)
+
+                        if (isTryingBiometricAccess) {
+                            prefs.saveToken(uiState.userModel.token)
+                            doNavigation(uiState.userModel)
+                        } else {
+                            isTryingBiometricAccess = false
+                            checkDeviceBiometric(uiState.userModel.token)
+                            doNavigation(uiState.userModel)
+                        }
                     }
 
                     is LogInFragmentUiState.LoginError -> {
@@ -345,7 +352,7 @@ class LogInFragment : Fragment() {
                     biometricPrompt.authenticate(promptInfo)
 
                 } else {
-                    showDialogToSaveAcount(token)
+                    showDialogToSaveAccount(token)
                 }
             }
 
@@ -399,7 +406,7 @@ class LogInFragment : Fragment() {
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    // TODO: hacer aquí la navegación
+                    logInFragmentViewModel.doBiometricLogin(token)
                     Toast.makeText(requireContext(), "Éxito", Toast.LENGTH_SHORT).show()
                 }
             })
@@ -414,7 +421,7 @@ class LogInFragment : Fragment() {
     }
     //biometric----------------------------------------------
 
-    private fun showDialogToSaveAcount(token: String) {
+    private fun showDialogToSaveAccount(token: String) {
         val builder = AlertDialog.Builder(requireContext())
 
         builder.setTitle("Confirmación")

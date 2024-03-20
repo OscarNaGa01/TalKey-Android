@@ -62,10 +62,10 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun loginBiometric(
-        firebaseToken: String
+        token: String
     ): BaseResponse<UserModel> {
         val apiResult =
-            apiCallService.loginBiometric(FirebaseTokenMapper().toRequest(firebaseToken))
+            apiCallService.loginBiometric(token)
 
         return when (apiResult) {
             is BaseResponse.Success ->
