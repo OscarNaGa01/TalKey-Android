@@ -34,7 +34,7 @@ class ChatFragmentViewModel(
 
             when (baseResponse) {
                 is BaseResponse.Success -> {
-                    getMessages(token, chat, 0, 5)
+                    getMessages(token, chat, 200, 0)
                 }
 
                 is BaseResponse.Error -> {
@@ -51,7 +51,7 @@ class ChatFragmentViewModel(
 
             when (baseResponse) {
                 is BaseResponse.Success -> {
-                    _message.emit(ListMessageModel(baseResponse.data.count, baseResponse.data.rows))
+                    _message.emit(baseResponse.data)
                 }
 
                 is BaseResponse.Error -> {

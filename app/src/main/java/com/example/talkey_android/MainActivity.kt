@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     fun hideKeyBoard() {
         val imm: InputMethodManager =
-            this.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+            this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         if (imm.isAcceptingText) {
             imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }

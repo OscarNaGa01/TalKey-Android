@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/tvDateMe"
+        android:id="@+id/tvDateOther"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_margin"
@@ -16,7 +16,7 @@
         tools:text="14 de Marzo" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cvChat"
+        android:id="@+id/cvChatOther"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_margin"
@@ -24,10 +24,10 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDateMe">
+        app:layout_constraintTop_toBottomOf="@id/tvDateOther">
 
         <TextView
-            android:id="@+id/tvMessageMe"
+            android:id="@+id/tvMessageOther"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
@@ -36,7 +36,7 @@
             tools:text="Ejemplo de texto" />
 
         <TextView
-            android:id="@+id/tvHourMe"
+            android:id="@+id/tvHourOther"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
