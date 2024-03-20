@@ -6,12 +6,16 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 object Utils {
@@ -68,6 +72,23 @@ object Utils {
 
         } else {
             null
+        }
+    }
+
+    fun checkDateAndTime(lastMsgDate: String): String {
+        return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            val formatter = DateTimeFormatter.ISO_DATE_TIME
+            val dateTime = LocalDateTime.parse(lastMsgDate, formatter)
+            val date = dateTime.toLocalDate()
+            val currentDate = LocalDate.now()
+
+            if (date == currentDate) {
+                lastMsgDate.substring(11, 16)
+            } else {
+                lastMsgDate.substring(0, 10)
+            }
+        } else {
+            lastMsgDate.substring(0, 10)
         }
     }
 }

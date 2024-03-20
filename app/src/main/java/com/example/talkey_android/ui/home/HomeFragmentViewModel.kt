@@ -1,6 +1,5 @@
 package com.example.talkey_android.ui.home
 
-import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.chats.ChatItemListModel
@@ -12,6 +11,7 @@ import com.example.talkey_android.data.domain.use_cases.chats.CreateChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
+import com.example.talkey_android.data.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,9 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class HomeFragmentViewModel(
     private val getListProfilesUseCase: GetListProfilesUseCase,
@@ -78,7 +75,7 @@ class HomeFragmentViewModel(
                     if (baseResponse.data.count > 0) {
                         chat.lastMessage = baseResponse.data.rows[0].message
                         //chat.dateLastMessage = baseResponse.data.rows[0].date.substring(0, 10)
-                        chat.dateLastMessage = checkDateAndTime(baseResponse.data.rows[0].date)
+                        chat.dateLastMessage = Utils.checkDateAndTime(baseResponse.data.rows[0].date)
                         println(baseResponse.data.rows[0].date)
                     } else {
                         chat.lastMessage = "Dile algo a ${chat.contactNick}"
@@ -94,25 +91,6 @@ class HomeFragmentViewModel(
         }
         chatsList.removeAll { it.dateLastMessage == "" }
         chatsList.sortByDescending { it.dateLastMessage }
-    }
-
-    // TODO: Mover esta función a la clase Utils cuando la añadan en un merge con develop
-    private fun checkDateAndTime(lastMsgDate: String): String {
-        return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
-            val formatter = DateTimeFormatter.ISO_DATE_TIME
-            val dateTime = LocalDateTime.parse(lastMsgDate, formatter)
-            val date = dateTime.toLocalDate()
-            val currentDate = LocalDate.now()
-
-            if (date == currentDate) {
-                lastMsgDate.substring(11, 16)
-            } else {
-                lastMsgDate.substring(0, 10)
-            }
-        } else {
-            lastMsgDate.substring(0, 10)
-        }
-
     }
 
     private suspend fun getChatsData(token: String, idUser: String) {
