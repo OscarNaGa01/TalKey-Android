@@ -63,12 +63,7 @@
 
         <CheckBox
             android:id="@+id/chbShowPasswdText"
-            android:layout_width="60dp"
-            android:layout_height="0dp"
-            android:background="@drawable/show_passwd_check_box"
-            android:button="@null"
-            android:layout_marginEnd="12dp"
-            android:layout_marginVertical="2dp"
+            style="@style/passwordCheckBox"
             app:layout_constraintTop_toTopOf="@id/etPassword"
             app:layout_constraintBottom_toBottomOf="@id/etPassword"
             app:layout_constraintEnd_toEndOf="@id/etPassword" />
@@ -84,12 +79,7 @@
 
         <CheckBox
             android:id="@+id/chbShowConfirmPasswdText"
-            android:layout_width="60dp"
-            android:layout_height="0dp"
-            android:background="@drawable/show_passwd_check_box"
-            android:button="@null"
-            android:layout_marginEnd="12dp"
-            android:layout_marginVertical="2dp"
+            style="@style/passwordCheckBox"
             app:layout_constraintTop_toTopOf="@id/etConfirmPassword"
             app:layout_constraintBottom_toBottomOf="@id/etConfirmPassword"
             app:layout_constraintEnd_toEndOf="@id/etConfirmPassword" />
