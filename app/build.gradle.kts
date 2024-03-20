@@ -51,6 +51,9 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
+    //biometric
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
+
     //splash API
     implementation("androidx.core:core-splashscreen:1.0.1")
 
