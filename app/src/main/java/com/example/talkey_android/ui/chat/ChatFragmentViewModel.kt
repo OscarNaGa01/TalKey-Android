@@ -27,7 +27,7 @@ class ChatFragmentViewModel(
     private val _message = MutableStateFlow(ListMessageModel())
     val message: StateFlow<ListMessageModel> = _message
 
-    suspend fun sendMessage(token: String, chat: String, source: String, message: String) {
+    fun sendMessage(token: String, chat: String, source: String, message: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
             val baseResponse = sendMessageUseCase(token, chat, source, message)
@@ -44,7 +44,7 @@ class ChatFragmentViewModel(
         }
     }
 
-    suspend fun getMessages(token: String, idChat: String, limit: Int, offset: Int) {
+    fun getMessages(token: String, idChat: String, limit: Int, offset: Int) {
         viewModelScope.launch(Dispatchers.IO) {
 
             val baseResponse = getListMessageUseCase(token, idChat, limit, offset)

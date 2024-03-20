@@ -73,6 +73,6 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
     fun updateList(messages: MutableList<MessageModel>) {
         messageList.clear()
         messageList.addAll(messages.toMutableList())
-        notifyItemInserted(messageList.size - 1)
+        notifyDataSetChanged()
     }
 }

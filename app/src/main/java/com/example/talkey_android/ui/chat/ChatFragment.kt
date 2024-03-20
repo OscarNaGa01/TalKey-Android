@@ -31,10 +31,15 @@ class ChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentChatBinding.inflate(inflater, container, false)
+        mainActivity = requireActivity() as MainActivity
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRecyclerView()
         observeViewModel()
         initListeners()
-        return binding.root
+        getMessageList()
     }
 
     private fun initListeners() {
@@ -44,21 +49,27 @@ class ChatFragment : Fragment() {
             }
             ivSend.setOnClickListener {
                 if (etMessage.text.toString().isNotEmpty()) {
-                    lifecycleScope.launch {
-                        chatFragmentViewModel.sendMessage(
-                            args.token,
-                            args.idChat,
-                            args.idUser,
-                            etMessage.text.toString()
-                        )
-                    }
+                    chatFragmentViewModel.sendMessage(
+                        args.token,
+                        args.idChat,
+                        args.idUser,
+                        etMessage.text.toString()
+                    )
                     etMessage.text?.clear()
                 }
             }
-            root.setOnClickListener {
+            rvChat.setOnClickListener {
                 mainActivity.hideKeyBoard()
             }
+            swipeToRefresh.setOnRefreshListener {
+                getMessageList()
+                swipeToRefresh.isRefreshing = false
+            }
         }
+    }
+
+    private fun getMessageList() {
+        chatFragmentViewModel.getMessages(args.token, args.idChat, 200, 0)
     }
 
     private fun observeViewModel() {

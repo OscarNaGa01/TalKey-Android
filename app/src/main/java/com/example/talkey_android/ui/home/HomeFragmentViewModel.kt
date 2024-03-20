@@ -71,7 +71,6 @@ class HomeFragmentViewModel(
     }
 
     private suspend fun getMessagesData(token: String) {
-        chatsList.sortByDescending { it.dateLastMessage }
         for (chat in chatsList) {
             when (val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)) {
                 is BaseResponse.Success -> {
@@ -94,6 +93,7 @@ class HomeFragmentViewModel(
             }
         }
         chatsList.removeAll { it.dateLastMessage == "" }
+        chatsList.sortByDescending { it.dateLastMessage }
     }
 
     // TODO: Mover esta función a la clase Utils cuando la añadan en un merge con develop
