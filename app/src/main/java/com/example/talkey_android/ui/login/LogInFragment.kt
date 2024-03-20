@@ -351,8 +351,10 @@ class LogInFragment : Fragment() {
                     createPromptInfo()
                     biometricPrompt.authenticate(promptInfo)
 
-                } else {
+                } else if (binding.etEmail.text.toString() != prefs.getMail()) {
                     showDialogToSaveAccount(token)
+                } else {
+                    prefs.saveToken(token)
                 }
             }
 
@@ -407,7 +409,6 @@ class LogInFragment : Fragment() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
                     logInFragmentViewModel.doBiometricLogin(token)
-                    Toast.makeText(requireContext(), "Éxito", Toast.LENGTH_SHORT).show()
                 }
             })
     }
@@ -424,11 +425,12 @@ class LogInFragment : Fragment() {
     private fun showDialogToSaveAccount(token: String) {
         val builder = AlertDialog.Builder(requireContext())
 
-        builder.setTitle("Confirmación")
+        builder.setTitle("Cuenta desconocida")
         builder.setMessage("¿Quieres asociar esta cuenta a tu sensor biométrico?")
 
         builder.setPositiveButton("Sí") { _, _ ->
             prefs.saveToken(token)
+            prefs.saveMail(binding.etEmail.text.toString())
             Toast.makeText(
                 requireContext(),
                 "Se ha asociado esta cuenta a su huella",
