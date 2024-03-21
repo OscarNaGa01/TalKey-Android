@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.talkey_android.data.domain.model.messages.MessageModel
-import com.example.talkey_android.data.utils.Utils
 import com.example.talkey_android.databinding.ItemChatMeBinding
 import com.example.talkey_android.databinding.ItemChatOtherBinding
 
-class ChatAdapter(private var messageList: MutableList<MessageModel>, private val idUser: String) :
+class ChatAdapter(
+    private var messageList: MutableList<MessageModel>,
+    private val idUser: String
+) :
     RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     private lateinit var context: Context
@@ -33,8 +35,8 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
             val currentBinding = binding as ItemChatOtherBinding
             with(currentBinding) {
                 tvMessageOther.text = messageModel.message
-                tvDateOther.text = setHourAndDate(messageModel.date, isDate)
-                tvHourOther.text = setHourAndDate(messageModel.date, !isDate)
+                tvDateOther.text = messageModel.date
+//                tvHourOther.text = Utils.checkDateAndTime(messageModel.date, false, true)
             }
         }
 
@@ -42,16 +44,8 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
             val currentBinding = binding as ItemChatMeBinding
             with(currentBinding) {
                 tvMessageMe.text = messageModel.message
-                tvDateMe.text = setHourAndDate(messageModel.date, isDate = true)
-                tvHourMe.text = setHourAndDate(messageModel.date, isDate = false)
-            }
-        }
-
-        private fun setHourAndDate(date: String, isDate: Boolean): String {
-            return if (isDate) {
-                Utils.checkDateAndTime(date, isDate)
-            } else {
-                Utils.checkDateAndTime(date, !isDate)
+                tvDateMe.text = messageModel.date
+//                tvHourMe.text = Utils.checkDateAndTime(messageModel.date, false, true)
             }
         }
     }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.talkey_android.MainActivity
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.SendMessageUseCase
+import com.example.talkey_android.data.utils.Utils
 import com.example.talkey_android.databinding.FragmentChatBinding
 import com.example.talkey_android.ui.chat.adapter.ChatAdapter
 import kotlinx.coroutines.launch
@@ -76,6 +77,7 @@ class ChatFragment : Fragment() {
     private fun observeViewModel() {
         lifecycleScope.launch {
             chatFragmentViewModel.message.collect { messages ->
+                Utils.showDateOnce(messages)
                 chatAdapter.updateList(messages.rows)
             }
         }
