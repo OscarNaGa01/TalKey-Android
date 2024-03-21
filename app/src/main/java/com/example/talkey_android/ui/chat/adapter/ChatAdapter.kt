@@ -35,8 +35,8 @@ class ChatAdapter(
             val currentBinding = binding as ItemChatOtherBinding
             with(currentBinding) {
                 tvMessageOther.text = messageModel.message
-                tvDateOther.text = messageModel.date
-//                tvHourOther.text = Utils.checkDateAndTime(messageModel.date, false, true)
+                tvDateOther.text = messageModel.day
+                tvHourOther.text = messageModel.hour
             }
         }
 
@@ -44,8 +44,8 @@ class ChatAdapter(
             val currentBinding = binding as ItemChatMeBinding
             with(currentBinding) {
                 tvMessageMe.text = messageModel.message
-                tvDateMe.text = messageModel.date
-//                tvHourMe.text = Utils.checkDateAndTime(messageModel.date, false, true)
+                tvDateMe.text = messageModel.day
+                tvHourMe.text = messageModel.hour
             }
         }
     }

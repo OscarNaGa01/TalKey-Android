@@ -104,10 +104,10 @@ object Utils {
             var formattedDate = ""
             if (message.date != "") {
                 formattedDate = checkDateAndTime(message.date, true, true)
-                message.date = formattedDate
+                message.day = formattedDate
             }
             if (formattedDate == lastDate) {
-                message.date = ""
+                message.day = ""
             } else {
                 lastDate = formattedDate
             }
