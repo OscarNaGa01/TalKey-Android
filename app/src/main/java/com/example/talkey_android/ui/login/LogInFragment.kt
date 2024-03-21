@@ -8,6 +8,7 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
@@ -56,6 +57,7 @@ class LogInFragment : Fragment() {
         binding = FragmentLogInBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
         prefs = Prefs(requireContext())
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         initListeners()
         observeViewModel()
 
@@ -287,17 +289,24 @@ class LogInFragment : Fragment() {
 
             } else if (!isValidPassword()) {
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
-                Toast.makeText(
-                    requireContext(),
-                    "Invalid password. It must be composed of 8 characters, a capital letter and a special character.",
-                    Toast.LENGTH_LONG
-                ).show()
+                with(binding.tvPasswordRequirements) {
+                    visibility = View.VISIBLE
+                    text = getString(R.string.password_requirements)
+                }
+                Toast.makeText(requireContext(), (R.string.invalid_password), Toast.LENGTH_SHORT)
+                    .show()
 
             } else if (etPassword.text.toString() != etConfirmPassword.text.toString()) {
+                binding.tvPasswordRequirements.visibility = View.GONE
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
-                Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.passwords_dont_match),
+                    Toast.LENGTH_SHORT
+                ).show()
 
             } else if (!cbTermsConditions.isChecked) {
+                binding.tvPasswordRequirements.visibility = View.GONE
                 setEditTextBackground(emptyList())
                 Toast.makeText(
                     requireContext(),

@@ -47,7 +47,19 @@
         <item name="android:background">@drawable/show_passwd_check_box</item>
         <item name="android:button">@null</item>
         <item name="android:layout_marginEnd">12dp</item>
+    </style>
 
-
+    <style name="passwordRequirements">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@drawable/edit_text_error_white_background</item>
+        <item name="android:textColor">@color/statusOffline</item>
+        <item name="android:layout_marginStart">1dp</item>
+        <item name="android:layout_marginEnd">1dp</item>
+        <item name="android:paddingBottom">60dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
     </style>
 </resources>

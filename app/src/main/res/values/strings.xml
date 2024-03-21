@@ -25,4 +25,10 @@
     <string name="fill_all_fields">Rellena todos los campos</string>
     <string name="user_exists">El usuario ya existe</string>
     <string name="status_update_error">No fué posible cambiar el status de usuario</string>
+    <string name="invalid_password">Contraseña inválida</string>
+    <string name="passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="password_requirements">La contrasña debe contener 8 carácteres, una letra mayúscula, un número y un carácter especial</string>
+
+    <!--    Por añadir-->
+
 </resources>
