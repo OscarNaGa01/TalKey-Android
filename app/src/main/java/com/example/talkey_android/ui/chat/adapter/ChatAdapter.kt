@@ -6,20 +6,54 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.talkey_android.data.domain.model.messages.MessageModel
+import com.example.talkey_android.data.utils.Utils
 import com.example.talkey_android.databinding.ItemChatMeBinding
 import com.example.talkey_android.databinding.ItemChatOtherBinding
 
-class ChatAdapter(private val messageList: List<MessageModel>) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+class ChatAdapter(private var messageList: MutableList<MessageModel>, private val idUser: String) :
+    RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     private lateinit var context: Context
+    private val isDate = true
 
     companion object {
         const val SENT_MESSAGE = 0
         const val RECEIVED_MESSAGE = 1
     }
 
-    inner class ViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(messageModel: MessageModel, itemViewType: Int) {
+            when (itemViewType) {
+                SENT_MESSAGE -> bindSentMessage(messageModel)
+                RECEIVED_MESSAGE -> bindReceivedMessage(messageModel)
+            }
+        }
 
+        private fun bindReceivedMessage(messageModel: MessageModel) {
+            val currentBinding = binding as ItemChatOtherBinding
+            with(currentBinding) {
+                tvMessageOther.text = messageModel.message
+                tvDateOther.text = setHourAndDate(messageModel.date, isDate)
+                tvHourOther.text = setHourAndDate(messageModel.date, !isDate)
+            }
+        }
+
+        private fun bindSentMessage(messageModel: MessageModel) {
+            val currentBinding = binding as ItemChatMeBinding
+            with(currentBinding) {
+                tvMessageMe.text = messageModel.message
+                tvDateMe.text = setHourAndDate(messageModel.date, isDate = true)
+                tvHourMe.text = setHourAndDate(messageModel.date, isDate = false)
+            }
+        }
+
+        private fun setHourAndDate(date: String, isDate: Boolean): String {
+            return if (isDate) {
+                Utils.checkDateAndTime(date, isDate)
+            } else {
+                Utils.checkDateAndTime(date, !isDate)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,6 +71,20 @@ class ChatAdapter(private val messageList: List<MessageModel>) : RecyclerView.Ad
     override fun getItemCount(): Int = messageList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val message = messageList[position]
+        holder.bind(messageList[position], getItemViewType(position))
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (messageList[position].source == idUser) {
+            SENT_MESSAGE
+        } else {
+            RECEIVED_MESSAGE
+        }
+    }
+
+    fun updateList(messages: MutableList<MessageModel>) {
+        messageList.clear()
+        messageList.addAll(messages.toMutableList())
+        notifyDataSetChanged()
     }
 }
