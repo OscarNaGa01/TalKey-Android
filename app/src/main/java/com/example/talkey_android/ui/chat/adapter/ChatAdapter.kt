@@ -2,6 +2,7 @@ package com.example.talkey_android.ui.chat.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -16,7 +17,6 @@ class ChatAdapter(
     RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     private lateinit var context: Context
-    private val isDate = true
 
     companion object {
         const val SENT_MESSAGE = 0
@@ -44,7 +44,12 @@ class ChatAdapter(
             val currentBinding = binding as ItemChatMeBinding
             with(currentBinding) {
                 tvMessageMe.text = messageModel.message
-                tvDateMe.text = messageModel.day
+                if (messageModel.day == "") {
+                    tvDateMe.visibility = View.GONE
+                } else {
+                    tvDateMe.visibility = View.VISIBLE
+                    tvDateMe.text = messageModel.day
+                }
                 tvHourMe.text = messageModel.hour
             }
         }

@@ -75,7 +75,7 @@ class HomeFragmentViewModel(
                     if (baseResponse.data.count > 0) {
                         chat.lastMessage = baseResponse.data.rows[0].message
                         //chat.dateLastMessage = baseResponse.data.rows[0].date.substring(0, 10)
-                        chat.dateLastMessage = Utils.checkDateAndTime(baseResponse.data.rows[0].date, false, false)
+                        chat.dateLastMessage = Utils.checkDateAndTime(baseResponse.data.rows[0].date, false)
                         println(baseResponse.data.rows[0].date)
                     } else {
                         chat.lastMessage = "Dile algo a ${chat.contactNick}"

@@ -77,17 +77,15 @@ object Utils {
         }
     }
 
-    fun checkDateAndTime(lastMsgDate: String, isDate: Boolean, isChat: Boolean): String {
+    fun checkDateAndTime(lastMsgDate: String, isChat: Boolean): String {
         return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
             val formatter = DateTimeFormatter.ISO_DATE_TIME
             val dateTime = LocalDateTime.parse(lastMsgDate, formatter)
             val date = dateTime.toLocalDate()
             val currentDate = LocalDate.now()
 
-            if (date == currentDate && !isChat || !isDate && isChat) {
+            if (date == currentDate && !isChat) {
                 lastMsgDate.substring(11, 16)
-            } else if (isDate && isChat) {
-                lastMsgDate.substring(0, 10)
             } else {
                 lastMsgDate.substring(0, 10)
             }
@@ -103,7 +101,7 @@ object Utils {
         messageList.forEach { message ->
             var formattedDate = ""
             if (message.date != "") {
-                formattedDate = checkDateAndTime(message.date, true, true)
+                formattedDate = checkDateAndTime(message.date, true)
                 message.day = formattedDate
             }
             if (formattedDate == lastDate) {
