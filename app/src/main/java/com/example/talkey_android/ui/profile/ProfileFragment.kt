@@ -326,17 +326,31 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         with(binding) {
             if (isValidPassword() && etPassword.text.toString() == etPasswordConfirm.text.toString()) {
                 setEditTextBackground(emptyList())
+                binding.tvPasswordRequirements.visibility = View.GONE
                 viewModel.saveData(
                     etPassword.text.toString(), myUser!!.nick, null
                 )
 
             } else if (!isValidPassword()) {
                 setEditTextBackground(listOf(etPassword, etPasswordConfirm))
-                Toast.makeText(requireContext(), "Invalid password", Toast.LENGTH_SHORT).show()
+                with(binding.tvPasswordRequirements) {
+                    visibility = View.VISIBLE
+                    text = getString(R.string.password_requirements)
+                }
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.invalid_password),
+                    Toast.LENGTH_SHORT
+                ).show()
 
             } else if (etPassword.text.toString() != etPasswordConfirm.text.toString()) {
                 setEditTextBackground(listOf(etPassword, etPasswordConfirm))
-                Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()
+                binding.tvPasswordRequirements.visibility = View.GONE
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.passwords_dont_match),
+                    Toast.LENGTH_SHORT
+                ).show()
 
             }
         }
