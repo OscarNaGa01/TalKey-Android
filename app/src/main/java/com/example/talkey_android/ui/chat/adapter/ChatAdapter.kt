@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.talkey_android.data.domain.model.messages.MessageModel
+import com.example.talkey_android.data.utils.Utils
 import com.example.talkey_android.databinding.ItemChatMeBinding
 import com.example.talkey_android.databinding.ItemChatOtherBinding
 
@@ -31,7 +32,8 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
             val currentBinding = binding as ItemChatOtherBinding
             with(currentBinding) {
                 tvMessageOther.text = messageModel.message
-                tvDateOther.text = messageModel.date
+                tvDateOther.text = Utils.checkDateAndTime(messageModel.date)
+                tvHourOther.text = Utils.checkDateAndTime(messageModel.date)
             }
         }
 
@@ -39,7 +41,8 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
             val currentBinding = binding as ItemChatMeBinding
             with(currentBinding) {
                 tvMessageMe.text = messageModel.message
-                tvDateMe.text = messageModel.date
+                tvDateMe.text = Utils.checkDateAndTime(messageModel.date)
+                tvHourMe.text = Utils.checkDateAndTime(messageModel.date)
             }
         }
     }

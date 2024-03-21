@@ -131,7 +131,8 @@ class HomeFragment
                     HomeFragmentDirections.actionHomeToChat(
                         args.token,
                         args.id,
-                        idNewChat
+                        idNewChat.second, //User nick
+                        idNewChat.first //Chat id
                     )
                 )
             }
@@ -173,15 +174,16 @@ class HomeFragment
         }
     }
 
-    override fun onContactClick(idContact: String) {
-        mViewModel.createChat(args.token, args.id, idContact)
+    override fun onContactClick(idContact: String, nick: String) {
+        mViewModel.createChat(args.token, args.id, idContact, nick)
     }
 
-    override fun onChatClick(idChat: String) {
+    override fun onChatClick(idChat: String, contactNick: String) {
         findNavController().navigate(
             HomeFragmentDirections.actionHomeToChat(
                 args.token,
                 args.id,
+                contactNick,
                 idChat
             )
         )

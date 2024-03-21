@@ -40,6 +40,7 @@ class ChatFragment : Fragment() {
         observeViewModel()
         initListeners()
         getMessageList()
+        binding.tvName.text = args.nickTarget
     }
 
     private fun initListeners() {
