@@ -74,9 +74,9 @@ class ContactsAdapter(
             tvDate.text = chatItemModel.dateLastMessage
             tvLastMsg.text = chatItemModel.lastMessage
             if (chatItemModel.contactOnline) {
-                imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
-            } else {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOnline))
+            } else {
+                imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             }
             Glide.with(context)
                 .load(chatItemModel.contactAvatar)

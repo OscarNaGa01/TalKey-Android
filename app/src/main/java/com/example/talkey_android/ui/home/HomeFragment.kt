@@ -127,16 +127,22 @@ class HomeFragment
     private fun observeViewModel() {
         lifecycleScope.launch {
             mViewModel.idNewChat.collect { idNewChat ->
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeToChat(
-                        args.token,
-                        args.id,
-                        idNewChat.second, //User nick
-                        idNewChat.first //Chat id
+                try {
+
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionHomeToChat(
+                            args.token,
+                            args.id,
+                            idNewChat.second, //User nick
+                            idNewChat.first //Chat id
+                        )
                     )
-                )
+                } catch (ex: Exception) {
+                    println(ex)
+                }
             }
         }
+        
         lifecycleScope.launch {
             mViewModel.createNewChatError.collect {
                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()

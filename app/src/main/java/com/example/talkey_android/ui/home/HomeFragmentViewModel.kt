@@ -91,6 +91,7 @@ class HomeFragmentViewModel(
         }
         chatsList.removeAll { it.dateLastMessage == "" }
         chatsList.sortByDescending { it.dateLastMessage }
+        chatsList.sortBy { it.dateLastMessage.length }
     }
 
     private suspend fun getChatsData(token: String, idUser: String) {
