@@ -21,7 +21,7 @@
             android:layout_marginHorizontal="@dimen/common_margin"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/back_arrow_white" />
 
         <include layout="@layout/item_profile_image_status_chat" />
 
@@ -36,13 +36,20 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvChat"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeToRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/tilMessage"
-        app:layout_constraintTop_toBottomOf="@id/toolBar"
-        tools:listitem="@layout/item_chat_me" />
+        app:layout_constraintTop_toBottomOf="@id/toolBar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvChat"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:listitem="@layout/item_chat_me" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilMessage"
@@ -51,12 +58,15 @@
         android:layout_margin="16dp"
         android:hint="@string/hint_message"
         app:boxStrokeColor="@color/vassBlue"
+        app:cursorColor="@color/vassBlue"
+        app:hintTextColor="@color/vassBlue"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ivSend"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMessage"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -64,9 +74,11 @@
 
     <ImageView
         android:id="@+id/ivSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/ic_send_msg"
         app:layout_constraintBottom_toBottomOf="@id/tilMessage"
         app:layout_constraintEnd_toEndOf="parent"

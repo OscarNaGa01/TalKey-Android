@@ -65,6 +65,9 @@
             android:name="idUser"
             app:argType="string" />
         <argument
+            android:name="nickTarget"
+            app:argType="string" />
+        <argument
             android:name="idChat"
             app:argType="string" />
 

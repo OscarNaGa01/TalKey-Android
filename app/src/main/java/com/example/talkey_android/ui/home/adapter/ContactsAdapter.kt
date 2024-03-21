@@ -22,8 +22,8 @@ class ContactsAdapter(
 ) : RecyclerView.Adapter<ContactsAdapter.UsersViewHolder>() {
 
     interface CellListener {
-        fun onContactClick(idContact: String)
-        fun onChatClick(idChat: String)
+        fun onContactClick(idContact: String, nick: String)
+        fun onChatClick(idChat: String, contactNick: String)
     }
 
     private val contactType = 1
@@ -31,14 +31,15 @@ class ContactsAdapter(
 
     inner class UsersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemRecyclerviewUserBinding.bind(view)
-        fun setListenerToChat(idChat: String) {
+        fun setListenerToChat(idChat: String, contactNick: String) {
             binding.root.setOnClickListener {
-                listener.onChatClick(idChat)
+                listener.onChatClick(idChat, contactNick)
             }
         }
-        fun setListenerToContact(idTarget: String) {
+
+        fun setListenerToContact(idTarget: String, nick: String) {
             binding.root.setOnClickListener {
-                listener.onContactClick(idTarget)
+                listener.onContactClick(idTarget, nick)
             }
         }
     }
@@ -83,7 +84,7 @@ class ContactsAdapter(
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
-        holder.setListenerToChat(chatItemModel.idChat)
+        holder.setListenerToChat(chatItemModel.idChat, chatItemModel.contactNick)
     }
 
 
@@ -104,7 +105,7 @@ class ContactsAdapter(
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
-        holder.setListenerToContact(contact.id)
+        holder.setListenerToContact(contact.id, contact.nick)
     }
 
     override fun getItemCount() = list.count()
