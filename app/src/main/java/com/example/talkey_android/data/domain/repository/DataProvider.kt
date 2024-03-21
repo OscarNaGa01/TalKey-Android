@@ -77,7 +77,7 @@ object DataProvider : DataSource {
         return RemoteDataSource.createChat(token, source, target)
     }
 
-    override suspend fun deleteChat(token: String, idChat: Int): BaseResponse<SuccessModel> {
+    override suspend fun deleteChat(token: String, idChat: String): BaseResponse<SuccessModel> {
         return RemoteDataSource.deleteChat(token, idChat)
     }
 

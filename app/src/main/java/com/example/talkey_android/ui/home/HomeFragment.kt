@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.chats.CreateChatUseCase
+import com.example.talkey_android.data.domain.use_cases.chats.DeleteChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
@@ -41,7 +42,8 @@ class HomeFragment
         GetListProfilesUseCase(),
         GetListChatsUseCase(),
         GetListMessageUseCase(),
-        CreateChatUseCase()
+        CreateChatUseCase(),
+        DeleteChatUseCase()
     )
 
     override fun onCreateView(
@@ -126,6 +128,21 @@ class HomeFragment
 
     private fun observeViewModel() {
         lifecycleScope.launch {
+            mViewModel.deleteChatSuccess.collect {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                mViewModel.getChatsList(args.token, args.id)
+            }
+        }
+
+        lifecycleScope.launch {
+            mViewModel.deleteChatError.collect {
+                if (it.errorCode == 401.toString()) {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
             mViewModel.idNewChat.collect { idNewChat ->
                 try {
 
@@ -142,7 +159,7 @@ class HomeFragment
                 }
             }
         }
-        
+
         lifecycleScope.launch {
             mViewModel.createNewChatError.collect {
                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
@@ -170,7 +187,7 @@ class HomeFragment
     }
 
     private fun setupAdapter() {
-        mAdapter = ContactsAdapter(requireContext(), this, args.token, args.id)
+        mAdapter = ContactsAdapter(requireContext(), this)
         val listManager = LinearLayoutManager(requireContext())
 
         with(mBinding) {
@@ -180,11 +197,11 @@ class HomeFragment
         }
     }
 
-    override fun onContactClick(idContact: String, nick: String) {
+    override fun onClickContact(idContact: String, nick: String) {
         mViewModel.createChat(args.token, args.id, idContact, nick)
     }
 
-    override fun onChatClick(idChat: String, contactNick: String) {
+    override fun onClickChat(idChat: String, contactNick: String) {
         findNavController().navigate(
             HomeFragmentDirections.actionHomeToChat(
                 args.token,
@@ -193,6 +210,10 @@ class HomeFragment
                 idChat
             )
         )
+    }
+
+    override fun onLongClickChat(idChat: String) {
+        mViewModel.deleteChat(args.token, idChat)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

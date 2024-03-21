@@ -16,14 +16,13 @@ import com.example.talkey_android.databinding.ItemRecyclerviewUserBinding
 class ContactsAdapter(
     private val context: Context,
     private val listener: CellListener,
-    private val token: String,
-    private val idUser: String,
     private var list: List<Any> = listOf()
 ) : RecyclerView.Adapter<ContactsAdapter.UsersViewHolder>() {
 
     interface CellListener {
-        fun onContactClick(idContact: String, nick: String)
-        fun onChatClick(idChat: String, contactNick: String)
+        fun onClickContact(idContact: String, nick: String)
+        fun onClickChat(idChat: String, contactNick: String)
+        fun onLongClickChat(idChat: String)
     }
 
     private val contactType = 1
@@ -33,13 +32,17 @@ class ContactsAdapter(
         val binding = ItemRecyclerviewUserBinding.bind(view)
         fun setListenerToChat(idChat: String, contactNick: String) {
             binding.root.setOnClickListener {
-                listener.onChatClick(idChat, contactNick)
+                listener.onClickChat(idChat, contactNick)
+            }
+            binding.root.setOnLongClickListener {
+                listener.onLongClickChat(idChat)
+                true
             }
         }
 
         fun setListenerToContact(idTarget: String, nick: String) {
             binding.root.setOnClickListener {
-                listener.onContactClick(idTarget, nick)
+                listener.onClickContact(idTarget, nick)
             }
         }
     }

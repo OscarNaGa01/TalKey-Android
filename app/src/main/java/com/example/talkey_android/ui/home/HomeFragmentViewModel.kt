@@ -8,6 +8,7 @@ import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.UserItemListModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.use_cases.chats.CreateChatUseCase
+import com.example.talkey_android.data.domain.use_cases.chats.DeleteChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
@@ -24,7 +25,8 @@ class HomeFragmentViewModel(
     private val getListProfilesUseCase: GetListProfilesUseCase,
     private val getListChatsUseCase: GetListChatsUseCase,
     private val getListMessageUseCase: GetListMessageUseCase,
-    private val createChatUseCase: CreateChatUseCase
+    private val createChatUseCase: CreateChatUseCase,
+    private val deleteChatUseCase: DeleteChatUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeFragmentUiState>(HomeFragmentUiState.Loading)
@@ -37,6 +39,25 @@ class HomeFragmentViewModel(
     val idNewChat: SharedFlow<Pair<String, String>> = _idNewChat
     private val _createNewChatError = MutableSharedFlow<ErrorModel>()
     val createNewChatError: SharedFlow<ErrorModel> = _createNewChatError
+
+    private val _deleteChatSuccess = MutableSharedFlow<String>()
+    val deleteChatSuccess: SharedFlow<String> = _deleteChatSuccess
+    private val _deleteChatError = MutableSharedFlow<ErrorModel>()
+    val deleteChatError: SharedFlow<ErrorModel> = _deleteChatError
+
+
+    fun deleteChat(token: String, idChat: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val baseResponse = deleteChatUseCase(token, idChat)) {
+                is BaseResponse.Success -> {
+                    _deleteChatSuccess.emit("Chat borrado con éxito!")
+                }
+
+                is BaseResponse.Error -> _deleteChatError.emit(baseResponse.error)
+            }
+        }
+    }
+
 
     fun createChat(token: String, source: String, target: String, nick: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -55,9 +76,12 @@ class HomeFragmentViewModel(
 
     fun getChatsList(token: String, idUser: String) {
         chatsList.clear()
+        println("aquí borra la lista y empieza el viewmodel")
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.emit(HomeFragmentUiState.Loading)
+            println("emite el cargando")
             val chatsListDeferred = async { getChatsData(token, idUser) }
+            println("Ha rellenado la lista")
             chatsListDeferred.await()
 
             val msgInfoDeferred = async { getMessagesData(token) }
@@ -68,17 +92,17 @@ class HomeFragmentViewModel(
     }
 
     private suspend fun getMessagesData(token: String) {
-        for (chat in chatsList) {
+        val auxList = mutableListOf<ChatItemListModel>()
+        auxList.addAll(chatsList)
+        for (chat in auxList) {
             when (val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)) {
                 is BaseResponse.Success -> {
 
                     if (baseResponse.data.count > 0) {
                         chat.lastMessage = baseResponse.data.rows[0].message
-                        //chat.dateLastMessage = baseResponse.data.rows[0].date.substring(0, 10)
-                        chat.dateLastMessage = Utils.checkDateAndTime(baseResponse.data.rows[0].date, false)
-                        println(baseResponse.data.rows[0].date)
+                        chat.dateLastMessage =
+                            Utils.checkDateAndTime(baseResponse.data.rows[0].date, false)
                     } else {
-                        chat.lastMessage = "Dile algo a ${chat.contactNick}"
                         chat.dateLastMessage = ""
                     }
                 }
@@ -89,9 +113,11 @@ class HomeFragmentViewModel(
                 }
             }
         }
-        chatsList.removeAll { it.dateLastMessage == "" }
-        chatsList.sortByDescending { it.dateLastMessage }
-        chatsList.sortBy { it.dateLastMessage.length }
+        auxList.removeAll { it.dateLastMessage == "" }
+        auxList.sortByDescending { it.dateLastMessage }
+        auxList.sortBy { it.dateLastMessage.length }
+        chatsList.clear()
+        chatsList.addAll(auxList)
     }
 
     private suspend fun getChatsData(token: String, idUser: String) {
