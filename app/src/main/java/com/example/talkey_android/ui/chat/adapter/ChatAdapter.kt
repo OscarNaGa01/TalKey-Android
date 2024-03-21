@@ -14,6 +14,7 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
     RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     private lateinit var context: Context
+    private val isDate = true
 
     companion object {
         const val SENT_MESSAGE = 0
@@ -32,8 +33,8 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
             val currentBinding = binding as ItemChatOtherBinding
             with(currentBinding) {
                 tvMessageOther.text = messageModel.message
-                tvDateOther.text = Utils.checkDateAndTime(messageModel.date)
-                tvHourOther.text = Utils.checkDateAndTime(messageModel.date)
+                tvDateOther.text = setHourAndDate(messageModel.date, isDate)
+                tvHourOther.text = setHourAndDate(messageModel.date, !isDate)
             }
         }
 
@@ -41,8 +42,16 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
             val currentBinding = binding as ItemChatMeBinding
             with(currentBinding) {
                 tvMessageMe.text = messageModel.message
-                tvDateMe.text = Utils.checkDateAndTime(messageModel.date)
-                tvHourMe.text = Utils.checkDateAndTime(messageModel.date)
+                tvDateMe.text = setHourAndDate(messageModel.date, isDate = true)
+                tvHourMe.text = setHourAndDate(messageModel.date, isDate = false)
+            }
+        }
+
+        private fun setHourAndDate(date: String, isDate: Boolean): String {
+            return if (isDate) {
+                Utils.checkDateAndTime(date, isDate)
+            } else {
+                Utils.checkDateAndTime(date, !isDate)
             }
         }
     }

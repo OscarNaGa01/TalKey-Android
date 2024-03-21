@@ -75,7 +75,7 @@ object Utils {
         }
     }
 
-    fun checkDateAndTime(lastMsgDate: String): String {
+    fun checkDateAndTime(lastMsgDate: String, isDate: Boolean): String {
         return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
             val formatter = DateTimeFormatter.ISO_DATE_TIME
             val dateTime = LocalDateTime.parse(lastMsgDate, formatter)
