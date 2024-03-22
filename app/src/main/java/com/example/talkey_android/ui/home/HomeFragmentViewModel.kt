@@ -1,5 +1,6 @@
 package com.example.talkey_android.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.chats.ChatItemListModel
@@ -16,9 +17,7 @@ import com.example.talkey_android.data.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class HomeFragmentViewModel(
@@ -29,8 +28,8 @@ class HomeFragmentViewModel(
     private val deleteChatUseCase: DeleteChatUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<HomeFragmentUiState>(HomeFragmentUiState.Loading)
-    val uiState: StateFlow<HomeFragmentUiState> = _uiState
+    private val _uiState = MutableSharedFlow<HomeFragmentUiState>()
+    val uiState: SharedFlow<HomeFragmentUiState> = _uiState
 
     private val chatsList: MutableList<ChatItemListModel> = mutableListOf()
     private var usersList: List<UserItemListModel> = listOf()
@@ -47,13 +46,18 @@ class HomeFragmentViewModel(
 
 
     fun deleteChat(token: String, idChat: String) {
+        Log.i(">", "HA CLICADO EN BORRAR CHAT")
         viewModelScope.launch(Dispatchers.IO) {
             when (val baseResponse = deleteChatUseCase(token, idChat)) {
                 is BaseResponse.Success -> {
+                    Log.i(">", "EMITE EL SUCCESS DE BORRADO")
                     _deleteChatSuccess.emit("Chat borrado con éxito!")
                 }
 
-                is BaseResponse.Error -> _deleteChatError.emit(baseResponse.error)
+                is BaseResponse.Error -> {
+                    Log.i(">", "ERROR BORRANDO CHAT")
+                    _deleteChatError.emit(baseResponse.error)
+                }
             }
         }
     }
@@ -76,25 +80,23 @@ class HomeFragmentViewModel(
 
     fun getChatsList(token: String, idUser: String) {
         chatsList.clear()
-        println("aquí borra la lista y empieza el viewmodel")
+        Log.i(">", "Inicio de getChatsList")
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.emit(HomeFragmentUiState.Loading)
-            println("emite el cargando")
+            Log.i(">", "ha emitido el cargando")
             val chatsListDeferred = async { getChatsData(token, idUser) }
-            println("Ha rellenado la lista")
+            Log.i(">", "Ha rellenado la lista")
             chatsListDeferred.await()
-
             val msgInfoDeferred = async { getMessagesData(token) }
+            Log.i(">", "Ha puesto los mensajes en la lista")
             msgInfoDeferred.await()
-
+            Log.i(">", "Y ahora emite el SUCCESS")
             _uiState.emit(HomeFragmentUiState.Success(chatsList))
         }
     }
 
     private suspend fun getMessagesData(token: String) {
-        val auxList = mutableListOf<ChatItemListModel>()
-        auxList.addAll(chatsList)
-        for (chat in auxList) {
+        for (chat in chatsList) {
             when (val baseResponse = getListMessageUseCase(token, chat.idChat, 1, 0)) {
                 is BaseResponse.Success -> {
 
@@ -113,11 +115,10 @@ class HomeFragmentViewModel(
                 }
             }
         }
-        auxList.removeAll { it.dateLastMessage == "" }
-        auxList.sortByDescending { it.dateLastMessage }
-        auxList.sortBy { it.dateLastMessage.length }
-        chatsList.clear()
-        chatsList.addAll(auxList)
+
+        chatsList.removeAll { it.dateLastMessage == "" }
+        chatsList.sortByDescending { it.dateLastMessage }
+        chatsList.sortBy { it.dateLastMessage.length }
     }
 
     private suspend fun getChatsData(token: String, idUser: String) {
@@ -169,15 +170,17 @@ class HomeFragmentViewModel(
     }
 
     fun getUsersList(token: String) {
+        Log.i(">", "Inicio de getChatsList")
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.emit(HomeFragmentUiState.Loading)
+            Log.i(">", "Emite loading")
             when (val baseResponse = getListProfilesUseCase(token)) {
                 is BaseResponse.Success -> {
+                    Log.i(">", "Rellena la lista de usuarios")
                     usersList = baseResponse.data.users
-
+                    Log.i(">", "Emite lista de contactos")
                     _uiState.emit(HomeFragmentUiState.Success(usersList))
                 }
-
                 is BaseResponse.Error -> {
                     _uiState.emit(HomeFragmentUiState.Error(baseResponse.error.message))
                 }
