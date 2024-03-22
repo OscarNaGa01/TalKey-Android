@@ -53,20 +53,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etPassword"
-            style="@style/passwordBox"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/common_margin"
-            android:padding="@dimen/common_margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etNick" />
+            app:layout_constraintTop_toBottomOf="@id/etNick">
 
-        <CheckBox
-            android:id="@+id/chbShowPasswdText"
-            style="@style/passwordCheckBox"
-            app:layout_constraintTop_toTopOf="@id/etPassword"
-            app:layout_constraintBottom_toBottomOf="@id/etPassword"
-            app:layout_constraintEnd_toEndOf="@id/etPassword" />
+            <TextView
+                android:id="@+id/tvPasswordRequirements"
+                style="@style/passwordRequirements"
+                tools:text="@string/password_requirements"
+                app:layout_constraintBottom_toBottomOf="@id/etPassword"
+                app:layout_constraintStart_toStartOf="@id/etPassword"
+                app:layout_constraintEnd_toEndOf="@id/etPassword" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etPassword"
+                style="@style/passwordBox"
+                android:padding="@dimen/common_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <CheckBox
+                android:id="@+id/chbShowPasswdText"
+                style="@style/passwordCheckBox"
+                app:layout_constraintTop_toTopOf="@id/etPassword"
+                app:layout_constraintBottom_toBottomOf="@id/etPassword"
+                app:layout_constraintEnd_toEndOf="@id/etPassword" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/etConfirmPassword"
@@ -75,7 +92,7 @@
             android:hint="@string/hint_confirm_password"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etPassword" />
+            app:layout_constraintTop_toBottomOf="@id/clPassword" />
 
         <CheckBox
             android:id="@+id/chbShowConfirmPasswdText"
