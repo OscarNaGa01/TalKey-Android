@@ -41,7 +41,7 @@ interface DataSource {
         target: String
     ): BaseResponse<ChatCreationModel>
 
-    suspend fun deleteChat(token: String, idChat: Int): BaseResponse<SuccessModel>
+    suspend fun deleteChat(token: String, idChat: String): BaseResponse<SuccessModel>
     suspend fun sendMessage(
         token: String,
         chat: String,

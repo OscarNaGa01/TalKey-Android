@@ -110,7 +110,7 @@ interface RemoteApiService {
     @DELETE("chats/{idChat}")
     suspend fun deleteChat(
         @Header("Authorization") token: String,
-        @Path("idChat") idChat: Int
+        @Path("idChat") idChat: String
     ): Response<SuccessResponse>
 
     //MESSAGES--------------------------------------
