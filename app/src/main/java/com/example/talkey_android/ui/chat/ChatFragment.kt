@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -56,6 +58,12 @@ class ChatFragment : Fragment() {
             ivBack.setOnClickListener {
                 findNavController().popBackStack()
             }
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        findNavController().popBackStack()
+                    }
+                })
             ivSend.setOnClickListener {
                 sendMessage()
             }
@@ -119,6 +127,24 @@ class ChatFragment : Fragment() {
             chatFragmentViewModel.message.collect { messages ->
                 Utils.showDateOnce(messages)
                 chatAdapter.updateList(messages.rows)
+            }
+        }
+
+        lifecycleScope.launch {
+            chatFragmentViewModel.setMessageError.collect { error ->
+                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        lifecycleScope.launch {
+            chatFragmentViewModel.getListMessageError.collect { error ->
+                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        lifecycleScope.launch {
+            chatFragmentViewModel.getListChatsError.collect { error ->
+                Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
