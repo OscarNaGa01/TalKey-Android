@@ -193,7 +193,7 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun deleteChat(token: String, idChat: Int): BaseResponse<SuccessModel> {
+    override suspend fun deleteChat(token: String, idChat: String): BaseResponse<SuccessModel> {
         val apiResult = apiCallService.deleteChat(token, idChat)
 
         return when (apiResult) {
