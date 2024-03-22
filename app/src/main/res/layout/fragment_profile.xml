@@ -158,7 +158,7 @@
         style="@style/text"
         android:layout_marginStart="30dp"
         android:layout_marginTop="28dp"
-        android:text="@string/log_in_button"
+        android:text="@string/log_in"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrierNickname" />

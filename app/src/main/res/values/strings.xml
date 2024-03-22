@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Talkey</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="sign_up_button">Sign up</string>
-    <string name="log_in_button">Log in</string>
+    <string name="sign_up">Registrarse</string>
+    <string name="log_in">Iniciar sesión</string>
     <string name="hint_email">Correo</string>
     <string name="hint_nick">Nick</string>
     <string name="hint_password">Contraseña</string>
@@ -32,7 +32,18 @@
     <string name="delete_confirmation_question">¿Estás seguro de que quieres eliminar este chat?</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
-
-    <!--    Por añadir-->
+    <string name="check_your_email_and_password">Comprueba el usuario y la contraseña</string>
+    <string name="enter_a_valid_email">Introduce un email válido</string>
+    <string name="accept_our_terms_and_conditions">Acepta los términos y condiciones</string>
+    <string name="biometric_sensor_doesnt_exist">No se encuenta el sensor biométrico</string>
+    <string name="biometric_sensor_not_available">Sensor biométrico no disponible</string>
+    <string name="connection_with_sensor_not_available">Conexión con el sensor biométrico fallida</string>
+    <string name="fingerprint_mismatch">La huella no coincide</string>
+    <string name="use_fingerprint_login">Usa tu huella para acceder a la aplicación</string>
+    <string name="cancel">Cancelar</string>
+    <string name="login_title">Inicio de sesión</string>
+    <string name="unlnown_account">Cuenta desconocida</string>
+    <string name="biometric_accunt_link_question">¿Quieres asociar esta cuenta a tu sensor biométrico?</string>
+    <string name="biometric_account_linked">Se ha asociado esta cuenta a su huella</string>
 
 </resources>

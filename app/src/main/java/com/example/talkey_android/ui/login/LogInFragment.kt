@@ -115,7 +115,8 @@ class LogInFragment : Fragment() {
     private fun showRegisterError(error: ErrorModel) {
         if (error.errorCode == "401") {
             setEditTextBackground(listOf(binding.etEmail))
-            Toast.makeText(requireContext(), "User exists", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.user_exists), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -210,8 +211,8 @@ class LogInFragment : Fragment() {
             etNick.visibility = View.GONE
             cbTermsConditions.visibility = View.GONE
             cbTermsConditions.isChecked = false
-            btnChange.text = getString(R.string.sign_up_button)
-            btnAccept.text = getString(R.string.log_in_button)
+            btnChange.text = getString(R.string.sign_up)
+            btnAccept.text = getString(R.string.log_in)
             setEditTextBackground(emptyList())
             isLogin = true
             btnFingerPrint.visibility = View.VISIBLE
@@ -225,8 +226,8 @@ class LogInFragment : Fragment() {
             etConfirmPassword.visibility = View.VISIBLE
             etNick.visibility = View.VISIBLE
             cbTermsConditions.visibility = View.VISIBLE
-            btnChange.text = getString(R.string.log_in_button)
-            btnAccept.text = getString(R.string.sign_up_button)
+            btnChange.text = getString(R.string.log_in)
+            btnAccept.text = getString(R.string.sign_up)
             setEditTextBackground(emptyList())
             isLogin = false
             btnFingerPrint.visibility = View.GONE
@@ -249,7 +250,7 @@ class LogInFragment : Fragment() {
                 setEditTextBackground(listOf(etEmail, etPassword))
                 Toast.makeText(
                     requireContext(),
-                    "Check your email and password",
+                    getString(R.string.check_your_email_and_password),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -277,15 +278,26 @@ class LogInFragment : Fragment() {
                     .isEmpty() && etConfirmPassword.text.toString().isEmpty()
             ) {
                 setEditTextBackground(listOf(etEmail, etNick, etPassword, etConfirmPassword))
-                Toast.makeText(requireContext(), "Complete all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.fill_all_fields),
+                    Toast.LENGTH_SHORT
+                ).show()
 
             } else if (!isValidEmail(etEmail.text.toString())) {
                 setEditTextBackground(listOf(etEmail))
-                Toast.makeText(requireContext(), "Enter a valid email", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.enter_a_valid_email), Toast.LENGTH_SHORT
+                ).show()
 
             } else if (etNick.text.toString().isEmpty()) {
                 setEditTextBackground(listOf(etNick))
-                Toast.makeText(requireContext(), "You need a nickname", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.fill_all_fields),
+                    Toast.LENGTH_SHORT
+                ).show()
 
             } else if (!isValidPassword()) {
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
@@ -310,7 +322,7 @@ class LogInFragment : Fragment() {
                 setEditTextBackground(emptyList())
                 Toast.makeText(
                     requireContext(),
-                    "Accept our terms and conditions",
+                    getString(R.string.accept_our_terms_and_conditions),
                     Toast.LENGTH_SHORT
                 ).show()
 
@@ -372,7 +384,7 @@ class LogInFragment : Fragment() {
                 if (isTryingBiometricAccess) {
                     Toast.makeText(
                         requireContext(),
-                        "No existe sensor biométrico",
+                        getString(R.string.biometric_sensor_doesnt_exist),
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -382,7 +394,7 @@ class LogInFragment : Fragment() {
                 if (isTryingBiometricAccess) {
                     Toast.makeText(
                         requireContext(),
-                        "No está disponible el sensor",
+                        getString(R.string.biometric_sensor_not_available),
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -392,7 +404,7 @@ class LogInFragment : Fragment() {
                 if (isTryingBiometricAccess) {
                     Toast.makeText(
                         requireContext(),
-                        "No se puede conectar con el sensor",
+                        getString(R.string.connection_with_sensor_not_available),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -412,7 +424,10 @@ class LogInFragment : Fragment() {
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-                    Toast.makeText(requireContext(), "La huella no coincide", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.fingerprint_mismatch), Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
 
@@ -425,9 +440,9 @@ class LogInFragment : Fragment() {
 
     private fun createPromptInfo() {
         promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Login")
-            .setSubtitle("Usa tu huella para acceder a la aplicación")
-            .setNegativeButtonText("Cancelar")
+            .setTitle(getString(R.string.login_title))
+            .setSubtitle(getString(R.string.use_fingerprint_login))
+            .setNegativeButtonText(getString(R.string.cancel))
             .build()
     }
 
@@ -436,20 +451,20 @@ class LogInFragment : Fragment() {
     private fun showDialogToSaveAccount(token: String) {
         val builder = AlertDialog.Builder(requireContext())
 
-        builder.setTitle("Cuenta desconocida")
-        builder.setMessage("¿Quieres asociar esta cuenta a tu sensor biométrico?")
+        builder.setTitle(getString(R.string.unlnown_account))
+        builder.setMessage(getString(R.string.biometric_accunt_link_question))
 
-        builder.setPositiveButton("Sí") { _, _ ->
+        builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
             prefs.saveToken(token)
             prefs.saveMail(binding.etEmail.text.toString())
             Toast.makeText(
                 requireContext(),
-                "Se ha asociado esta cuenta a su huella",
+                getString(R.string.biometric_account_linked),
                 Toast.LENGTH_SHORT
             ).show()
         }
 
-        builder.setNegativeButton("No") { _, _ -> }
+        builder.setNegativeButton(getString(R.string.no)) { _, _ -> }
 
         val dialog = builder.create()
         dialog.show()
