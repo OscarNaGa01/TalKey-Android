@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:layout_marginTop="8dp">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgProfile"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:contentDescription="@string/img_profile_description"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +34,7 @@
         android:id="@+id/tvName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -65,13 +65,21 @@
         android:id="@+id/tvLastMsg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/vassGreyMedium"
+        android:textColor="@android:color/darker_gray"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
         app:layout_constraintEnd_toEndOf="@id/guideLine"
         app:layout_constraintStart_toEndOf="@id/imgProfile"
         tools:text="Esta sería la última frase que estuvo escrita en el chat" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/vassGreyMedium"
+        app:layout_constraintTop_toBottomOf="@id/tvLastMsg" />
 </androidx.constraintlayout.widget.ConstraintLayout>
