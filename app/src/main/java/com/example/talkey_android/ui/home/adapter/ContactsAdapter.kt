@@ -1,6 +1,7 @@
 package com.example.talkey_android.ui.home.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,7 @@ class ContactsAdapter(
                 listener.onClickChat(idChat, contactNick)
             }
             binding.root.setOnLongClickListener {
+                Log.i(">", "Ha hecho longClick")
                 listener.onLongClickChat(idChat)
                 true
             }
@@ -51,7 +53,7 @@ class ContactsAdapter(
         return when {
             list[position] is UserItemListModel -> contactType
             list[position] is ChatItemListModel -> chatType
-            else -> throw IllegalArgumentException("Tipo de elemento desconocido en la posición $position")
+            else -> throw IllegalArgumentException()
         }
     }
 
@@ -115,5 +117,6 @@ class ContactsAdapter(
     fun refreshData(newList: List<Any>) {
         list = newList
         notifyDataSetChanged()
+        Log.i(">", "Ha modificado la lista")
     }
 }

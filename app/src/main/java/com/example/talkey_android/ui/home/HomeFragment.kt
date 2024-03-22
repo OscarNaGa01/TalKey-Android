@@ -1,6 +1,8 @@
 package com.example.talkey_android.ui.home
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,13 +40,18 @@ class HomeFragment
     private var listType = ListType.CHATS
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var mAdapter: ContactsAdapter
-    private val mViewModel = HomeFragmentViewModel(
-        GetListProfilesUseCase(),
-        GetListChatsUseCase(),
-        GetListMessageUseCase(),
-        CreateChatUseCase(),
-        DeleteChatUseCase()
-    )
+    private lateinit var mViewModel: HomeFragmentViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mViewModel = HomeFragmentViewModel(
+            GetListProfilesUseCase(),
+            GetListChatsUseCase(),
+            GetListMessageUseCase(),
+            CreateChatUseCase(),
+            DeleteChatUseCase()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +60,7 @@ class HomeFragment
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
         setupToolbar()
+        mViewModel.getChatsList(args.token, args.id)
         return mBinding.root
     }
 
@@ -89,6 +97,8 @@ class HomeFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        super.onViewCreated(view, savedInstanceState)
+
         mBinding.searchView.setOnQueryTextListener(this)
         mBinding.searchView.setOnCloseListener {
             mViewModel.removeFilters(listType)
@@ -96,7 +106,6 @@ class HomeFragment
         }
         setupAdapter()
         observeViewModel()
-        mViewModel.getChatsList(args.token, args.id)
 
         with(mBinding) {
             constraintLayout.setOnClickListener {
@@ -111,6 +120,7 @@ class HomeFragment
             }
 
             btnChats.setOnClickListener {
+                Log.i(">", "CLIC EN CHATS")
                 vSelectedChats.visibility = View.VISIBLE
                 vSelectedContacts.visibility = View.INVISIBLE
                 mViewModel.getChatsList(args.token, args.id)
@@ -118,6 +128,7 @@ class HomeFragment
             }
 
             btnContacts.setOnClickListener {
+                Log.i(">", "CLIC EN CONTACTOS")
                 vSelectedChats.visibility = View.INVISIBLE
                 vSelectedContacts.visibility = View.VISIBLE
                 mViewModel.getUsersList(args.token)
@@ -126,47 +137,48 @@ class HomeFragment
         }
     }
 
+
     private fun observeViewModel() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.deleteChatSuccess.collect {
+                Log.i(">", "Muestra el toast de borrado exitoso")
+
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+
                 mViewModel.getChatsList(args.token, args.id)
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.deleteChatError.collect {
                 if (it.errorCode == 401.toString()) {
+                    Log.i(">", "Muestra el toast de fallo en el borrado")
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.idNewChat.collect { idNewChat ->
-                try {
-
-                    findNavController().navigate(
-                        HomeFragmentDirections.actionHomeToChat(
-                            args.token,
-                            args.id,
-                            idNewChat.second, //User nick
-                            idNewChat.first //Chat id
-                        )
+                Log.i(">", "Realiza la navegación")
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeToChat(
+                        args.token,
+                        args.id,
+                        idNewChat.second, //User nick
+                        idNewChat.first //Chat id
                     )
-                } catch (ex: Exception) {
-                    println(ex)
-                }
+                )
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.createNewChatError.collect {
                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.uiState.collect {
                 when (it) {
                     is HomeFragmentUiState.Loading -> {
@@ -175,6 +187,7 @@ class HomeFragment
 
                     is HomeFragmentUiState.Success -> {
                         mBinding.progressBarr.visibility = View.GONE
+                        Log.i(">", "Refresca la lista del recycler")
                         mAdapter.refreshData(it.dataList)
                     }
 
@@ -202,6 +215,7 @@ class HomeFragment
     }
 
     override fun onClickChat(idChat: String, contactNick: String) {
+        Log.i(">", "Ha clicado en un chat")
         findNavController().navigate(
             HomeFragmentDirections.actionHomeToChat(
                 args.token,
@@ -213,7 +227,8 @@ class HomeFragment
     }
 
     override fun onLongClickChat(idChat: String) {
-        mViewModel.deleteChat(args.token, idChat)
+        showDialogToDeleteChat(idChat)
+
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -224,4 +239,21 @@ class HomeFragment
     }
 
     override fun onQueryTextChange(newText: String?) = true
+
+    private fun showDialogToDeleteChat(idChat: String) {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setTitle(getString(R.string.delete_confirmation_title))
+        builder.setMessage(getString(R.string.delete_confirmation_question))
+
+        builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
+            mViewModel.deleteChat(args.token, idChat)
+            Log.i(">", "AQUÍ ACEPTAS EL POP UP")
+        }
+
+        builder.setNegativeButton(getString(R.string.no)) { _, _ -> }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
 }
