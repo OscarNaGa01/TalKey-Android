@@ -15,6 +15,13 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="14 de Marzo" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.80" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cvChatOther"
         android:layout_width="wrap_content"
@@ -23,6 +30,9 @@
         app:cardBackgroundColor="@color/vassGreyLight"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@id/guideLine"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvDateOther">
 
@@ -33,7 +43,6 @@
             android:layout_marginHorizontal="12dp"
             android:layout_marginTop="@dimen/minimal_margin"
             android:layout_marginBottom="24dp"
-            android:maxWidth="280dp"
             android:textSize="16sp"
             tools:text="Ejemplo de texto" />
 

@@ -35,7 +35,12 @@ class ChatAdapter(
             val currentBinding = binding as ItemChatOtherBinding
             with(currentBinding) {
                 tvMessageOther.text = messageModel.message
-                tvDateOther.text = messageModel.day
+                if (messageModel.day == "") {
+                    tvDateOther.visibility = View.GONE
+                } else {
+                    tvDateOther.visibility = View.VISIBLE
+                    tvDateOther.text = messageModel.day
+                }
                 tvHourOther.text = messageModel.hour
             }
         }

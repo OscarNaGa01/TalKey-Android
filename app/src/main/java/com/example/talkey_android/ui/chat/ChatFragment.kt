@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,7 @@ class ChatFragment : Fragment() {
     ): View {
         binding = FragmentChatBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         return binding.root
     }
 
@@ -50,15 +52,7 @@ class ChatFragment : Fragment() {
                 findNavController().popBackStack()
             }
             ivSend.setOnClickListener {
-                if (etMessage.text.toString().isNotEmpty()) {
-                    chatFragmentViewModel.sendMessage(
-                        args.token,
-                        args.idChat,
-                        args.idUser,
-                        etMessage.text.toString()
-                    )
-                    etMessage.text?.clear()
-                }
+                sendMessage()
             }
             rvChat.setOnClickListener {
                 mainActivity.hideKeyBoard()
@@ -66,6 +60,21 @@ class ChatFragment : Fragment() {
             swipeToRefresh.setOnRefreshListener {
                 getMessageList()
                 swipeToRefresh.isRefreshing = false
+            }
+        }
+    }
+
+    private fun sendMessage() {
+        with(binding) {
+            if (etMessage.text.toString().isNotEmpty()) {
+                chatFragmentViewModel.sendMessage(
+                    args.token,
+                    args.idChat,
+                    args.idUser,
+                    etMessage.text.toString()
+                )
+                etMessage.text?.clear()
+                rvChat.scrollToPosition(rvChat.top)
             }
         }
     }
