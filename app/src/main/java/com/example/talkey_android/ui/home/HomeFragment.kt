@@ -60,7 +60,22 @@ class HomeFragment
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
         setupToolbar()
-        mViewModel.getChatsList(args.token, args.id)
+
+        if (listType == ListType.CHATS) {
+            mViewModel.getChatsList(args.token, args.id)
+            mBinding.vSelectedChats.visibility = View.VISIBLE
+            mBinding.vSelectedContacts.visibility = View.INVISIBLE
+        } else {
+            mViewModel.getUsersList(args.token)
+            mBinding.vSelectedChats.visibility = View.INVISIBLE
+            mBinding.vSelectedContacts.visibility = View.VISIBLE
+        }
+
+
+
+
+
+
         return mBinding.root
     }
 
@@ -96,7 +111,6 @@ class HomeFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
 
         mBinding.searchView.setOnQueryTextListener(this)
@@ -189,6 +203,17 @@ class HomeFragment
                         mBinding.progressBarr.visibility = View.GONE
                         Log.i(">", "Refresca la lista del recycler")
                         mAdapter.refreshData(it.dataList)
+                        /*when(it.dataList[0]){
+                            is ChatItemListModel ->{
+                                mBinding.vSelectedChats.visibility = View.VISIBLE
+                                mBinding.vSelectedContacts.visibility = View.INVISIBLE
+
+                            }
+                            is UserItemListModel ->{
+                                mBinding.vSelectedChats.visibility = View.INVISIBLE
+                                mBinding.vSelectedContacts.visibility = View.VISIBLE
+                            }
+                        }*/
                     }
 
                     is HomeFragmentUiState.Error -> {
