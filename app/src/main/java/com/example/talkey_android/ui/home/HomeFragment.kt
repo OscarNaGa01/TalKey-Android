@@ -168,8 +168,12 @@ class HomeFragment
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.deleteChatSuccess.collect {
                 Log.i(">", "Muestra el toast de borrado exitoso")
-
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                if (it) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.deleteChatSuccessfull), Toast.LENGTH_SHORT
+                    ).show()
+                }
 
                 mViewModel.getChatsList(args.token, args.id)
             }
