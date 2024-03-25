@@ -1,5 +1,6 @@
 package com.example.talkey_android.ui.home.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -97,8 +98,7 @@ class ContactsAdapter(
         val contact = list[position] as (UserItemListModel)
         with(holder.binding) {
             tvName.text = contact.nick
-            tvDate.text = ""
-            tvLastMsg.text = "Dile algo a " + contact.nick + "!"
+            tvLastMsg.text = context.getString(R.string.saySomethingTo, contact.nick)
             if (contact.online) {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             } else {
@@ -114,6 +114,8 @@ class ContactsAdapter(
     }
 
     override fun getItemCount() = list.count()
+
+    @SuppressLint("NotifyDataSetChanged")
     fun refreshData(newList: List<Any>) {
         list = newList
         notifyDataSetChanged()
