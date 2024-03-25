@@ -17,7 +17,6 @@
         android:id="@+id/ivStatus"
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:src="@color/statusOnline"
         app:layout_constraintBottom_toBottomOf="@id/ivProfile"
         app:layout_constraintEnd_toEndOf="@id/ivProfile"
         app:shapeAppearanceOverlay="@style/circleImageViewShape" />

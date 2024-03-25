@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -109,16 +110,22 @@ class ChatFragment : Fragment() {
                 println(userData.targetOnline)
 
                 if (userData.targetOnline) {
-                    Glide.with(requireContext())
-                        .load(R.color.statusOnline)
-                        .error(R.color.statusOnline)
-                        .into(profileImageStatusBinding.ivStatus)
+                    profileImageStatusBinding.ivStatus.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.statusOnline
+                        )
+                    )
+                    println("Entro en if")
 
                 } else {
-                    Glide.with(requireContext())
-                        .load(R.color.statusOffline)
-                        .error(R.color.statusOffline)
-                        .into(profileImageStatusBinding.ivStatus)
+                    profileImageStatusBinding.ivStatus.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.statusOffline
+                        )
+                    )
+                    println("Entro en else")
                 }
             }
         }
