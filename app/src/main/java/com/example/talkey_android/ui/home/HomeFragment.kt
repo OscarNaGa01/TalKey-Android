@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -60,7 +61,6 @@ class HomeFragment
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
         setupToolbar()
-        mViewModel.getChatsList(args.token, args.id)
         return mBinding.root
     }
 
@@ -96,45 +96,71 @@ class HomeFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
 
-        mBinding.searchView.setOnQueryTextListener(this)
-        mBinding.searchView.setOnCloseListener {
-            mViewModel.removeFilters(listType)
-            true
-        }
+        setupSearchView()
+
+        setupToggleBtnsAndGetList()
+
         setupAdapter()
+
         observeViewModel()
+
+        setupSwipeToRefresh()
 
         with(mBinding) {
             constraintLayout.setOnClickListener {
                 mainActivity.hideKeyBoard()
             }
-            swipToRefresh.setOnRefreshListener {
-                when (listType) {
-                    ListType.CHATS -> mViewModel.getChatsList(args.token, args.id)
-                    ListType.CONTACTS -> mViewModel.getUsersList(args.token)
-                }
-                swipToRefresh.isRefreshing = false
-            }
 
-            btnChats.setOnClickListener {
-                Log.i(">", "CLIC EN CHATS")
-                vSelectedChats.visibility = View.VISIBLE
-                vSelectedContacts.visibility = View.INVISIBLE
-                mViewModel.getChatsList(args.token, args.id)
-                listType = ListType.CHATS
-            }
-
-            btnContacts.setOnClickListener {
-                Log.i(">", "CLIC EN CONTACTOS")
-                vSelectedChats.visibility = View.INVISIBLE
-                vSelectedContacts.visibility = View.VISIBLE
-                mViewModel.getUsersList(args.token)
-                listType = ListType.CONTACTS
-            }
         }
+    }
+
+    private fun setupSwipeToRefresh() {
+        mBinding.swipeToRefresh.setOnRefreshListener {
+            when (listType) {
+                ListType.CHATS -> mViewModel.getChatsList(args.token, args.id)
+                ListType.CONTACTS -> mViewModel.getUsersList(args.token)
+            }
+            mBinding.swipeToRefresh.isRefreshing = false
+        }
+    }
+
+    private fun setupSearchView() {
+        mBinding.searchView.setOnQueryTextListener(this)
+        mBinding.searchView.setOnCloseListener {
+            mViewModel.removeFilters(listType)
+            true
+        }
+    }
+
+    private fun setupToggleBtnsAndGetList() {
+        if (listType == ListType.CHATS) {
+            mViewModel.getChatsList(args.token, args.id)
+            setToggleBtnsChecks(mBinding.tbChats, mBinding.tbContacts)
+        } else {
+            mViewModel.getUsersList(args.token)
+            setToggleBtnsChecks(mBinding.tbContacts, mBinding.tbChats)
+        }
+
+        mBinding.tbChats.setOnClickListener { _ ->
+            setToggleBtnsChecks(mBinding.tbChats, mBinding.tbContacts)
+            mViewModel.getChatsList(args.token, args.id)
+            listType = ListType.CHATS
+        }
+        mBinding.tbContacts.setOnClickListener { _ ->
+            setToggleBtnsChecks(mBinding.tbContacts, mBinding.tbChats)
+            mViewModel.getUsersList(args.token)
+            listType = ListType.CONTACTS
+        }
+    }
+
+    private fun setToggleBtnsChecks(
+        toggleBtnToCheckTrue: ToggleButton,
+        toggleBtnToCheckFalse: ToggleButton
+    ) {
+        toggleBtnToCheckTrue.isChecked = true
+        toggleBtnToCheckFalse.isChecked = false
     }
 
 
@@ -142,8 +168,12 @@ class HomeFragment
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.deleteChatSuccess.collect {
                 Log.i(">", "Muestra el toast de borrado exitoso")
-
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                if (it) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.deleteChatSuccessfull), Toast.LENGTH_SHORT
+                    ).show()
+                }
 
                 mViewModel.getChatsList(args.token, args.id)
             }
@@ -228,7 +258,6 @@ class HomeFragment
 
     override fun onLongClickChat(idChat: String) {
         showDialogToDeleteChat(idChat)
-
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -242,7 +271,6 @@ class HomeFragment
 
     private fun showDialogToDeleteChat(idChat: String) {
         val builder = AlertDialog.Builder(requireContext())
-
         builder.setTitle(getString(R.string.delete_confirmation_title))
         builder.setMessage(getString(R.string.delete_confirmation_question))
 

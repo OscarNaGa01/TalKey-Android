@@ -39,8 +39,8 @@ class HomeFragmentViewModel(
     private val _createNewChatError = MutableSharedFlow<ErrorModel>()
     val createNewChatError: SharedFlow<ErrorModel> = _createNewChatError
 
-    private val _deleteChatSuccess = MutableSharedFlow<String>()
-    val deleteChatSuccess: SharedFlow<String> = _deleteChatSuccess
+    private val _deleteChatSuccess = MutableSharedFlow<Boolean>()
+    val deleteChatSuccess: SharedFlow<Boolean> = _deleteChatSuccess
     private val _deleteChatError = MutableSharedFlow<ErrorModel>()
     val deleteChatError: SharedFlow<ErrorModel> = _deleteChatError
 
@@ -51,7 +51,7 @@ class HomeFragmentViewModel(
             when (val baseResponse = deleteChatUseCase(token, idChat)) {
                 is BaseResponse.Success -> {
                     Log.i(">", "EMITE EL SUCCESS DE BORRADO")
-                    _deleteChatSuccess.emit("Chat borrado con éxito!")
+                    _deleteChatSuccess.emit(true)
                 }
 
                 is BaseResponse.Error -> {
@@ -110,8 +110,8 @@ class HomeFragmentViewModel(
                 }
 
                 is BaseResponse.Error -> {
-                    chat.lastMessage = "No se ha podido cargar el último mensaje"
-                    chat.dateLastMessage = "ERROR"
+                    chat.lastMessage = ""
+                    chat.dateLastMessage = ""
                 }
             }
         }
@@ -137,13 +137,11 @@ class HomeFragmentViewModel(
                     )
                 }
             }
-
             is BaseResponse.Error -> {
                 _uiState.emit(HomeFragmentUiState.Error(baseResponse.error.message))
             }
         }
     }
-
 
     private fun selectContactOnline(idUser: String, chatModel: ChatModel): Boolean {
         return if (idUser == chatModel.source) {
@@ -207,7 +205,6 @@ class HomeFragmentViewModel(
                     ))
                 }
             }
-
         }
     }
 
