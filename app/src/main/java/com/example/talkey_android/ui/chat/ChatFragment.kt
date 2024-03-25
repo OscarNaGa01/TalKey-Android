@@ -95,19 +95,19 @@ class ChatFragment : Fragment() {
 
     private fun getMessageList() {
         chatFragmentViewModel.getMessages(args.token, args.idChat, 20, 0)
-        chatFragmentViewModel.getContactData(args.token, args.idChat)
+        chatFragmentViewModel.getContactData(args.token, args.idChat, args.idUser)
     }
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.contact.collect { userData ->
-                binding.tvName.text = userData.targetNick
+
+            binding.tvName.text = userData.targetNick
 
                 Glide.with(requireContext())
                     .load(userData.targetAvatar)
                     .error(R.drawable.image)
                     .into(profileImageStatusBinding.ivProfile)
-                println(userData.targetOnline)
 
                 if (userData.targetOnline) {
                     profileImageStatusBinding.ivStatus.setBackgroundColor(
@@ -116,7 +116,6 @@ class ChatFragment : Fragment() {
                             R.color.statusOnline
                         )
                     )
-                    println("Entro en if")
 
                 } else {
                     profileImageStatusBinding.ivStatus.setBackgroundColor(
@@ -125,7 +124,6 @@ class ChatFragment : Fragment() {
                             R.color.statusOffline
                         )
                     )
-                    println("Entro en else")
                 }
             }
         }

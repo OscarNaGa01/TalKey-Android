@@ -39,9 +39,7 @@ class ChatFragmentViewModel(
     fun sendMessage(token: String, chat: String, source: String, message: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val baseResponse = sendMessageUseCase(token, chat, source, message)
-
-            when (baseResponse) {
+            when (val baseResponse = sendMessageUseCase(token, chat, source, message)) {
                 is BaseResponse.Success -> {
                     getMessages(token, chat, 20, 0)
                 }
@@ -56,9 +54,7 @@ class ChatFragmentViewModel(
     fun getMessages(token: String, idChat: String, limit: Int, offset: Int) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val baseResponse = getListMessageUseCase(token, idChat, limit, offset)
-
-            when (baseResponse) {
+            when (val baseResponse = getListMessageUseCase(token, idChat, limit, offset)) {
                 is BaseResponse.Success -> {
                     _message.emit(baseResponse.data)
                 }
@@ -70,15 +66,19 @@ class ChatFragmentViewModel(
         }
     }
 
-    fun getContactData(token: String, idChat: String) {
+    fun getContactData(token: String, idChat: String, idUser: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val baseResponse = getListChatsUseCase(token)
-
-            when (baseResponse) {
+            when (val baseResponse = getListChatsUseCase(token)) {
                 is BaseResponse.Success -> {
                     baseResponse.data.chats.filter { idChat == it.idChat }.map {
-                        _contact.emit(it)
+                        _contact.emit(
+                            ChatModel(
+                                targetNick = selectContactNick(idUser, it),
+                                targetOnline = selectContactOnline(idUser, it),
+                                targetAvatar = selectContactAvatar(idUser, it)
+                            )
+                        )
                     }
                 }
 
@@ -86,6 +86,30 @@ class ChatFragmentViewModel(
                     _getListChatsError.emit(baseResponse.error)
                 }
             }
+        }
+    }
+
+    private fun selectContactOnline(idUser: String, chatModel: ChatModel): Boolean {
+        return if (idUser == chatModel.source) {
+            chatModel.targetOnline
+        } else {
+            chatModel.sourceOnline
+        }
+    }
+
+    private fun selectContactNick(idUser: String, chatModel: ChatModel): String {
+        return if (idUser == chatModel.source) {
+            chatModel.targetNick
+        } else {
+            chatModel.sourceNick
+        }
+    }
+
+    private fun selectContactAvatar(idUser: String, chatModel: ChatModel): String {
+        return if (idUser == chatModel.source) {
+            chatModel.targetAvatar
+        } else {
+            chatModel.sourceAvatar
         }
     }
 }
