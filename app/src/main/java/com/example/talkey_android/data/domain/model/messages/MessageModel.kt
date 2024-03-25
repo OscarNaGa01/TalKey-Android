@@ -7,5 +7,7 @@ data class MessageModel(
     val chat: String = "",
     val source: String = "",
     val message: String = "",
-    val date: String = ""
+    var date: String = "",
+    var day: String = "",
+    val hour: String = ""
 ) : BaseModel()

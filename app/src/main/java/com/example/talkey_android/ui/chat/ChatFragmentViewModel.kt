@@ -2,9 +2,11 @@ package com.example.talkey_android.ui.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.talkey_android.data.domain.model.chats.ChatModel
 import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.messages.ListMessageModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
+import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.SendMessageUseCase
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class ChatFragmentViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
-    private val getListMessageUseCase: GetListMessageUseCase
+    private val getListMessageUseCase: GetListMessageUseCase,
+    private val getListChatsUseCase: GetListChatsUseCase
 ) : ViewModel() {
     private val _setMessageError = MutableSharedFlow<ErrorModel>()
     val setMessageError: SharedFlow<ErrorModel> = _setMessageError
@@ -24,8 +27,14 @@ class ChatFragmentViewModel(
     private val _getListMessageError = MutableSharedFlow<ErrorModel>()
     val getListMessageError: SharedFlow<ErrorModel> = _getListMessageError
 
+    private val _getListChatsError = MutableSharedFlow<ErrorModel>()
+    val getListChatsError: SharedFlow<ErrorModel> = _getListChatsError
+
     private val _message = MutableStateFlow(ListMessageModel())
     val message: StateFlow<ListMessageModel> = _message
+
+    private val _contact = MutableStateFlow(ChatModel())
+    val contact: StateFlow<ChatModel> = _contact
 
     fun sendMessage(token: String, chat: String, source: String, message: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -34,7 +43,7 @@ class ChatFragmentViewModel(
 
             when (baseResponse) {
                 is BaseResponse.Success -> {
-                    getMessages(token, chat, 200, 0)
+                    getMessages(token, chat, 20, 0)
                 }
 
                 is BaseResponse.Error -> {
@@ -56,6 +65,25 @@ class ChatFragmentViewModel(
 
                 is BaseResponse.Error -> {
                     _getListMessageError.emit(baseResponse.error)
+                }
+            }
+        }
+    }
+
+    fun getContactData(token: String, idChat: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val baseResponse = getListChatsUseCase(token)
+
+            when (baseResponse) {
+                is BaseResponse.Success -> {
+                    baseResponse.data.chats.filter { idChat == it.idChat }.map {
+                        _contact.emit(it)
+                    }
+                }
+
+                is BaseResponse.Error -> {
+                    _getListChatsError.emit(baseResponse.error)
                 }
             }
         }
