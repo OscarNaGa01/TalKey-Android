@@ -102,7 +102,7 @@ class ChatFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.contact.collect { userData ->
 
-            binding.tvName.text = userData.targetNick
+                binding.tvName.text = userData.targetNick
 
                 Glide.with(requireContext())
                     .load(userData.targetAvatar)
