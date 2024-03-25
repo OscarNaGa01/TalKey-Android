@@ -2,11 +2,10 @@
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipToRefresh"
+    android:id="@+id/swipe_to_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -29,18 +28,23 @@
                 android:text="@string/app_name"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
-                android:textSize="28sp" />
+                android:textSize="28sp"
+                tools:ignore="TextContrastCheck"
+                tools:layout_editor_absoluteX="166dp"
+                tools:layout_editor_absoluteY="13dp" />
 
             <ImageButton
                 android:id="@+id/icSearch"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="12dp"
                 android:background="@color/transparent"
                 android:importantForAccessibility="no"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_search" />
+                android:src="@drawable/ic_search"
+                tools:ignore="ImageContrastCheck,TouchTargetSizeCheck"
+                tools:layout_editor_absoluteX="369dp"
+                tools:layout_editor_absoluteY="17dp" />
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.constraintlayout.widget.Guideline
@@ -50,63 +54,31 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
 
-        <TextView
-            android:id="@+id/tvContacts"
-            android:layout_width="wrap_content"
+        <ToggleButton
+            android:id="@+id/tbContacts"
+            style="@style/toggleBtnLists"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/contacts"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/btnContacts"
-            app:layout_constraintEnd_toEndOf="@id/btnContacts"
-            app:layout_constraintStart_toStartOf="@id/btnContacts" />
+            android:textOff="@string/contacts"
+            android:textOn="@string/contacts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            tools:ignore="TextContrastCheck" />
 
-        <View
-            android:id="@+id/vSelectedContacts"
+        <ToggleButton
+            android:id="@+id/tbChats"
+            style="@style/toggleBtnLists"
             android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#D8DADD"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@id/btnContacts"
-            app:layout_constraintEnd_toEndOf="@id/btnContacts"
-            app:layout_constraintStart_toStartOf="@id/btnContacts" />
-
-        <Button
-            android:id="@+id/btnContacts"
-            android:layout_width="0dp"
-            android:layout_height="15dp"
-            android:background="@color/transparent"
-            app:layout_constraintBottom_toBottomOf="@id/toolBar"
-            app:layout_constraintEnd_toEndOf="@id/guideline"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/tvChats"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/chats"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/btnChats"
-            app:layout_constraintEnd_toEndOf="@id/btnChats"
-            app:layout_constraintStart_toStartOf="@id/btnChats" />
-
-        <View
-            android:id="@+id/vSelectedChats"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#D8DADD"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@id/btnChats"
-            app:layout_constraintEnd_toEndOf="@id/btnChats"
-            app:layout_constraintStart_toStartOf="@id/btnChats" />
-
-        <Button
-            android:id="@+id/btnChats"
-            android:layout_width="0dp"
-            android:layout_height="15dp"
-            android:background="@color/transparent"
-            app:layout_constraintBottom_toBottomOf="@id/toolBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/guideline" />
+            android:textOff="@string/chats"
+            android:textOn="@string/chats"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            tools:ignore="TextContrastCheck" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
@@ -115,7 +87,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vSelectedChats" />
+            app:layout_constraintTop_toBottomOf="@id/tbContacts" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

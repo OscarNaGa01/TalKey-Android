@@ -45,5 +45,6 @@
     <string name="unlnown_account">Cuenta desconocida</string>
     <string name="biometric_accunt_link_question">¿Quieres asociar esta cuenta a tu sensor biométrico?</string>
     <string name="biometric_account_linked">Se ha asociado esta cuenta a su huella</string>
-
+    <string name="saySomethingTo">Dile algo a %1$s!</string>
+    <string name="deleteChatSuccessfull">Chat borrado con éxito</string>
 </resources>
