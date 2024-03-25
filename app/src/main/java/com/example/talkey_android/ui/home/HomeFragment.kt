@@ -240,10 +240,13 @@ class HomeFragment
     }
 
     override fun onClickContact(idContact: String) {
+        mBinding.searchView.isIconified = true
         mViewModel.createChat(args.token, args.id, idContact)
+
     }
 
     override fun onClickChat(idChat: String, contactNick: String) {
+        mBinding.searchView.isIconified = true
         Log.i(">", "Ha clicado en un chat")
         findNavController().navigate(
             HomeFragmentDirections.actionHomeToChat(
