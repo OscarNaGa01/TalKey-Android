@@ -42,4 +42,6 @@
     <string name="unlnown_account">Unknown account</string>
     <string name="biometric_accunt_link_question">Do you want to associate this account with your biometric sensor</string>
     <string name="biometric_account_linked">This account has been associated with your fingerprint</string>
+    <string name="saySomethingTo">Say something to %1$s!</string>
+    <string name="deleteChatSuccessfull">Chat successfully deleted</string>
 </resources>
