@@ -100,9 +100,9 @@ class ContactsAdapter(
             tvName.text = contact.nick
             tvLastMsg.text = context.getString(R.string.saySomethingTo, contact.nick)
             if (contact.online) {
-                imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
-            } else {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOnline))
+            } else {
+                imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             }
             Glide.with(context)
                 .load(contact.avatar)
