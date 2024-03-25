@@ -23,7 +23,9 @@
             android:focusable="true"
             android:src="@drawable/back_arrow_white" />
 
-        <include layout="@layout/item_profile_image_status_chat" />
+        <include
+            android:id="@+id/include"
+            layout="@layout/item_profile_image_status_chat" />
 
         <TextView
             android:id="@+id/tvName"

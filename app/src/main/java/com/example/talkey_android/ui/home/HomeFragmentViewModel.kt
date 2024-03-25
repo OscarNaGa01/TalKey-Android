@@ -34,8 +34,8 @@ class HomeFragmentViewModel(
     private val chatsList: MutableList<ChatItemListModel> = mutableListOf()
     private var usersList: List<UserItemListModel> = listOf()
 
-    private val _idNewChat = MutableSharedFlow<Pair<String, String>>()
-    val idNewChat: SharedFlow<Pair<String, String>> = _idNewChat
+    private val _idNewChat = MutableSharedFlow<String>()
+    val idNewChat: SharedFlow<String> = _idNewChat
     private val _createNewChatError = MutableSharedFlow<ErrorModel>()
     val createNewChatError: SharedFlow<ErrorModel> = _createNewChatError
 
@@ -63,12 +63,12 @@ class HomeFragmentViewModel(
     }
 
 
-    fun createChat(token: String, source: String, target: String, nick: String) {
+    fun createChat(token: String, source: String, target: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
             when (val baseResponse = createChatUseCase(token, source, target)) {
                 is BaseResponse.Success -> {
-                    _idNewChat.emit(Pair(baseResponse.data.chatBasicInfoModel.id, nick))
+                    _idNewChat.emit(baseResponse.data.chatBasicInfoModel.id)
                 }
 
                 is BaseResponse.Error -> {

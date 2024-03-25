@@ -2,19 +2,21 @@ package com.example.talkey_android.ui.chat.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.talkey_android.data.domain.model.messages.MessageModel
-import com.example.talkey_android.data.utils.Utils
 import com.example.talkey_android.databinding.ItemChatMeBinding
 import com.example.talkey_android.databinding.ItemChatOtherBinding
 
-class ChatAdapter(private var messageList: MutableList<MessageModel>, private val idUser: String) :
+class ChatAdapter(
+    private var messageList: MutableList<MessageModel>,
+    private val idUser: String
+) :
     RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     private lateinit var context: Context
-    private val isDate = true
 
     companion object {
         const val SENT_MESSAGE = 0
@@ -33,8 +35,13 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
             val currentBinding = binding as ItemChatOtherBinding
             with(currentBinding) {
                 tvMessageOther.text = messageModel.message
-                tvDateOther.text = setHourAndDate(messageModel.date, isDate)
-                tvHourOther.text = setHourAndDate(messageModel.date, !isDate)
+                if (messageModel.day == "") {
+                    tvDateOther.visibility = View.GONE
+                } else {
+                    tvDateOther.visibility = View.VISIBLE
+                    tvDateOther.text = messageModel.day
+                }
+                tvHourOther.text = messageModel.hour
             }
         }
 
@@ -42,16 +49,13 @@ class ChatAdapter(private var messageList: MutableList<MessageModel>, private va
             val currentBinding = binding as ItemChatMeBinding
             with(currentBinding) {
                 tvMessageMe.text = messageModel.message
-                tvDateMe.text = setHourAndDate(messageModel.date, isDate = true)
-                tvHourMe.text = setHourAndDate(messageModel.date, isDate = false)
-            }
-        }
-
-        private fun setHourAndDate(date: String, isDate: Boolean): String {
-            return if (isDate) {
-                Utils.checkDateAndTime(date, isDate)
-            } else {
-                Utils.checkDateAndTime(date, !isDate)
+                if (messageModel.day == "") {
+                    tvDateMe.visibility = View.GONE
+                } else {
+                    tvDateMe.visibility = View.VISIBLE
+                    tvDateMe.text = messageModel.day
+                }
+                tvHourMe.text = messageModel.hour
             }
         }
     }

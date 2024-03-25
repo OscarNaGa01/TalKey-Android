@@ -10,6 +10,8 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import com.example.talkey_android.data.domain.model.messages.ListMessageModel
+import com.example.talkey_android.data.domain.model.messages.MessageModel
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -75,14 +77,14 @@ object Utils {
         }
     }
 
-    fun checkDateAndTime(lastMsgDate: String, isDate: Boolean): String {
+    fun checkDateAndTime(lastMsgDate: String, isChat: Boolean): String {
         return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
             val formatter = DateTimeFormatter.ISO_DATE_TIME
             val dateTime = LocalDateTime.parse(lastMsgDate, formatter)
             val date = dateTime.toLocalDate()
             val currentDate = LocalDate.now()
 
-            if (date == currentDate) {
+            if (date == currentDate && !isChat) {
                 lastMsgDate.substring(11, 16)
             } else {
                 lastMsgDate.substring(0, 10)
@@ -90,5 +92,24 @@ object Utils {
         } else {
             lastMsgDate.substring(0, 10)
         }
+    }
+
+    fun showDateOnce(baseResponse: ListMessageModel): ListMessageModel {
+        val messageList = ArrayList<MessageModel>()
+        messageList.addAll(baseResponse.rows)
+        var lastDate = ""
+        messageList.forEach { message ->
+            var formattedDate = ""
+            if (message.date != "") {
+                formattedDate = checkDateAndTime(message.date, true)
+                message.day = formattedDate
+            }
+            if (formattedDate == lastDate) {
+                message.day = ""
+            } else {
+                lastDate = formattedDate
+            }
+        }
+        return ListMessageModel(baseResponse.count, messageList)
     }
 }
