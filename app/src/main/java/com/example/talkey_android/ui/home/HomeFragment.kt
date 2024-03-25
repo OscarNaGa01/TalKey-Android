@@ -21,6 +21,7 @@ import com.example.talkey_android.data.domain.use_cases.chats.DeleteChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
+import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
 import com.example.talkey_android.databinding.FragmentHomeBinding
 import com.example.talkey_android.ui.home.adapter.ContactsAdapter
 import kotlinx.coroutines.launch
@@ -50,7 +51,8 @@ class HomeFragment
             GetListChatsUseCase(),
             GetListMessageUseCase(),
             CreateChatUseCase(),
-            DeleteChatUseCase()
+            DeleteChatUseCase(),
+            SetOnlineUseCase()
         )
     }
 
@@ -90,6 +92,7 @@ class HomeFragment
             true
         }
         mBinding.toolBar.menu.getItem(logoutIndex).setOnMenuItemClickListener {
+            mViewModel.doLogout(args.token)
             findNavController().navigate(HomeFragmentDirections.actionHomeToLogin())
             true
         }
