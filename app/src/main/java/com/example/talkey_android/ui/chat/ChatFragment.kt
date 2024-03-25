@@ -98,7 +98,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.contact.collect { userData ->
                 binding.tvName.text = userData.targetNick
 
@@ -123,26 +123,26 @@ class ChatFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.message.collect { messages ->
                 Utils.showDateOnce(messages)
                 chatAdapter.updateList(messages.rows)
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.setMessageError.collect { error ->
                 Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.getListMessageError.collect { error ->
                 Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.getListChatsError.collect { error ->
                 Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
             }
