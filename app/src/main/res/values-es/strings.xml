@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">TalKey</string>
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="sign_up">Registrarse</string>
     <string name="log_in">Iniciar sesión</string>
     <string name="hint_email">Correo</string>
@@ -16,8 +14,6 @@
     <string name="chats">Chats</string>
     <string name="edtiProfile">Editar perfil</string>
     <string name="logout">Cerrar sesión</string>
-    <string name="status_online" translatable="false">Online</string>
-    <string name="status_offline" translatable="false">Offline</string>
     <string name="camera_button">Cámara</string>
     <string name="gallery_button">Galería</string>
     <string name="photo_upload_error">No se pudo subir el avatar</string>

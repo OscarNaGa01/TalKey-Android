@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_up">Sign up</string>
+    <string name="log_in">Log in</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_nick">Nick</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm password</string>
+    <string name="accept_terms_and_conditions_dialog">Accept our terms and conditions</string>
+    <string name="img_profile_description">User\'s image profile</string>
+    <string name="save">Save changes</string>
+    <string name="change_password">Change password</string>
+    <string name="hint_message">Message</string>
+    <string name="contacts">Contacts</string>
+    <string name="chats">Chats</string>
+    <string name="edtiProfile">Edit profile</string>
+    <string name="logout">Log out</string>
+    <string name="camera_button">Camera</string>
+    <string name="gallery_button">Gallery</string>
+    <string name="photo_upload_error">Avatar could not be uploaded</string>
+    <string name="profile_updated">Profile updated</string>
+    <string name="fill_all_fields">Fill all fields</string>
+    <string name="user_exists">User doesn\'t exist</string>
+    <string name="status_update_error">Online status could not be changed</string>
+    <string name="invalid_password">Invalid password</string>
+    <string name="passwords_dont_match">Passwords doesn\'t match</string>
+    <string name="password_requirements">The password must contain 8 characters, one uppercase letter, one number, and one special character.</string>
+    <string name="delete_confirmation_title">Delete confirmation</string>
+    <string name="delete_confirmation_question">Are you sure you want to delete this chat?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="check_your_email_and_password">"Check the username and password "</string>
+    <string name="enter_a_valid_email">Enter a valid email</string>
+    <string name="accept_our_terms_and_conditions">Accept our terms and conditions</string>
+    <string name="biometric_sensor_doesnt_exist">Biometric sensor not found</string>
+    <string name="biometric_sensor_not_available">Biometric sensor unavailable</string>
+    <string name="connection_with_sensor_not_available">Biometric sensor connection failed</string>
+    <string name="fingerprint_mismatch">Fingerprint mismatch</string>
+    <string name="use_fingerprint_login">Use your fingerprint to access the application</string>
+    <string name="cancel">Cancel</string>
+    <string name="login_title">Log in</string>
+    <string name="unlnown_account">Unknown account</string>
+    <string name="biometric_accunt_link_question">Do you want to associate this account with your biometric sensor</string>
+    <string name="biometric_account_linked">This account has been associated with your fingerprint</string>
+    <string name="saySomethingTo">Say something to %1$s!</string>
+    <string name="deleteChatSuccessfull">Chat successfully deleted</string>
+</resources>

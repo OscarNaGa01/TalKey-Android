@@ -473,7 +473,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             etPasswordConfirm.visibility = View.GONE
 
             tvNicknameLabel.text = getString(R.string.hint_nick)
-            tvLoginLabel.text = getString(R.string.log_in_button)
+            tvLoginLabel.text = getString(R.string.log_in)
             btnAccept.text = getString(R.string.change_password)
             etPassword.setText("")
             etPasswordConfirm.setText("")
