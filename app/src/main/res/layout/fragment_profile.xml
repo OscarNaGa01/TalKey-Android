@@ -112,45 +112,13 @@
         app:layout_constraintTop_toBottomOf="@id/tvNicknameLabel"
         tools:text="Juan Cuesta" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@id/tvNickname">
-
-        <TextView
-            android:id="@+id/tvPasswordRequirements"
-            style="@style/passwordRequirements"
-            tools:text="@string/password_requirements"
-            app:layout_constraintBottom_toBottomOf="@id/etPassword"
-            app:layout_constraintStart_toStartOf="@id/etPassword"
-            app:layout_constraintEnd_toEndOf="@id/etPassword" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etPassword"
-            style="@style/passwordBox"
-            android:visibility="gone"
-            android:padding="@dimen/common_margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <CheckBox
-            android:id="@+id/chbShowPasswdText"
-            style="@style/passwordCheckBox"
-            app:layout_constraintTop_toTopOf="@id/etPassword"
-            app:layout_constraintBottom_toBottomOf="@id/etPassword"
-            app:layout_constraintEnd_toEndOf="@id/etPassword" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierNickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="etNickname,tvNickname,clPassword" />
+        app:constraint_referenced_ids="etNickname,tvNickname" />
 
 
     <TextView
@@ -172,28 +140,12 @@
         app:layout_constraintTop_toBottomOf="@id/tvLoginLabel"
         tools:text="juan.cuesta@vasscompany.com" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etPasswordConfirm"
-        style="@style/passwordBox"
-        android:layout_marginTop="@dimen/minimal_margin"
-        android:hint="@string/hint_confirm_password"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLoginLabel" />
-
-    <CheckBox
-        android:id="@+id/chbShowConfirmPasswdText"
-        style="@style/passwordCheckBox"
-        app:layout_constraintTop_toTopOf="@id/etPasswordConfirm"
-        app:layout_constraintBottom_toBottomOf="@id/etPasswordConfirm"
-        app:layout_constraintEnd_toEndOf="@id/etPasswordConfirm" />
-
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="tvLogin,etPasswordConfirm" />
+        app:constraint_referenced_ids="tvLogin" />
 
 
     <com.google.android.material.button.MaterialButton

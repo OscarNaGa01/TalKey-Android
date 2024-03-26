@@ -44,4 +44,6 @@
     <string name="biometric_account_linked">This account has been associated with your fingerprint</string>
     <string name="saySomethingTo">Say something to %1$s!</string>
     <string name="deleteChatSuccessfull">Chat successfully deleted</string>
+    <string name="password_updated">Password updated</string>
+    <string name="password_error">Password couldn\'t be changed</string>
 </resources>
