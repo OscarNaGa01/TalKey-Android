@@ -13,11 +13,14 @@ import com.example.talkey_android.data.domain.use_cases.chats.DeleteChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
+import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
 import com.example.talkey_android.data.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class HomeFragmentViewModel(
@@ -25,11 +28,13 @@ class HomeFragmentViewModel(
     private val getListChatsUseCase: GetListChatsUseCase,
     private val getListMessageUseCase: GetListMessageUseCase,
     private val createChatUseCase: CreateChatUseCase,
-    private val deleteChatUseCase: DeleteChatUseCase
+    private val deleteChatUseCase: DeleteChatUseCase,
+    private val setOnlineUseCase: SetOnlineUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableSharedFlow<HomeFragmentUiState>()
-    val uiState: SharedFlow<HomeFragmentUiState> = _uiState
+    private val _uiState =
+        MutableStateFlow<HomeFragmentUiState>(HomeFragmentUiState.Success(listOf()))
+    val uiState: StateFlow<HomeFragmentUiState> = _uiState
 
     private val chatsList: MutableList<ChatItemListModel> = mutableListOf()
     private var usersList: List<UserItemListModel> = listOf()
@@ -43,6 +48,13 @@ class HomeFragmentViewModel(
     val deleteChatSuccess: SharedFlow<Boolean> = _deleteChatSuccess
     private val _deleteChatError = MutableSharedFlow<ErrorModel>()
     val deleteChatError: SharedFlow<ErrorModel> = _deleteChatError
+
+
+    fun doLogout(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            setOnlineUseCase(token, false)
+        }
+    }
 
 
     fun deleteChat(token: String, idChat: String) {
@@ -65,7 +77,6 @@ class HomeFragmentViewModel(
 
     fun createChat(token: String, source: String, target: String) {
         viewModelScope.launch(Dispatchers.IO) {
-
             when (val baseResponse = createChatUseCase(token, source, target)) {
                 is BaseResponse.Success -> {
                     _idNewChat.emit(baseResponse.data.chatBasicInfoModel.id)
@@ -79,19 +90,21 @@ class HomeFragmentViewModel(
     }
 
     fun getChatsList(token: String, idUser: String) {
-        chatsList.clear()
-        Log.i(">", "Inicio de getChatsList")
-        viewModelScope.launch(Dispatchers.IO) {
-            _uiState.emit(HomeFragmentUiState.Loading)
-            Log.i(">", "ha emitido el cargando")
-            val chatsListDeferred = async { getChatsData(token, idUser) }
-            Log.i(">", "Ha rellenado la lista")
-            chatsListDeferred.await()
-            val msgInfoDeferred = async { getMessagesData(token) }
-            Log.i(">", "Ha puesto los mensajes en la lista")
-            msgInfoDeferred.await()
-            Log.i(">", "Y ahora emite el SUCCESS")
-            _uiState.emit(HomeFragmentUiState.Success(chatsList))
+        if (_uiState.value != HomeFragmentUiState.Loading) {
+            chatsList.clear()
+            Log.i(">", "Inicio de getChatsList")
+            viewModelScope.launch(Dispatchers.IO) {
+                _uiState.emit(HomeFragmentUiState.Loading)
+                Log.i(">", "ha emitido el cargando")
+                val chatsListDeferred = async { getChatsData(token, idUser) }
+                Log.i(">", "Ha rellenado la lista")
+                chatsListDeferred.await()
+                val msgInfoDeferred = async { getMessagesData(token) }
+                Log.i(">", "Ha puesto los mensajes en la lista")
+                msgInfoDeferred.await()
+                Log.i(">", "Y ahora emite el SUCCESS")
+                _uiState.emit(HomeFragmentUiState.Success(chatsList))
+            }
         }
     }
 
@@ -137,6 +150,7 @@ class HomeFragmentViewModel(
                     )
                 }
             }
+
             is BaseResponse.Error -> {
                 _uiState.emit(HomeFragmentUiState.Error(baseResponse.error.message))
             }
@@ -168,19 +182,22 @@ class HomeFragmentViewModel(
     }
 
     fun getUsersList(token: String) {
-        Log.i(">", "Inicio de getChatsList")
-        viewModelScope.launch(Dispatchers.IO) {
-            _uiState.emit(HomeFragmentUiState.Loading)
-            Log.i(">", "Emite loading")
-            when (val baseResponse = getListProfilesUseCase(token)) {
-                is BaseResponse.Success -> {
-                    Log.i(">", "Rellena la lista de usuarios")
-                    usersList = baseResponse.data.users
-                    Log.i(">", "Emite lista de contactos")
-                    _uiState.emit(HomeFragmentUiState.Success(usersList))
-                }
-                is BaseResponse.Error -> {
-                    _uiState.emit(HomeFragmentUiState.Error(baseResponse.error.message))
+        if (_uiState.value != HomeFragmentUiState.Loading) {
+            Log.i(">", "Inicio de getChatsList")
+            viewModelScope.launch(Dispatchers.IO) {
+                _uiState.emit(HomeFragmentUiState.Loading)
+                Log.i(">", "Emite loading")
+                when (val baseResponse = getListProfilesUseCase(token)) {
+                    is BaseResponse.Success -> {
+                        Log.i(">", "Rellena la lista de usuarios")
+                        usersList = baseResponse.data.users
+                        Log.i(">", "Emite lista de contactos")
+                        _uiState.emit(HomeFragmentUiState.Success(usersList))
+                    }
+
+                    is BaseResponse.Error -> {
+                        _uiState.emit(HomeFragmentUiState.Error(baseResponse.error.message))
+                    }
                 }
             }
         }
