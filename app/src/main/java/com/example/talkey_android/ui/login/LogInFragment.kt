@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
+import com.example.talkey_android.data.Token
 import com.example.talkey_android.data.constants.Constants.PLATFORM
 import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
@@ -33,6 +35,7 @@ import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
 import com.example.talkey_android.data.utils.Prefs
 import com.example.talkey_android.databinding.FragmentLogInBinding
+import com.towerbank.ikigii.data.repository.security.EncryptDecryptManager
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executor
 import java.util.regex.Pattern
@@ -89,7 +92,12 @@ class LogInFragment : Fragment() {
                         binding.progressBar.visibility = View.GONE
 
                         if (isTryingBiometricAccess) {
-                            prefs.saveToken(uiState.userModel.token)
+                            Log.i(">", "OBSERVANDO EL VIEW_MODEL:")
+                            Log.i(">", "Token sin encriptar ->" + uiState.userModel.token)
+                            val encryptedToken =
+                                EncryptDecryptManager.encrypt(uiState.userModel.token)
+                            Log.i(">", "Token encriptado ->" + encryptedToken)
+                            prefs.saveToken(encryptedToken)
                             doNavigation(uiState.userModel)
                         } else {
                             isTryingBiometricAccess = false
@@ -131,7 +139,9 @@ class LogInFragment : Fragment() {
     }
 
     private fun doNavigation(user: UserModel) {
+        // TODO: aquí hay que encriptar, guardar y desencriptar el token
         if (user.token.isNotEmpty() && !isLogin) {
+            Token.setToken(user.token)
             findNavController().navigate(
                 LogInFragmentDirections.actionLogInFragmentToProfileFragment(
                     user.id,
@@ -140,6 +150,7 @@ class LogInFragment : Fragment() {
                 )
             )
         } else if (user.token.isNotEmpty() && isLogin) {
+            Token.setToken(user.token)
             findNavController().navigate(
                 LogInFragmentDirections.actionLogInFragmentToHomeFragment(
                     user.id,
@@ -367,7 +378,7 @@ class LogInFragment : Fragment() {
         val biometricManager = BiometricManager.from(requireContext())
         when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
-
+                // TODO: aquí iría la encriptación y desencriptación
                 if (isTryingBiometricAccess) {
                     createBiometricListener(token)
                     createPromptInfo()
@@ -376,7 +387,12 @@ class LogInFragment : Fragment() {
                 } else if (binding.etEmail.text.toString() != prefs.getMail()) {
                     showDialogToSaveAccount(token)
                 } else {
-                    prefs.saveToken(token)
+                    Log.i(">", "GUARDADO DE TOKEN AUTOMÁTICO POR LOGIN MANUAL:")
+                    Log.i(">", "Token sin encriptar ->" + token)
+                    val encryptedToken = EncryptDecryptManager.encrypt(token)
+                    Log.i(">", "Token encriptado ->" + encryptedToken)
+                    prefs.saveToken(encryptedToken)
+                    //prefs.saveToken(token)
                 }
             }
 
@@ -433,7 +449,9 @@ class LogInFragment : Fragment() {
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    logInFragmentViewModel.doBiometricLogin(token)
+                    // TODO: aquí desencriptaría la clave de acceso
+                    val decryptedToken = EncryptDecryptManager.decrypt(prefs.getToken())
+                    logInFragmentViewModel.doBiometricLogin(decryptedToken)
                 }
             })
     }
@@ -455,7 +473,12 @@ class LogInFragment : Fragment() {
         builder.setMessage(getString(R.string.biometric_accunt_link_question))
 
         builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
-            prefs.saveToken(token)
+            // TODO: aquí habría que encriptar y guardar
+            Log.i(">", "ASOCIANDO LA CUENTA ACTUAL A LA HUELLA:")
+            Log.i(">", "Token sin encriptar ->" + token)
+            val encryptedToken = EncryptDecryptManager.encrypt(token)
+            Log.i(">", "Token encriptado ->" + encryptedToken)
+            prefs.saveToken(encryptedToken)
             prefs.saveMail(binding.etEmail.text.toString())
             Toast.makeText(
                 requireContext(),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "78582609201",
+    "project_id": "talkey-6c191",
+    "storage_bucket": "talkey-6c191.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78582609201:android:f7e07e76fa62f3a72fac10",
+        "android_client_info": {
+          "package_name": "com.example.talkey_android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsTwPXay-zFkHgpD6fwWuKpQqgYjicmlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
