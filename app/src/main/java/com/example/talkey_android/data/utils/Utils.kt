@@ -94,9 +94,9 @@ object Utils {
         }
     }
 
-    fun showDateOnce(baseResponse: ListMessageModel): ListMessageModel {
+    fun showDateOnce(baseResponse: List<MessageModel>): ListMessageModel {
         val messageList = ArrayList<MessageModel>()
-        messageList.addAll(baseResponse.rows)
+        messageList.addAll(baseResponse)
         var lastDate = ""
         messageList.forEach { message ->
             var formattedDate = ""
@@ -110,6 +110,6 @@ object Utils {
                 lastDate = formattedDate
             }
         }
-        return ListMessageModel(baseResponse.count, messageList)
+        return ListMessageModel(messageList.count(), messageList)
     }
 }

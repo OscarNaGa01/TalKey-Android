@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.chats.ChatModel
 import com.example.talkey_android.data.domain.model.error.ErrorModel
-import com.example.talkey_android.data.domain.model.messages.ListMessageModel
+import com.example.talkey_android.data.domain.model.messages.MessageModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
@@ -30,18 +30,20 @@ class ChatFragmentViewModel(
     private val _getListChatsError = MutableSharedFlow<ErrorModel>()
     val getListChatsError: SharedFlow<ErrorModel> = _getListChatsError
 
-    private val _message = MutableStateFlow(ListMessageModel())
-    val message: StateFlow<ListMessageModel> = _message
+    private val _message = MutableSharedFlow<List<MessageModel>>()
+    val message: SharedFlow<List<MessageModel>> = _message
 
     private val _contact = MutableStateFlow(ChatModel())
     val contact: StateFlow<ChatModel> = _contact
+
+    private val messageList = mutableListOf<MessageModel>()
 
     fun sendMessage(token: String, chat: String, source: String, message: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
             when (val baseResponse = sendMessageUseCase(token, chat, source, message)) {
                 is BaseResponse.Success -> {
-                    getMessages(token, chat, 20, 0)
+                    getMessages(token, chat, 10, 0)
                 }
 
                 is BaseResponse.Error -> {
@@ -56,7 +58,8 @@ class ChatFragmentViewModel(
 
             when (val baseResponse = getListMessageUseCase(token, idChat, limit, offset)) {
                 is BaseResponse.Success -> {
-                    _message.emit(baseResponse.data)
+                    messageList.addAll(baseResponse.data.rows)
+                    _message.emit(messageList)
                 }
 
                 is BaseResponse.Error -> {

@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
@@ -94,8 +95,8 @@ class ChatFragment : Fragment() {
     }
 
     private fun getMessageList() {
-        chatFragmentViewModel.getMessages(args.token, args.idChat, 20, 0)
         chatFragmentViewModel.getContactData(args.token, args.idChat, args.idUser)
+        chatFragmentViewModel.getMessages(args.token, args.idChat, 10, 0)
     }
 
     private fun observeViewModel() {
@@ -131,7 +132,7 @@ class ChatFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.message.collect { messages ->
                 Utils.showDateOnce(messages)
-                chatAdapter.updateList(messages.rows)
+                chatAdapter.updateList(messages)
             }
         }
 
@@ -162,5 +163,33 @@ class ChatFragment : Fragment() {
             adapter = chatAdapter
             layoutManager = linearLayout
         }
+        setupPagination()
+    }
+
+    private fun setupPagination() {
+        var visibleItemCount = 0
+        var pastVisibleItems = 0
+        var totalItemCount = 0
+        var page = 0
+        var limit = 10
+        var loading = true
+        binding.rvChat.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = linearLayout.childCount
+                    totalItemCount = linearLayout.itemCount
+                    pastVisibleItems = linearLayout.findFirstVisibleItemPosition()
+                    if (loading) {
+                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                            loading = false
+                            chatFragmentViewModel.getMessages(args.token, args.idChat, limit, limit * page)
+                            page++
+                            loading = true
+                        }
+                    }
+                }
+            }
+        }
+        )
     }
 }
