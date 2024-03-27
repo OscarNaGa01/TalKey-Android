@@ -27,75 +27,70 @@ object DataProvider : DataSource {
         return RemoteDataSource.login(loginRequestModel)
     }
 
-    override suspend fun logout(token: String): BaseResponse<CommonMessageModel> {
-        return RemoteDataSource.logout(token)
+    override suspend fun logout(): BaseResponse<CommonMessageModel> {
+        return RemoteDataSource.logout()
     }
 
-    override suspend fun getProfile(token: String): BaseResponse<UserProfileModel> {
-        return RemoteDataSource.getProfile(token)
+    override suspend fun getProfile(): BaseResponse<UserProfileModel> {
+        return RemoteDataSource.getProfile()
     }
 
-    override suspend fun getListProfiles(token: String): BaseResponse<ListUsersModel> {
-        return RemoteDataSource.getListProfiles(token)
+    override suspend fun getListProfiles(): BaseResponse<ListUsersModel> {
+        return RemoteDataSource.getListProfiles()
     }
 
     override suspend fun updateProfile(
-        token: String,
         updateProfileModel: UpdateProfileModel
     ): BaseResponse<SuccessModel> {
-        return RemoteDataSource.updateProfile(token, updateProfileModel)
+        return RemoteDataSource.updateProfile(updateProfileModel)
     }
 
-    override suspend fun uploadImg(token: String, file: File): BaseResponse<CommonMessageModel> {
-        return RemoteDataSource.uploadImg(token, file)
+    override suspend fun uploadImg(file: File): BaseResponse<CommonMessageModel> {
+        return RemoteDataSource.uploadImg(file)
     }
 
-    override suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<CommonMessageModel> {
-        return RemoteDataSource.setOnline(token, isOnline)
+    override suspend fun setOnline(isOnline: Boolean): BaseResponse<CommonMessageModel> {
+        return RemoteDataSource.setOnline(isOnline)
     }
 
     override suspend fun putNotification(
-        token: String,
         firebaseToken: String
     ): BaseResponse<CommonMessageModel> {
-        return RemoteDataSource.putNotification(token, firebaseToken)
+        return RemoteDataSource.putNotification(firebaseToken)
     }
 
-    override suspend fun loginBiometric(token: String): BaseResponse<UserModel> {
-        return RemoteDataSource.loginBiometric(token)
+    override suspend fun loginBiometric(): BaseResponse<UserModel> {
+        return RemoteDataSource.loginBiometric()
     }
 
-    override suspend fun getListChats(token: String): BaseResponse<ListChatsModel> {
-        return RemoteDataSource.getListChats(token)
+    override suspend fun getListChats(): BaseResponse<ListChatsModel> {
+        return RemoteDataSource.getListChats()
     }
 
     override suspend fun createChat(
-        token: String,
         source: String,
         target: String
     ): BaseResponse<ChatCreationModel> {
-        return RemoteDataSource.createChat(token, source, target)
+        return RemoteDataSource.createChat(source, target)
     }
 
-    override suspend fun deleteChat(token: String, idChat: String): BaseResponse<SuccessModel> {
-        return RemoteDataSource.deleteChat(token, idChat)
+    override suspend fun deleteChat(idChat: String): BaseResponse<SuccessModel> {
+        return RemoteDataSource.deleteChat(idChat)
     }
 
     override suspend fun sendMessage(
-        token: String,
         chat: String,
         source: String,
         message: String
     ): BaseResponse<SuccessModel> {
-        return RemoteDataSource.sendMessage(token, chat, source, message)
+        return RemoteDataSource.sendMessage(chat, source, message)
     }
 
     override suspend fun getMessages(
-        token: String,
         idChat: String,
         limit: Int,
         offset: Int
     ): BaseResponse<ListMessageModel> {
-        return RemoteDataSource.getMessages(token, idChat, limit, offset)
+        return RemoteDataSource.getMessages(idChat, limit, offset)
     }
 }

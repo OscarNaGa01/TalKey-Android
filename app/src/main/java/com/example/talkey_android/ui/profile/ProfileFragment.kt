@@ -48,7 +48,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         )
 
     val args: ProfileFragmentArgs by navArgs()
-    private lateinit var token: String
     private lateinit var id: String
     private var isNew: Boolean = false
     private var state: ProfileState = ProfileState.ShowProfile
@@ -97,12 +96,11 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
         id = args.id
         isNew = args.isNew
-        token = args.token
 
         Log.d("TAG", imageUri.toString())
 
         observeViewModel()
-        viewModel.getProfile(token)
+        viewModel.getProfile()
 
         toolBarConfiguration()
         initListeners()
@@ -148,12 +146,12 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             viewModel.updateProfileSuccess.collect {
                 if (isNew) {
                     findNavController().navigate(
-                        ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id, token)
+                        ProfileFragmentDirections.actionProfileFragmentToHomeFragment(id)
                     )
                 } else {
                     Log.d("TAG", it.success.toString())
                     editToShow()
-                    viewModel.getProfile(token)
+                    viewModel.getProfile()
                 }
             }
         }

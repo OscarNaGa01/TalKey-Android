@@ -6,7 +6,7 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 import java.io.File
 
 class UploadImgUseCase {
-    suspend operator fun invoke(token: String, file: File): BaseResponse<CommonMessageModel> {
-        return DataProvider.uploadImg(token, file)
+    suspend operator fun invoke(file: File): BaseResponse<CommonMessageModel> {
+        return DataProvider.uploadImg(file)
     }
 }

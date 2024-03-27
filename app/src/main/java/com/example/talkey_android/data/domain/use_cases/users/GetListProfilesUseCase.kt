@@ -6,7 +6,7 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 
 class GetListProfilesUseCase {
 
-    suspend operator fun invoke(token: String): BaseResponse<ListUsersModel> {
-        return DataProvider.getListProfiles(token)
+    suspend operator fun invoke(): BaseResponse<ListUsersModel> {
+        return DataProvider.getListProfiles()
     }
 }

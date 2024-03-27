@@ -5,7 +5,7 @@ import com.example.talkey_android.data.domain.repository.DataProvider
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 
 class SetOnlineUseCase {
-    suspend operator fun invoke(token: String, isOnline: Boolean): BaseResponse<CommonMessageModel> {
-        return DataProvider.setOnline(token, isOnline)
+    suspend operator fun invoke(isOnline: Boolean): BaseResponse<CommonMessageModel> {
+        return DataProvider.setOnline(isOnline)
     }
 }

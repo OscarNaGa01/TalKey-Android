@@ -18,39 +18,34 @@ import java.io.File
 interface DataSource {
     suspend fun register(registerRequestModel: RegisterRequestModel): BaseResponse<RegisterResponseModel>
     suspend fun login(loginRequestModel: LoginRequestModel): BaseResponse<UserModel>
-    suspend fun logout(token: String): BaseResponse<CommonMessageModel>
-    suspend fun getProfile(token: String): BaseResponse<UserProfileModel>
-    suspend fun getListProfiles(token: String): BaseResponse<ListUsersModel>
+    suspend fun logout(): BaseResponse<CommonMessageModel>
+    suspend fun getProfile(): BaseResponse<UserProfileModel>
+    suspend fun getListProfiles(): BaseResponse<ListUsersModel>
     suspend fun updateProfile(
-        token: String,
         updateProfileModel: UpdateProfileModel
     ): BaseResponse<SuccessModel>
 
-    suspend fun uploadImg(token: String, file: File): BaseResponse<CommonMessageModel>
-    suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<CommonMessageModel>
+    suspend fun uploadImg(file: File): BaseResponse<CommonMessageModel>
+    suspend fun setOnline(isOnline: Boolean): BaseResponse<CommonMessageModel>
     suspend fun putNotification(
-        token: String,
         firebaseToken: String
     ): BaseResponse<CommonMessageModel>
 
-    suspend fun loginBiometric(token: String): BaseResponse<UserModel>
-    suspend fun getListChats(token: String): BaseResponse<ListChatsModel>
+    suspend fun loginBiometric(): BaseResponse<UserModel>
+    suspend fun getListChats(): BaseResponse<ListChatsModel>
     suspend fun createChat(
-        token: String,
         source: String,
         target: String
     ): BaseResponse<ChatCreationModel>
 
-    suspend fun deleteChat(token: String, idChat: String): BaseResponse<SuccessModel>
+    suspend fun deleteChat(idChat: String): BaseResponse<SuccessModel>
     suspend fun sendMessage(
-        token: String,
         chat: String,
         source: String,
         message: String
     ): BaseResponse<SuccessModel>
 
     suspend fun getMessages(
-        token: String,
         idChat: String,
         limit: Int,
         offset: Int

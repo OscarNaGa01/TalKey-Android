@@ -38,9 +38,6 @@
             android:name="id"
             app:argType="string" />
 
-        <argument
-            android:name="token"
-            app:argType="string" />
         <action
             android:id="@+id/action_HomeFragment_to_profileFragment"
             app:destination="@id/profileFragment"
@@ -58,9 +55,6 @@
         <action
             android:id="@+id/action_chat_to_home"
             app:destination="@id/HomeFragment" />
-        <argument
-            android:name="token"
-            app:argType="string" />
         <argument
             android:name="idUser"
             app:argType="string" />
@@ -86,9 +80,6 @@
             app:argType="boolean" />
         <argument
             android:name="id"
-            app:argType="string" />
-        <argument
-            android:name="token"
             app:argType="string" />
     </fragment>
 
