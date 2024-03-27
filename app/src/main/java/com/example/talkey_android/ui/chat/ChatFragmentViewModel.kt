@@ -41,12 +41,12 @@ class ChatFragmentViewModel(
     private var page = 0
     private var limit = 10
 
-    fun sendMessage(token: String, chat: String, source: String, message: String) {
+    fun sendMessage(chat: String, source: String, message: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            when (val baseResponse = sendMessageUseCase(token, chat, source, message)) {
+            when (val baseResponse = sendMessageUseCase(chat, source, message)) {
                 is BaseResponse.Success -> {
-                    getMessages(token, chat, true)
+                    getMessages(chat, true)
                 }
 
                 is BaseResponse.Error -> {
@@ -56,7 +56,7 @@ class ChatFragmentViewModel(
         }
     }
 
-    fun getMessages(token: String, idChat: String, isSentMessage: Boolean) {
+    fun getMessages(idChat: String, isSentMessage: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
 
             val offset = if (isSentMessage) {
@@ -67,7 +67,7 @@ class ChatFragmentViewModel(
                 limit * page
             }
             println(offset)
-            when (val baseResponse = getListMessageUseCase(token, idChat, limit, offset)) {
+            when (val baseResponse = getListMessageUseCase(idChat, limit, offset)) {
                 is BaseResponse.Success -> {
                     messageList.addAll(baseResponse.data.rows)
                     _message.emit(messageList)
@@ -81,10 +81,10 @@ class ChatFragmentViewModel(
         }
     }
 
-    fun getContactData(token: String, idChat: String, idUser: String) {
+    fun getContactData(idChat: String, idUser: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            when (val baseResponse = getListChatsUseCase(token)) {
+            when (val baseResponse = getListChatsUseCase()) {
                 is BaseResponse.Success -> {
                     baseResponse.data.chats.filter { idChat == it.idChat }.map {
                         _contact.emit(
