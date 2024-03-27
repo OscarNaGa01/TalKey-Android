@@ -36,14 +36,17 @@ class ChatFragmentViewModel(
     private val _contact = MutableStateFlow(ChatModel())
     val contact: StateFlow<ChatModel> = _contact
 
-    private val messageList = mutableListOf<MessageModel>()
+    private var messageList = mutableListOf<MessageModel>()
+
+    private var page = 0
+    private var limit = 10
 
     fun sendMessage(token: String, chat: String, source: String, message: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
             when (val baseResponse = sendMessageUseCase(token, chat, source, message)) {
                 is BaseResponse.Success -> {
-                    getMessages(token, chat, 10, 0)
+                    getMessages(token, chat, true)
                 }
 
                 is BaseResponse.Error -> {
@@ -53,13 +56,22 @@ class ChatFragmentViewModel(
         }
     }
 
-    fun getMessages(token: String, idChat: String, limit: Int, offset: Int) {
+    fun getMessages(token: String, idChat: String, isSentMessage: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
 
+            val offset = if (isSentMessage) {
+                page = 0
+                messageList.clear()
+                0
+            } else {
+                limit * page
+            }
+            println(offset)
             when (val baseResponse = getListMessageUseCase(token, idChat, limit, offset)) {
                 is BaseResponse.Success -> {
                     messageList.addAll(baseResponse.data.rows)
                     _message.emit(messageList)
+                    page++
                 }
 
                 is BaseResponse.Error -> {

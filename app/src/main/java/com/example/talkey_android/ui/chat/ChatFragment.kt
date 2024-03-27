@@ -36,6 +36,9 @@ class ChatFragment : Fragment() {
     private val chatFragmentViewModel: ChatFragmentViewModel =
         ChatFragmentViewModel(SendMessageUseCase(), GetListMessageUseCase(), GetListChatsUseCase())
     private lateinit var mainActivity: MainActivity
+    private var visibleItemCount = 0
+    private var pastVisibleItems = 0
+    private var totalItemCount = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +55,7 @@ class ChatFragment : Fragment() {
         initRecyclerView()
         observeViewModel()
         initListeners()
-        getMessageList()
+        getMessageList(false)
     }
 
     private fun initListeners() {
@@ -67,17 +70,35 @@ class ChatFragment : Fragment() {
                     }
                 })
             ivSend.setOnClickListener {
+//                resetLinearLayoutValues(rvChat)
                 sendMessage()
             }
             rvChat.setOnClickListener {
                 mainActivity.hideKeyBoard()
             }
             swipeToRefresh.setOnRefreshListener {
-                getMessageList()
+//                resetLinearLayoutValues(rvChat)
+                getMessageList(true)
                 swipeToRefresh.isRefreshing = false
             }
         }
     }
+
+//    private fun resetLinearLayoutValues(linearLayout: RecyclerView) {
+//        linearLayout.post {
+//            linearLayout.scrollToPosition(0) // Esto asegura que la vista esté en la posición inicial
+//            linearLayout.layoutManager?.apply {
+//                scrollToPosition(0) // Asegura que el layout manager esté en la posición inicial
+//            }
+//            linearLayout.clearOnScrollListeners() // Elimina cualquier listener de desplazamiento existente
+//            linearLayout.viewTreeObserver.dispatchOnPreDraw() // Actualiza la vista antes de acceder a sus valores
+//            linearLayout.apply {
+//                visibleItemCount = 0
+//                totalItemCount = 0
+//                pastVisibleItems = 0
+//            }
+//        }
+//    }
 
     private fun sendMessage() {
         with(binding) {
@@ -94,9 +115,9 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun getMessageList() {
+    private fun getMessageList(isSentMessage: Boolean) {
         chatFragmentViewModel.getContactData(args.token, args.idChat, args.idUser)
-        chatFragmentViewModel.getMessages(args.token, args.idChat, 10, 0)
+        chatFragmentViewModel.getMessages(args.token, args.idChat, isSentMessage)
     }
 
     private fun observeViewModel() {
@@ -166,30 +187,35 @@ class ChatFragment : Fragment() {
         setupPagination()
     }
 
+//    private fun setupPagination() {
+//        var loading = true
+//        binding.rvChat.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                if (dy > 0) {
+//                    visibleItemCount = linearLayout.childCount
+//                    totalItemCount = linearLayout.itemCount
+//                    pastVisibleItems = linearLayout.findFirstVisibleItemPosition()
+//                    if (loading && visibleItemCount + pastVisibleItems >= totalItemCount) {
+//                        loading = false
+//                        getMessageList(false)
+//                    } else if (visibleItemCount + pastVisibleItems < totalItemCount && !loading) {
+//                        loading = true
+//                    }
+//                }
+//            }
+//        }
+//        )
+//    }
+
     private fun setupPagination() {
-        var visibleItemCount = 0
-        var pastVisibleItems = 0
-        var totalItemCount = 0
-        var page = 0
-        var limit = 10
-        var loading = true
         binding.rvChat.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) {
-                    visibleItemCount = linearLayout.childCount
-                    totalItemCount = linearLayout.itemCount
-                    pastVisibleItems = linearLayout.findFirstVisibleItemPosition()
-                    if (loading) {
-                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                            loading = false
-                            chatFragmentViewModel.getMessages(args.token, args.idChat, limit, limit * page)
-                            page++
-                            loading = true
-                        }
-                    }
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager: LinearLayoutManager? = recyclerView.layoutManager as LinearLayoutManager?
+                if (layoutManager?.findLastCompletelyVisibleItemPosition() == recyclerView.adapter?.itemCount?.minus(1)) {
+                    getMessageList(false)
                 }
             }
-        }
-        )
+        })
     }
 }
