@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -90,6 +91,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         id = args.id
         isNew = args.isNew
@@ -197,7 +199,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         with(binding) {
             tvNickname.text = user.nick
             tvLogin.text = user.login
-            etNickname.setText(user.nick)
         }
 
         if (user.online) {
@@ -356,6 +357,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             ivStatus.visibility = View.GONE
 
             btnAccept.text = getString(R.string.save)
+            etNickname.setText(myUser!!.nick)
         }
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
             false

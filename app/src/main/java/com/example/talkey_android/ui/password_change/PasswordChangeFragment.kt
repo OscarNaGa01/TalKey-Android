@@ -6,6 +6,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
@@ -36,6 +37,7 @@ class PasswordChangeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPasswordChangeBinding.inflate(inflater, container, false)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         image = args.image
         nick = args.nick
