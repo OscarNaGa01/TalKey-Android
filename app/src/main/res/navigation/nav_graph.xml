@@ -81,6 +81,22 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_profileFragment_to_passwordChangeFragment"
+            app:destination="@id/passwordChangeFragment"
+            app:popUpTo="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordChangeFragment"
+        android:name="com.example.talkey_android.ui.password_change.PasswordChangeFragment"
+        android:label="fragment_password_change"
+        tools:layout="@layout/fragment_password_change">
+        <argument
+            android:name="image"
+            app:argType="string" />
+        <argument
+            android:name="nick"
+            app:argType="string" />
     </fragment>
 
 </navigation>
