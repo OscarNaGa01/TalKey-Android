@@ -22,10 +22,9 @@ class PasswordChangeFragmentViewModel(
     val updateProfileSuccess: SharedFlow<SuccessModel> = _updateProfileSuccess
 
 
-    fun updateProfile(token: String, passwd: String, nick: String) {
+    fun updateProfile(passwd: String, nick: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val baseResponse = updateProfileUseCase(
-                token,
                 UpdateProfileModel(passwd, nick)
             )
             when (baseResponse) {

@@ -29,7 +29,6 @@ class PasswordChangeFragment : Fragment() {
 
     val args: PasswordChangeFragmentArgs by navArgs()
     private lateinit var image: String
-    private lateinit var token: String
     private lateinit var nick: String
 
     override fun onCreateView(
@@ -39,7 +38,6 @@ class PasswordChangeFragment : Fragment() {
         binding = FragmentPasswordChangeBinding.inflate(inflater, container, false)
 
         image = args.image
-        token = args.token
         nick = args.nick
 
         setAvatar()
@@ -106,7 +104,7 @@ class PasswordChangeFragment : Fragment() {
                 setEditTextBackground(emptyList())
                 binding.tvPasswordRequirements.visibility = View.GONE
                 viewModel.updateProfile(
-                    token, etPassword.text.toString(), nick
+                    etPassword.text.toString(), nick
                 )
 
             } else if (!isValidPassword()) {

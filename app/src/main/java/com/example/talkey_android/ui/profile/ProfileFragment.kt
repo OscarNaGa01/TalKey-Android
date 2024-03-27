@@ -270,7 +270,6 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             is ProfileState.ShowProfile -> { //Change password
                 findNavController().navigate(
                     ProfileFragmentDirections.actionProfileFragmentToPasswordChangeFragment(
-                        token,
                         myUser!!.avatar,
                         myUser!!.nick
                     )
