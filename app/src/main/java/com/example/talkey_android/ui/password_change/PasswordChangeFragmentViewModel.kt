@@ -1,4 +1,4 @@
-package com.example.talkey_android.ui.profile.password_change
+package com.example.talkey_android.ui.password_change
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

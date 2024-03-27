@@ -1,4 +1,4 @@
-package com.example.talkey_android.ui.profile.password_change
+package com.example.talkey_android.ui.password_change
 
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
@@ -67,7 +67,7 @@ class PasswordChangeFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.updateProfileError.collect { error ->
+            viewModel.updateProfileError.collect {
                 Toast.makeText(requireContext(), R.string.password_error, Toast.LENGTH_SHORT)
                     .show()
             }

@@ -88,7 +88,7 @@
     </fragment>
     <fragment
         android:id="@+id/passwordChangeFragment"
-        android:name="com.example.talkey_android.ui.profile.password_change.PasswordChangeFragment"
+        android:name="com.example.talkey_android.ui.password_change.PasswordChangeFragment"
         android:label="fragment_password_change"
         tools:layout="@layout/fragment_password_change">
         <argument
