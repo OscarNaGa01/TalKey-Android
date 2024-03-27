@@ -83,7 +83,6 @@ class ChatFragment : Fragment() {
         with(binding) {
             if (etMessage.text.toString().isNotEmpty()) {
                 chatFragmentViewModel.sendMessage(
-                    args.token,
                     args.idChat,
                     args.idUser,
                     etMessage.text.toString()
@@ -95,8 +94,8 @@ class ChatFragment : Fragment() {
     }
 
     private fun getMessageList(isSentMessage: Boolean) {
-        chatFragmentViewModel.getContactData(args.token, args.idChat, args.idUser)
-        chatFragmentViewModel.getMessages(args.token, args.idChat, isSentMessage)
+        chatFragmentViewModel.getContactData(args.idChat, args.idUser)
+        chatFragmentViewModel.getMessages(args.idChat, isSentMessage)
     }
 
     private fun observeViewModel() {
