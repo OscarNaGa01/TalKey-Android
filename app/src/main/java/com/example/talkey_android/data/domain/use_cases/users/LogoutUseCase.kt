@@ -5,7 +5,7 @@ import com.example.talkey_android.data.domain.repository.DataProvider
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 
 class LogoutUseCase {
-    suspend operator fun invoke(token: String): BaseResponse<CommonMessageModel> {
-        return DataProvider.logout(token)
+    suspend operator fun invoke(): BaseResponse<CommonMessageModel> {
+        return DataProvider.logout()
     }
 }

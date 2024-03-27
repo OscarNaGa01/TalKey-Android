@@ -5,7 +5,7 @@ import com.example.talkey_android.data.domain.repository.DataProvider
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 
 class LoginBiometricUseCase {
-    suspend operator fun invoke(token: String): BaseResponse<UserModel> {
-        return DataProvider.loginBiometric(token)
+    suspend operator fun invoke(): BaseResponse<UserModel> {
+        return DataProvider.loginBiometric()
     }
 }

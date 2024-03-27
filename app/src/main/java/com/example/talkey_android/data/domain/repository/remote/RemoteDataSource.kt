@@ -61,11 +61,9 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun loginBiometric(
-        token: String
-    ): BaseResponse<UserModel> {
+    override suspend fun loginBiometric(): BaseResponse<UserModel> {
         val apiResult =
-            apiCallService.loginBiometric(token)
+            apiCallService.loginBiometric()
 
         return when (apiResult) {
             is BaseResponse.Success ->
@@ -76,8 +74,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun logout(token: String): BaseResponse<CommonMessageModel> {
-        val apiResult = apiCallService.logout(token)
+    override suspend fun logout(): BaseResponse<CommonMessageModel> {
+        val apiResult = apiCallService.logout()
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(CommonMessageMapper().fromResponse(apiResult.data))
@@ -87,8 +85,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun getProfile(token: String): BaseResponse<UserProfileModel> {
-        val apiResult = apiCallService.getProfile(token)
+    override suspend fun getProfile(): BaseResponse<UserProfileModel> {
+        val apiResult = apiCallService.getProfile()
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(UserFullDataToUserProfileMapper().fromResponse(apiResult.data))
@@ -98,8 +96,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun getListProfiles(token: String): BaseResponse<ListUsersModel> {
-        val apiResult = apiCallService.getListProfiles(token)
+    override suspend fun getListProfiles(): BaseResponse<ListUsersModel> {
+        val apiResult = apiCallService.getListProfiles()
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(ListUsersMapper().fromResponse(apiResult.data))
@@ -110,11 +108,10 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun updateProfile(
-        token: String,
         updateProfileModel: UpdateProfileModel
     ): BaseResponse<SuccessModel> {
         val apiResult =
-            apiCallService.updateProfile(token, UpdateProfileMapper().toRequest(updateProfileModel))
+            apiCallService.updateProfile(UpdateProfileMapper().toRequest(updateProfileModel))
 
         return when (apiResult) {
             is BaseResponse.Success ->
@@ -125,8 +122,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun uploadImg(token: String, file: File): BaseResponse<CommonMessageModel> {
-        val apiResult = apiCallService.uploadImg(token, file)
+    override suspend fun uploadImg(file: File): BaseResponse<CommonMessageModel> {
+        val apiResult = apiCallService.uploadImg(file)
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(CommonMessageMapper().fromResponse(apiResult.data))
@@ -136,8 +133,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<CommonMessageModel> {
-        val apiResult = apiCallService.setOnline(token, isOnline)
+    override suspend fun setOnline(isOnline: Boolean): BaseResponse<CommonMessageModel> {
+        val apiResult = apiCallService.setOnline(isOnline)
 
         return when (apiResult) {
             is BaseResponse.Success ->
@@ -149,11 +146,10 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun putNotification(
-        token: String,
         firebaseToken: String
     ): BaseResponse<CommonMessageModel> {
         val apiResult =
-            apiCallService.putNotification(token, FirebaseTokenMapper().toRequest(firebaseToken))
+            apiCallService.putNotification(FirebaseTokenMapper().toRequest(firebaseToken))
 
         return when (apiResult) {
             is BaseResponse.Success ->
@@ -164,8 +160,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun getListChats(token: String): BaseResponse<ListChatsModel> {
-        val apiResult = apiCallService.getListChats(token)
+    override suspend fun getListChats(): BaseResponse<ListChatsModel> {
+        val apiResult = apiCallService.getListChats()
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(ListChatsMapper().fromResponse(apiResult.data))
@@ -176,12 +172,10 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun createChat(
-        token: String,
         source: String,
         target: String
     ): BaseResponse<ChatCreationModel> {
         val apiResult = apiCallService.createChat(
-            token,
             ChatCreationRequest(source, target)
         )
         return when (apiResult) {
@@ -193,8 +187,8 @@ object RemoteDataSource : DataSource {
         }
     }
 
-    override suspend fun deleteChat(token: String, idChat: String): BaseResponse<SuccessModel> {
-        val apiResult = apiCallService.deleteChat(token, idChat)
+    override suspend fun deleteChat(idChat: String): BaseResponse<SuccessModel> {
+        val apiResult = apiCallService.deleteChat(idChat)
 
         return when (apiResult) {
             is BaseResponse.Success ->
@@ -206,13 +200,11 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun sendMessage(
-        token: String,
         chat: String,
         source: String,
         message: String
     ): BaseResponse<SuccessModel> {
         val apiResult = apiCallService.sendMessage(
-            token,
             SendMessageRequest(chat, source, message)
         )
         return when (apiResult) {
@@ -225,12 +217,11 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun getMessages(
-        token: String,
         idChat: String,
         limit: Int,
         offset: Int
     ): BaseResponse<ListMessageModel> {
-        val apiResult = apiCallService.getMessages(token, idChat, limit, offset)
+        val apiResult = apiCallService.getMessages(idChat, limit, offset)
 
         return when (apiResult) {
             is BaseResponse.Success ->

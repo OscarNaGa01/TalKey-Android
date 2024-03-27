@@ -6,11 +6,10 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 
 class SendMessageUseCase {
     suspend operator fun invoke(
-        token: String,
         chat: String,
         source: String,
         message: String
     ): BaseResponse<SuccessModel> {
-        return DataProvider.sendMessage(token, chat, source, message)
+        return DataProvider.sendMessage(chat, source, message)
     }
 }

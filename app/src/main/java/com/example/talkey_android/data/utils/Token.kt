@@ -1,4 +1,4 @@
-package com.example.talkey_android.data
+package com.example.talkey_android.data.utils
 
 data object Token {
 

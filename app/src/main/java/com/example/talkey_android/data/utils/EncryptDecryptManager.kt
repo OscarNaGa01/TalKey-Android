@@ -1,4 +1,4 @@
-package com.towerbank.ikigii.data.repository.security
+package com.example.talkey_android.data.utils
 
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec

@@ -62,10 +62,10 @@ class LogInFragmentViewModel(
         }
     }
 
-    fun doBiometricLogin(token: String) {
+    fun doBiometricLogin() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.emit(LogInFragmentUiState.Loading)
-            when (val baseResponse = loginBiometricUseCase(token)) {
+            when (val baseResponse = loginBiometricUseCase()) {
                 is BaseResponse.Success -> {
 
                     _uiState.emit(LogInFragmentUiState.Success(baseResponse.data))
