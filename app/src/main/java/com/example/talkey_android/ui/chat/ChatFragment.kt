@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
@@ -51,7 +52,7 @@ class ChatFragment : Fragment() {
         initRecyclerView()
         observeViewModel()
         initListeners()
-        getMessageList()
+        getMessageList(false)
     }
 
     private fun initListeners() {
@@ -72,7 +73,7 @@ class ChatFragment : Fragment() {
                 mainActivity.hideKeyBoard()
             }
             swipeToRefresh.setOnRefreshListener {
-                getMessageList()
+                getMessageList(true)
                 swipeToRefresh.isRefreshing = false
             }
         }
@@ -93,21 +94,21 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun getMessageList() {
-        chatFragmentViewModel.getMessages(args.token, args.idChat, 20, 0)
-        chatFragmentViewModel.getContactData(args.token, args.idChat)
+    private fun getMessageList(isSentMessage: Boolean) {
+        chatFragmentViewModel.getContactData(args.token, args.idChat, args.idUser)
+        chatFragmentViewModel.getMessages(args.token, args.idChat, isSentMessage)
     }
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.contact.collect { userData ->
+
                 binding.tvName.text = userData.targetNick
 
                 Glide.with(requireContext())
                     .load(userData.targetAvatar)
                     .error(R.drawable.image)
                     .into(profileImageStatusBinding.ivProfile)
-                println(userData.targetOnline)
 
                 if (userData.targetOnline) {
                     profileImageStatusBinding.ivStatus.setBackgroundColor(
@@ -116,7 +117,6 @@ class ChatFragment : Fragment() {
                             R.color.statusOnline
                         )
                     )
-                    println("Entro en if")
 
                 } else {
                     profileImageStatusBinding.ivStatus.setBackgroundColor(
@@ -125,7 +125,6 @@ class ChatFragment : Fragment() {
                             R.color.statusOffline
                         )
                     )
-                    println("Entro en else")
                 }
             }
         }
@@ -133,7 +132,7 @@ class ChatFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.message.collect { messages ->
                 Utils.showDateOnce(messages)
-                chatAdapter.updateList(messages.rows)
+                chatAdapter.updateList(messages)
             }
         }
 
@@ -164,5 +163,17 @@ class ChatFragment : Fragment() {
             adapter = chatAdapter
             layoutManager = linearLayout
         }
+        setupPagination()
+    }
+
+    private fun setupPagination() {
+        binding.rvChat.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager: LinearLayoutManager? = recyclerView.layoutManager as LinearLayoutManager?
+                if (layoutManager?.findLastCompletelyVisibleItemPosition() == recyclerView.adapter?.itemCount?.minus(1)) {
+                    getMessageList(false)
+                }
+            }
+        })
     }
 }

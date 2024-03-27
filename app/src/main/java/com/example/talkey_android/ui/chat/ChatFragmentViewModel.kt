@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talkey_android.data.domain.model.chats.ChatModel
 import com.example.talkey_android.data.domain.model.error.ErrorModel
-import com.example.talkey_android.data.domain.model.messages.ListMessageModel
+import com.example.talkey_android.data.domain.model.messages.MessageModel
 import com.example.talkey_android.data.domain.repository.remote.response.BaseResponse
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
@@ -30,20 +30,23 @@ class ChatFragmentViewModel(
     private val _getListChatsError = MutableSharedFlow<ErrorModel>()
     val getListChatsError: SharedFlow<ErrorModel> = _getListChatsError
 
-    private val _message = MutableStateFlow(ListMessageModel())
-    val message: StateFlow<ListMessageModel> = _message
+    private val _message = MutableSharedFlow<List<MessageModel>>()
+    val message: SharedFlow<List<MessageModel>> = _message
 
     private val _contact = MutableStateFlow(ChatModel())
     val contact: StateFlow<ChatModel> = _contact
 
+    private var messageList = mutableListOf<MessageModel>()
+
+    private var page = 0
+    private var limit = 10
+
     fun sendMessage(token: String, chat: String, source: String, message: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val baseResponse = sendMessageUseCase(token, chat, source, message)
-
-            when (baseResponse) {
+            when (val baseResponse = sendMessageUseCase(token, chat, source, message)) {
                 is BaseResponse.Success -> {
-                    getMessages(token, chat, 20, 0)
+                    getMessages(token, chat, true)
                 }
 
                 is BaseResponse.Error -> {
@@ -53,14 +56,22 @@ class ChatFragmentViewModel(
         }
     }
 
-    fun getMessages(token: String, idChat: String, limit: Int, offset: Int) {
+    fun getMessages(token: String, idChat: String, isSentMessage: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val baseResponse = getListMessageUseCase(token, idChat, limit, offset)
-
-            when (baseResponse) {
+            val offset = if (isSentMessage) {
+                page = 0
+                messageList.clear()
+                0
+            } else {
+                limit * page
+            }
+            println(offset)
+            when (val baseResponse = getListMessageUseCase(token, idChat, limit, offset)) {
                 is BaseResponse.Success -> {
-                    _message.emit(baseResponse.data)
+                    messageList.addAll(baseResponse.data.rows)
+                    _message.emit(messageList)
+                    page++
                 }
 
                 is BaseResponse.Error -> {
@@ -70,15 +81,19 @@ class ChatFragmentViewModel(
         }
     }
 
-    fun getContactData(token: String, idChat: String) {
+    fun getContactData(token: String, idChat: String, idUser: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val baseResponse = getListChatsUseCase(token)
-
-            when (baseResponse) {
+            when (val baseResponse = getListChatsUseCase(token)) {
                 is BaseResponse.Success -> {
                     baseResponse.data.chats.filter { idChat == it.idChat }.map {
-                        _contact.emit(it)
+                        _contact.emit(
+                            ChatModel(
+                                targetNick = selectContactNick(idUser, it),
+                                targetOnline = selectContactOnline(idUser, it),
+                                targetAvatar = selectContactAvatar(idUser, it)
+                            )
+                        )
                     }
                 }
 
@@ -86,6 +101,30 @@ class ChatFragmentViewModel(
                     _getListChatsError.emit(baseResponse.error)
                 }
             }
+        }
+    }
+
+    private fun selectContactOnline(idUser: String, chatModel: ChatModel): Boolean {
+        return if (idUser == chatModel.source) {
+            chatModel.targetOnline
+        } else {
+            chatModel.sourceOnline
+        }
+    }
+
+    private fun selectContactNick(idUser: String, chatModel: ChatModel): String {
+        return if (idUser == chatModel.source) {
+            chatModel.targetNick
+        } else {
+            chatModel.sourceNick
+        }
+    }
+
+    private fun selectContactAvatar(idUser: String, chatModel: ChatModel): String {
+        return if (idUser == chatModel.source) {
+            chatModel.targetAvatar
+        } else {
+            chatModel.sourceAvatar
         }
     }
 }
