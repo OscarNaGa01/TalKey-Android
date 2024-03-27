@@ -85,14 +85,13 @@ class HomeFragment
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToProfileFragment(
                     args.id,
-                    args.token,
                     false
                 )
             )
             true
         }
         mBinding.toolBar.menu.getItem(logoutIndex).setOnMenuItemClickListener {
-            mViewModel.doLogout(args.token)
+            mViewModel.doLogout()
             findNavController().navigate(HomeFragmentDirections.actionHomeToLogin())
             true
         }
@@ -122,8 +121,8 @@ class HomeFragment
     private fun setupSwipeToRefresh() {
         mBinding.swipeToRefresh.setOnRefreshListener {
             when (listType) {
-                ListType.CHATS -> mViewModel.getChatsList(args.token, args.id)
-                ListType.CONTACTS -> mViewModel.getUsersList(args.token)
+                ListType.CHATS -> mViewModel.getChatsList(args.id)
+                ListType.CONTACTS -> mViewModel.getUsersList()
             }
             mBinding.swipeToRefresh.isRefreshing = false
         }
@@ -139,21 +138,21 @@ class HomeFragment
 
     private fun setupToggleBtnsAndGetList() {
         if (listType == ListType.CHATS) {
-            mViewModel.getChatsList(args.token, args.id)
+            mViewModel.getChatsList(args.id)
             setToggleBtnsChecks(mBinding.tbChats, mBinding.tbContacts)
         } else {
-            mViewModel.getUsersList(args.token)
+            mViewModel.getUsersList()
             setToggleBtnsChecks(mBinding.tbContacts, mBinding.tbChats)
         }
 
         mBinding.tbChats.setOnClickListener { _ ->
             setToggleBtnsChecks(mBinding.tbChats, mBinding.tbContacts)
-            mViewModel.getChatsList(args.token, args.id)
+            mViewModel.getChatsList(args.id)
             listType = ListType.CHATS
         }
         mBinding.tbContacts.setOnClickListener { _ ->
             setToggleBtnsChecks(mBinding.tbContacts, mBinding.tbChats)
-            mViewModel.getUsersList(args.token)
+            mViewModel.getUsersList()
             listType = ListType.CONTACTS
         }
     }
@@ -178,7 +177,7 @@ class HomeFragment
                     ).show()
                 }
 
-                mViewModel.getChatsList(args.token, args.id)
+                mViewModel.getChatsList(args.id)
             }
         }
 
@@ -196,7 +195,6 @@ class HomeFragment
                 Log.i(">", "Realiza la navegación")
                 findNavController().navigate(
                     HomeFragmentDirections.actionHomeToChat(
-                        args.token,
                         args.id,
                         idNewChat
                     )
@@ -244,7 +242,7 @@ class HomeFragment
 
     override fun onClickContact(idContact: String) {
         mBinding.searchView.isIconified = true
-        mViewModel.createChat(args.token, args.id, idContact)
+        mViewModel.createChat(args.id, idContact)
 
     }
 
@@ -253,7 +251,6 @@ class HomeFragment
         Log.i(">", "Ha clicado en un chat")
         findNavController().navigate(
             HomeFragmentDirections.actionHomeToChat(
-                args.token,
                 args.id,
                 idChat
             )
@@ -279,7 +276,7 @@ class HomeFragment
         builder.setMessage(getString(R.string.delete_confirmation_question))
 
         builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
-            mViewModel.deleteChat(args.token, idChat)
+            mViewModel.deleteChat(idChat)
             Log.i(">", "AQUÍ ACEPTAS EL POP UP")
         }
 

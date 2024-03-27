@@ -38,9 +38,6 @@
             android:name="id"
             app:argType="string" />
 
-        <argument
-            android:name="token"
-            app:argType="string" />
         <action
             android:id="@+id/action_HomeFragment_to_profileFragment"
             app:destination="@id/profileFragment"
@@ -58,9 +55,6 @@
         <action
             android:id="@+id/action_chat_to_home"
             app:destination="@id/HomeFragment" />
-        <argument
-            android:name="token"
-            app:argType="string" />
         <argument
             android:name="idUser"
             app:argType="string" />
@@ -87,9 +81,6 @@
         <argument
             android:name="id"
             app:argType="string" />
-        <argument
-            android:name="token"
-            app:argType="string" />
         <action
             android:id="@+id/action_profileFragment_to_passwordChangeFragment"
             app:destination="@id/passwordChangeFragment"
@@ -100,9 +91,6 @@
         android:name="com.example.talkey_android.ui.profile.password_change.PasswordChangeFragment"
         android:label="fragment_password_change"
         tools:layout="@layout/fragment_password_change">
-        <argument
-            android:name="token"
-            app:argType="string" />
         <argument
             android:name="image"
             app:argType="string" />

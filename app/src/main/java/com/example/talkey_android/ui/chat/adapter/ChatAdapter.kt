@@ -11,7 +11,7 @@ import com.example.talkey_android.databinding.ItemChatMeBinding
 import com.example.talkey_android.databinding.ItemChatOtherBinding
 
 class ChatAdapter(
-    private var messageList: MutableList<MessageModel>,
+    private var messageList: List<MessageModel>,
     private val idUser: String
 ) :
     RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
@@ -86,9 +86,8 @@ class ChatAdapter(
         }
     }
 
-    fun updateList(messages: MutableList<MessageModel>) {
-        messageList.clear()
-        messageList.addAll(messages.toMutableList())
+    fun updateList(messages: List<MessageModel>) {
+        messageList = messages
         notifyDataSetChanged()
     }
 }

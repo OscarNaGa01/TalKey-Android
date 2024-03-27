@@ -7,9 +7,8 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 
 class UpdateProfileUseCase {
     suspend operator fun invoke(
-        token: String,
         updateProfileModel: UpdateProfileModel
     ): BaseResponse<SuccessModel> {
-        return DataProvider.updateProfile(token, updateProfileModel)
+        return DataProvider.updateProfile(updateProfileModel)
     }
 }

@@ -64,7 +64,7 @@ class ProfileFragmentViewModel(
                 async { uploadImg(file) }
             )
             deferred.awaitAll()
-            getProfile(_getProfile.value.token)
+            getProfile()
         }
     }
 
@@ -72,7 +72,6 @@ class ProfileFragmentViewModel(
     private suspend fun uploadImg(file: File?) {
         if (file != null) {
             val baseResponse = uploadImgUseCase(
-                _getProfile.value.token,
                 file
             )
 
@@ -90,7 +89,6 @@ class ProfileFragmentViewModel(
 
     private suspend fun updateProfile(updateProfileModel: UpdateProfileModel) {
         val baseResponse = updateProfileUseCase(
-            _getProfile.value.token,
             updateProfileModel
         )
         when (baseResponse) {
@@ -113,7 +111,7 @@ class ProfileFragmentViewModel(
 
     private suspend fun statusSetter(isOnline: Boolean) {
         val baseResponse = setOnlineUseCase(
-            _getProfile.value.token, isOnline
+            isOnline
         )
         when (baseResponse) {
             is BaseResponse.Success -> {
@@ -126,9 +124,9 @@ class ProfileFragmentViewModel(
         }
     }
 
-    fun getProfile(token: String) {
+    fun getProfile() {
         viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = getProfileUseCase(token)
+            val baseResponse = getProfileUseCase()
             when (baseResponse) {
                 is BaseResponse.Success -> {
                     _getProfile.emit(baseResponse.data)

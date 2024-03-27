@@ -16,6 +16,7 @@ import com.example.talkey_android.data.domain.repository.remote.response.message
 import com.example.talkey_android.data.domain.repository.remote.response.users.LoginResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.RegisterResponse
 import com.example.talkey_android.data.domain.repository.remote.response.users.UserFullDataResponse
+import com.example.talkey_android.data.utils.Token
 import java.io.File
 
 class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCallService() {
@@ -28,77 +29,70 @@ class ApiCallService(private val remoteApiService: RemoteApiService) : BaseApiCa
         return apiCall { remoteApiService.login(loginRequest) }
     }
 
-    suspend fun logout(token: String): BaseResponse<CommonMessageResponse> {
-        return apiCall { remoteApiService.logout(token) }
+    suspend fun logout(): BaseResponse<CommonMessageResponse> {
+        return apiCall { remoteApiService.logout(Token.getToken()) }
     }
 
-    suspend fun getProfile(token: String): BaseResponse<UserFullDataResponse> {
-        return apiCall { remoteApiService.getProfile(token) }
+    suspend fun getProfile(): BaseResponse<UserFullDataResponse> {
+        return apiCall { remoteApiService.getProfile(Token.getToken()) }
     }
 
-    suspend fun getListProfiles(token: String): BaseResponse<List<UserFullDataResponse>> {
-        return apiCall { remoteApiService.getListProfiles(token) }
+    suspend fun getListProfiles(): BaseResponse<List<UserFullDataResponse>> {
+        return apiCall { remoteApiService.getListProfiles(Token.getToken()) }
     }
 
     suspend fun updateProfile(
-        token: String,
         updateProfileRequest: UpdateProfileRequest
     ): BaseResponse<SuccessResponse> {
-        return apiCall { remoteApiService.updateProfile(token, updateProfileRequest) }
+        return apiCall { remoteApiService.updateProfile(Token.getToken(), updateProfileRequest) }
     }
 
-    suspend fun uploadImg(token: String, file: File): BaseResponse<CommonMessageResponse> {
-        return apiCall { remoteApiService.uploadImg(token, file) }
+    suspend fun uploadImg(file: File): BaseResponse<CommonMessageResponse> {
+        return apiCall { remoteApiService.uploadImg(Token.getToken(), file) }
     }
 
-    suspend fun setOnline(token: String, isOnline: Boolean): BaseResponse<CommonMessageResponse> {
-        return apiCall { remoteApiService.setOnline(token, isOnline) }
+    suspend fun setOnline(isOnline: Boolean): BaseResponse<CommonMessageResponse> {
+        return apiCall { remoteApiService.setOnline(Token.getToken(), isOnline) }
     }
 
     suspend fun putNotification(
-        token: String,
         firebaseTokenRequest: FirebaseTokenRequest
     ): BaseResponse<CommonMessageResponse> {
-        return apiCall { remoteApiService.putNotification(token, firebaseTokenRequest) }
+        return apiCall { remoteApiService.putNotification(Token.getToken(), firebaseTokenRequest) }
     }
 
     suspend fun loginBiometric(
-        token: String
     ): BaseResponse<LoginResponse> {
-        return apiCall { remoteApiService.loginBiometric(token) }
+        return apiCall { remoteApiService.loginBiometric(Token.getToken()) }
     }
 
-    suspend fun getListChats(token: String): BaseResponse<List<ChatResponse>> {
-        return apiCall { remoteApiService.getListChats(token) }
+    suspend fun getListChats(): BaseResponse<List<ChatResponse>> {
+        return apiCall { remoteApiService.getListChats(Token.getToken()) }
     }
 
     suspend fun createChat(
-        token: String,
         chatCreationRequest: ChatCreationRequest
     ): BaseResponse<ChatCreationResponse> {
-        return apiCall { remoteApiService.createChat(token, chatCreationRequest) }
+        return apiCall { remoteApiService.createChat(Token.getToken(), chatCreationRequest) }
     }
 
     suspend fun deleteChat(
-        token: String,
         idChat: String
     ): BaseResponse<SuccessResponse> {
-        return apiCall { remoteApiService.deleteChat(token, idChat) }
+        return apiCall { remoteApiService.deleteChat(Token.getToken(), idChat) }
     }
 
     suspend fun sendMessage(
-        token: String,
         sendMessageRequest: SendMessageRequest
     ): BaseResponse<SuccessResponse> {
-        return apiCall { remoteApiService.sendMessage(token, sendMessageRequest) }
+        return apiCall { remoteApiService.sendMessage(Token.getToken(), sendMessageRequest) }
     }
 
     suspend fun getMessages(
-        token: String,
         idChat: String,
         limit: Int,
         offset: Int
     ): BaseResponse<ListMessageResponse> {
-        return apiCall { remoteApiService.getMessages(token, idChat, limit, offset) }
+        return apiCall { remoteApiService.getMessages(Token.getToken(), idChat, limit, offset) }
     }
 }

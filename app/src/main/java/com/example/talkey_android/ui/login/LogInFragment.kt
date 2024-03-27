@@ -27,11 +27,12 @@ import com.example.talkey_android.data.constants.Constants.PLATFORM
 import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
-import com.example.talkey_android.data.domain.model.users.UserModel
 import com.example.talkey_android.data.domain.use_cases.users.LoginBiometricUseCase
 import com.example.talkey_android.data.domain.use_cases.users.LoginUseCase
 import com.example.talkey_android.data.domain.use_cases.users.RegisterUseCase
+import com.example.talkey_android.data.utils.EncryptDecryptManager
 import com.example.talkey_android.data.utils.Prefs
+import com.example.talkey_android.data.utils.Token
 import com.example.talkey_android.databinding.FragmentLogInBinding
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executor
@@ -64,7 +65,7 @@ class LogInFragment : Fragment() {
         //biometric----------------------------------------------
         binding.btnFingerPrint.setOnClickListener {
             isTryingBiometricAccess = true
-            checkDeviceBiometric(prefs.getToken())
+            checkDeviceBiometric()
         }
         //biometric----------------------------------------------
 
@@ -88,13 +89,20 @@ class LogInFragment : Fragment() {
                     is LogInFragmentUiState.Success -> {
                         binding.progressBar.visibility = View.GONE
 
+                        Token.setToken(uiState.userModel.token)
+
                         if (isTryingBiometricAccess) {
-                            prefs.saveToken(uiState.userModel.token)
-                            doNavigation(uiState.userModel)
+
+                            val encryptedToken =
+                                EncryptDecryptManager.encrypt(uiState.userModel.token)
+
+                            prefs.saveToken(encryptedToken)
+
+                            doNavigation(uiState.userModel.id)
                         } else {
                             isTryingBiometricAccess = false
-                            checkDeviceBiometric(uiState.userModel.token)
-                            doNavigation(uiState.userModel)
+                            checkDeviceBiometric()
+                            doNavigation(uiState.userModel.id)
                         }
                     }
 
@@ -130,20 +138,18 @@ class LogInFragment : Fragment() {
         }
     }
 
-    private fun doNavigation(user: UserModel) {
-        if (user.token.isNotEmpty() && !isLogin) {
+    private fun doNavigation(userId: String) {
+        if (!isLogin) {
             findNavController().navigate(
                 LogInFragmentDirections.actionLogInFragmentToProfileFragment(
-                    user.id,
-                    user.token,
+                    userId,
                     true
                 )
             )
-        } else if (user.token.isNotEmpty() && isLogin) {
+        } else {
             findNavController().navigate(
                 LogInFragmentDirections.actionLogInFragmentToHomeFragment(
-                    user.id,
-                    user.token
+                    userId,
                 )
             )
         }
@@ -363,20 +369,25 @@ class LogInFragment : Fragment() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: PromptInfo
-    private fun checkDeviceBiometric(token: String) {
+    private fun checkDeviceBiometric() {
         val biometricManager = BiometricManager.from(requireContext())
         when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
 
                 if (isTryingBiometricAccess) {
-                    createBiometricListener(token)
+                    createBiometricListener()
                     createPromptInfo()
                     biometricPrompt.authenticate(promptInfo)
 
                 } else if (binding.etEmail.text.toString() != prefs.getMail()) {
-                    showDialogToSaveAccount(token)
+
+                    showDialogToSaveAccount()
+
                 } else {
-                    prefs.saveToken(token)
+
+                    val encryptedToken = EncryptDecryptManager.encrypt(Token.getToken())
+                    prefs.saveToken(encryptedToken)
+
                 }
             }
 
@@ -413,7 +424,7 @@ class LogInFragment : Fragment() {
         }
     }
 
-    private fun createBiometricListener(token: String) {
+    private fun createBiometricListener() {
         executor = ContextCompat.getMainExecutor(requireContext())
         biometricPrompt =
             BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -433,7 +444,10 @@ class LogInFragment : Fragment() {
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    logInFragmentViewModel.doBiometricLogin(token)
+
+                    val decryptedToken = EncryptDecryptManager.decrypt(prefs.getToken())
+                    Token.setToken(decryptedToken)
+                    logInFragmentViewModel.doBiometricLogin()
                 }
             })
     }
@@ -448,14 +462,17 @@ class LogInFragment : Fragment() {
 
     //biometric----------------------------------------------
 
-    private fun showDialogToSaveAccount(token: String) {
+    private fun showDialogToSaveAccount() {
         val builder = AlertDialog.Builder(requireContext())
 
         builder.setTitle(getString(R.string.unlnown_account))
         builder.setMessage(getString(R.string.biometric_accunt_link_question))
 
         builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
-            prefs.saveToken(token)
+
+            val encryptedToken = EncryptDecryptManager.encrypt(Token.getToken())
+
+            prefs.saveToken(encryptedToken)
             prefs.saveMail(binding.etEmail.text.toString())
             Toast.makeText(
                 requireContext(),
