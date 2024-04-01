@@ -24,4 +24,9 @@ class Prefs(val context: Context) {
     fun getMail(): String {
         return storage.getString(SHARED_MAIL, "")!!
     }
+
+    fun restartData() {
+        storage.edit().putString(SHARED_MAIL, "").apply()
+        storage.edit().putString(SHARED_TOKEN, "").apply()
+    }
 }
