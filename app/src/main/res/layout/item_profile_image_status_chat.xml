@@ -5,20 +5,23 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/image"
+        android:id="@+id/ivStatus"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginVertical="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivStatus"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        app:layout_constraintBottom_toBottomOf="@id/ivProfile"
-        app:layout_constraintEnd_toEndOf="@id/ivProfile"
+        android:id="@+id/ivProfile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/perfil_new_blue"
+        app:layout_constraintStart_toStartOf="@id/ivStatus"
+        app:layout_constraintEnd_toEndOf="@id/ivStatus"
+        app:layout_constraintTop_toTopOf="@id/ivStatus"
+        app:layout_constraintBottom_toBottomOf="@id/ivStatus"
         app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

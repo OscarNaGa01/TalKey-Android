@@ -16,7 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.users.UpdateProfileUseCase
 import com.example.talkey_android.databinding.FragmentPasswordChangeBinding
@@ -53,8 +53,8 @@ class PasswordChangeFragment : Fragment() {
     private fun setAvatar() {
         Glide.with(requireContext())
             .load("https://mock-movilidad.vass.es/${image}")
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .error(R.drawable.perfil)
+            .apply(RequestOptions().centerCrop())
+            .error(R.drawable.perfil_new_white)
             .into(binding.imgProfile)
     }
 
