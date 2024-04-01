@@ -74,11 +74,17 @@ class ContactsAdapter(
 
     private fun showChatDataAndSetListener(holder: UsersViewHolder, position: Int) {
         val chatItemModel = list[position] as (ChatItemListModel)
-        val date = chatItemModel.dateLastMessage.split("-")
+
 
         with(holder.binding) {
+            if (chatItemModel.dateLastMessage.contains("-")) {
+                val date = chatItemModel.dateLastMessage.split("-")
+                tvDate.text = context.getString(R.string.date_formater, date[0], date[1], date[2])
+            } else {
+                tvDate.text = chatItemModel.dateLastMessage
+            }
+
             tvName.text = chatItemModel.contactNick
-            tvDate.text = context.getString(R.string.date_formater, date[0], date[1], date[2])
             tvLastMsg.text = chatItemModel.lastMessage
             if (chatItemModel.contactOnline) {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOnline))
