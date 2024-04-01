@@ -74,10 +74,11 @@ class ContactsAdapter(
 
     private fun showChatDataAndSetListener(holder: UsersViewHolder, position: Int) {
         val chatItemModel = list[position] as (ChatItemListModel)
+        val date = chatItemModel.dateLastMessage.split("-")
 
         with(holder.binding) {
             tvName.text = chatItemModel.contactNick
-            tvDate.text = chatItemModel.dateLastMessage
+            tvDate.text = context.getString(R.string.date_formater, date[0], date[1], date[2])
             tvLastMsg.text = chatItemModel.lastMessage
             if (chatItemModel.contactOnline) {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOnline))
@@ -85,8 +86,8 @@ class ContactsAdapter(
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             }
             Glide.with(context)
-                .load(chatItemModel.contactAvatar)
-                .error(R.drawable.perfil)
+                .load("https://mock-movilidad.vass.es/${chatItemModel.contactAvatar}")
+                .error(R.drawable.perfil_new_white)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
@@ -105,8 +106,8 @@ class ContactsAdapter(
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             }
             Glide.with(context)
-                .load(contact.avatar)
-                .error(R.drawable.perfil)
+                .load("https://mock-movilidad.vass.es/${contact.avatar}")
+                .error(R.drawable.perfil_new_white)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }

@@ -20,7 +20,7 @@
     <string name="camera_button">Cámara</string>
     <string name="gallery_button">Galería</string>
     <string name="photo_upload_error">No se pudo subir el avatar</string>
-    <string name="profile_updated">Perfil Actualizado</string>
+    <string name="profile_updated">Perfil actualizado</string>
     <string name="fill_all_fields">Rellena todos los campos</string>
     <string name="user_exists">El usuario ya existe</string>
     <string name="user_does_not_exists">El usuario no existe</string>
@@ -47,4 +47,7 @@
     <string name="biometric_account_linked">Se ha asociado esta cuenta a su huella</string>
     <string name="saySomethingTo">Dile algo a %1$s!</string>
     <string name="deleteChatSuccessfull">Chat borrado con éxito</string>
+    <string name="password_updated">Contraseña Actualizada</string>
+    <string name="password_error">No se pudo cambiar la contraseña</string>
+    <string name="date_formater">%3$s-%2$s-%1$s</string>
 </resources>
