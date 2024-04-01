@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.model.messages.MessageModel
 import com.example.talkey_android.databinding.ItemChatMeBinding
 import com.example.talkey_android.databinding.ItemChatOtherBinding
@@ -33,13 +34,15 @@ class ChatAdapter(
 
         private fun bindReceivedMessage(messageModel: MessageModel) {
             val currentBinding = binding as ItemChatOtherBinding
+            val date = messageModel.day.split("-")
             with(currentBinding) {
                 tvMessageOther.text = messageModel.message
                 if (messageModel.day == "") {
                     tvDateOther.visibility = View.GONE
                 } else {
                     tvDateOther.visibility = View.VISIBLE
-                    tvDateOther.text = messageModel.day
+                    tvDateOther.text =
+                        context.getString(R.string.date_formater, date[0], date[1], date[2])
                 }
                 tvHourOther.text = messageModel.hour
             }
@@ -47,13 +50,15 @@ class ChatAdapter(
 
         private fun bindSentMessage(messageModel: MessageModel) {
             val currentBinding = binding as ItemChatMeBinding
+            val date = messageModel.day.split("-")
             with(currentBinding) {
                 tvMessageMe.text = messageModel.message
                 if (messageModel.day == "") {
                     tvDateMe.visibility = View.GONE
                 } else {
                     tvDateMe.visibility = View.VISIBLE
-                    tvDateMe.text = messageModel.day
+                    tvDateMe.text =
+                        context.getString(R.string.date_formater, date[0], date[1], date[2])
                 }
                 tvHourMe.text = messageModel.hour
             }

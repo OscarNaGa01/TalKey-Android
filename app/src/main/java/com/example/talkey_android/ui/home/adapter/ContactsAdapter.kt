@@ -74,10 +74,11 @@ class ContactsAdapter(
 
     private fun showChatDataAndSetListener(holder: UsersViewHolder, position: Int) {
         val chatItemModel = list[position] as (ChatItemListModel)
+        val date = chatItemModel.dateLastMessage.split("-")
 
         with(holder.binding) {
             tvName.text = chatItemModel.contactNick
-            tvDate.text = chatItemModel.dateLastMessage
+            tvDate.text = context.getString(R.string.date_formater, date[0], date[1], date[2])
             tvLastMsg.text = chatItemModel.lastMessage
             if (chatItemModel.contactOnline) {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOnline))
