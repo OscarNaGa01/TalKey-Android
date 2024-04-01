@@ -85,8 +85,8 @@ class ContactsAdapter(
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             }
             Glide.with(context)
-                .load(chatItemModel.contactAvatar)
-                .error(R.drawable.perfil)
+                .load("https://mock-movilidad.vass.es/${chatItemModel.contactAvatar}")
+                .error(R.drawable.perfil_new_white)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
@@ -105,8 +105,8 @@ class ContactsAdapter(
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             }
             Glide.with(context)
-                .load(contact.avatar)
-                .error(R.drawable.perfil)
+                .load("https://mock-movilidad.vass.es/${contact.avatar}")
+                .error(R.drawable.perfil_new_white)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
