@@ -465,7 +465,7 @@ class LogInFragment : Fragment() {
     private fun showDialogToSaveAccount() {
         val builder = AlertDialog.Builder(requireContext())
 
-        builder.setTitle(getString(R.string.unlnown_account))
+        builder.setTitle(getString(R.string.unknown_account))
         builder.setMessage(getString(R.string.biometric_accunt_link_question))
 
         builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
