@@ -20,7 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.model.users.UserProfileModel
@@ -211,8 +211,8 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         Log.d("TAG", user.avatar)
         Glide.with(requireContext())
             .load("https://mock-movilidad.vass.es/${user.avatar}")
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .error(R.drawable.perfil)
+            .apply(RequestOptions().centerCrop())
+            .error(R.drawable.perfil_new_white)
             .into(binding.imgProfile)
     }
 

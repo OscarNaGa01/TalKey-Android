@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/circleImageViewShape"
-        tools:src="@drawable/background_launcher" />
+        tools:src="@drawable/perfil_new_white" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgOnline"
