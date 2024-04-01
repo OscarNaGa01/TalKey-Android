@@ -212,7 +212,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         Glide.with(requireContext())
             .load("https://mock-movilidad.vass.es/${user.avatar}")
             .apply(RequestOptions().centerCrop())
-            .error(R.drawable.perfil_new_white)
+            .error(R.drawable.perfil)
             .into(binding.imgProfile)
     }
 

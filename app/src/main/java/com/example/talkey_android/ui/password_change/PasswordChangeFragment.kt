@@ -54,7 +54,7 @@ class PasswordChangeFragment : Fragment() {
         Glide.with(requireContext())
             .load("https://mock-movilidad.vass.es/${image}")
             .apply(RequestOptions().centerCrop())
-            .error(R.drawable.perfil_new_white)
+            .error(R.drawable.perfil)
             .into(binding.imgProfile)
     }
 

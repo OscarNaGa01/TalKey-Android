@@ -7,6 +7,17 @@
     android:layout_marginTop="2dp">
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/circleImageViewShape"
+        tools:src="@drawable/perfil" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgProfile"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -17,7 +28,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/circleImageViewShape"
-        tools:src="@drawable/perfil_new_white" />
+        tools:src="@drawable/perfil" />
+
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgOnline"
@@ -56,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        android:textColor="@color/vassGreyDark"
+        android:textColor="@color/vassAccent"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvName"

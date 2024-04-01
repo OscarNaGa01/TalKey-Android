@@ -14,10 +14,20 @@
         app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:src="@drawable/perfil_white"
+        app:layout_constraintStart_toStartOf="@id/ivStatus"
+        app:layout_constraintEnd_toEndOf="@id/ivStatus"
+        app:layout_constraintTop_toTopOf="@id/ivStatus"
+        app:layout_constraintBottom_toBottomOf="@id/ivStatus"
+        app:shapeAppearanceOverlay="@style/circleImageViewShape" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivProfile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/perfil_new_blue"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:src="@drawable/perfil_white"
         app:layout_constraintStart_toStartOf="@id/ivStatus"
         app:layout_constraintEnd_toEndOf="@id/ivStatus"
         app:layout_constraintTop_toTopOf="@id/ivStatus"
