@@ -137,6 +137,7 @@ class HomeFragment
     }
 
     private fun setupToggleBtnsAndGetList() {
+        val recyclerStartPosition = 0
         if (listType == ListType.CHATS) {
             mViewModel.getChatsList(args.id)
             setToggleBtnsChecks(mBinding.tbChats, mBinding.tbContacts)
@@ -149,11 +150,13 @@ class HomeFragment
             setToggleBtnsChecks(mBinding.tbChats, mBinding.tbContacts)
             mViewModel.getChatsList(args.id)
             listType = ListType.CHATS
+            mBinding.recyclerView.scrollToPosition(recyclerStartPosition)
         }
         mBinding.tbContacts.setOnClickListener { _ ->
             setToggleBtnsChecks(mBinding.tbContacts, mBinding.tbChats)
             mViewModel.getUsersList()
             listType = ListType.CONTACTS
+            mBinding.recyclerView.scrollToPosition(recyclerStartPosition)
         }
     }
 
@@ -243,7 +246,6 @@ class HomeFragment
     override fun onClickContact(idContact: String) {
         mBinding.searchView.isIconified = true
         mViewModel.createChat(args.id, idContact)
-
     }
 
     override fun onClickChat(idChat: String, contactNick: String) {

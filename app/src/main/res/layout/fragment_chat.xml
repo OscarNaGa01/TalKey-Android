@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/common_margin"
             android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
             android:textSize="22sp"
             tools:text="Juan Cuesta" />
 

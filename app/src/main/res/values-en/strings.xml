@@ -21,6 +21,7 @@
     <string name="profile_updated">Profile updated</string>
     <string name="fill_all_fields">Fill all fields</string>
     <string name="user_exists">User doesn\'t exist</string>
+    <string name="user_does_not_exists">User doesn\'t exist</string>
     <string name="status_update_error">Online status could not be changed</string>
     <string name="invalid_password">Invalid password</string>
     <string name="passwords_dont_match">Passwords doesn\'t match</string>
@@ -39,9 +40,12 @@
     <string name="use_fingerprint_login">Use your fingerprint to access the application</string>
     <string name="cancel">Cancel</string>
     <string name="login_title">Log in</string>
-    <string name="unlnown_account">Unknown account</string>
+    <string name="unknown_account">Unknown account</string>
     <string name="biometric_accunt_link_question">Do you want to associate this account with your biometric sensor</string>
     <string name="biometric_account_linked">This account has been associated with your fingerprint</string>
     <string name="saySomethingTo">Say something to %1$s!</string>
     <string name="deleteChatSuccessfull">Chat successfully deleted</string>
+    <string name="password_updated">Password updated</string>
+    <string name="password_error">Password couldn\'t be changed</string>
+    <string name="date_formater">%2$s-%3$s-%1$s</string>
 </resources>

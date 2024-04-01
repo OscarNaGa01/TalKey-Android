@@ -42,6 +42,10 @@ android {
         viewBinding = true
         buildConfig = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
+    }
 }
 
 dependencies {
@@ -88,6 +92,22 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.2")
     //Swiperefreshlayout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    //Compose
+//    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+//    implementation("androidx.compose.ui:ui")
+//    implementation("androidx.compose.ui:ui-graphics")
+//    implementation("androidx.compose.ui:ui-tooling-preview")
+//    implementation("androidx.compose.material3:material3")
+//    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+//    implementation ("androidx.compose.material:material:1.6.4") //1.5.4
+//    implementation ("androidx.compose.ui:ui:1.6.4") //1.5.4
+//    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+//    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+//    debugImplementation("androidx.compose.ui:ui-tooling")
+//    debugImplementation("androidx.compose.ui:ui-test-manifest")
+//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

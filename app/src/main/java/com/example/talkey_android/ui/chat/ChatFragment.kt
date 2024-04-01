@@ -15,6 +15,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
@@ -104,8 +105,9 @@ class ChatFragment : Fragment() {
                 binding.tvName.text = userData.targetNick
 
                 Glide.with(requireContext())
-                    .load(userData.targetAvatar)
-                    .error(R.drawable.image)
+                    .load("https://mock-movilidad.vass.es/${userData.targetAvatar}")
+                    .apply(RequestOptions().centerCrop())
+                    .error(R.drawable.perfil_new_blue)
                     .into(profileImageStatusBinding.ivProfile)
 
                 if (userData.targetOnline) {

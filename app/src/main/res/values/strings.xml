@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">TalKey</string>
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="sign_up">Registrarse</string>
     <string name="log_in">Iniciar sesión</string>
     <string name="hint_email">Correo</string>
@@ -21,9 +20,10 @@
     <string name="camera_button">Cámara</string>
     <string name="gallery_button">Galería</string>
     <string name="photo_upload_error">No se pudo subir el avatar</string>
-    <string name="profile_updated">Perfil Actualizado</string>
+    <string name="profile_updated">Perfil actualizado</string>
     <string name="fill_all_fields">Rellena todos los campos</string>
     <string name="user_exists">El usuario ya existe</string>
+    <string name="user_does_not_exists">El usuario no existe</string>
     <string name="status_update_error">No fue posible cambiar el status de usuario</string>
     <string name="invalid_password">Contraseña inválida</string>
     <string name="passwords_dont_match">Las contraseñas no coinciden</string>
@@ -42,9 +42,12 @@
     <string name="use_fingerprint_login">Usa tu huella para acceder a la aplicación</string>
     <string name="cancel">Cancelar</string>
     <string name="login_title">Inicio de sesión</string>
-    <string name="unlnown_account">Cuenta desconocida</string>
+    <string name="unknown_account">Cuenta desconocida</string>
     <string name="biometric_accunt_link_question">¿Quieres asociar esta cuenta a tu sensor biométrico?</string>
     <string name="biometric_account_linked">Se ha asociado esta cuenta a su huella</string>
     <string name="saySomethingTo">Dile algo a %1$s!</string>
     <string name="deleteChatSuccessfull">Chat borrado con éxito</string>
+    <string name="password_updated">Contraseña Actualizada</string>
+    <string name="password_error">No se pudo cambiar la contraseña</string>
+    <string name="date_formater">%3$s-%2$s-%1$s</string>
 </resources>

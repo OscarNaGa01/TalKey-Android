@@ -75,9 +75,16 @@ class ContactsAdapter(
     private fun showChatDataAndSetListener(holder: UsersViewHolder, position: Int) {
         val chatItemModel = list[position] as (ChatItemListModel)
 
+
         with(holder.binding) {
+            if (chatItemModel.dateLastMessage.contains("-")) {
+                val date = chatItemModel.dateLastMessage.split("-")
+                tvDate.text = context.getString(R.string.date_formater, date[0], date[1], date[2])
+            } else {
+                tvDate.text = chatItemModel.dateLastMessage
+            }
+
             tvName.text = chatItemModel.contactNick
-            tvDate.text = chatItemModel.dateLastMessage
             tvLastMsg.text = chatItemModel.lastMessage
             if (chatItemModel.contactOnline) {
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOnline))
@@ -85,8 +92,8 @@ class ContactsAdapter(
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             }
             Glide.with(context)
-                .load(chatItemModel.contactAvatar)
-                .error(R.drawable.perfil)
+                .load("https://mock-movilidad.vass.es/${chatItemModel.contactAvatar}")
+                .error(R.drawable.perfil_new_white)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
@@ -105,8 +112,8 @@ class ContactsAdapter(
                 imgOnline.setBackgroundColor(ContextCompat.getColor(context, R.color.statusOffline))
             }
             Glide.with(context)
-                .load(contact.avatar)
-                .error(R.drawable.perfil)
+                .load("https://mock-movilidad.vass.es/${contact.avatar}")
+                .error(R.drawable.perfil_new_white)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
