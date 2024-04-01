@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -51,6 +52,7 @@ class LogInFragment : Fragment() {
     private var isTryingBiometricAccess: Boolean = false
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,6 +63,7 @@ class LogInFragment : Fragment() {
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         initListeners()
         observeViewModel()
+
 
         //biometric----------------------------------------------
         binding.btnFingerPrint.setOnClickListener {
@@ -129,12 +132,25 @@ class LogInFragment : Fragment() {
     }
 
     private fun showLoginError(error: ErrorModel) {
-        Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+        if (error.message == "No token provided") {
+            prefs.restartData()
+            EncryptDecryptManager.removeKey()
+            Toast.makeText(
+                requireContext(),
+                "Por motivos de seguridad, debes iniciar sesión manualmente",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
+        }
+
+        Log.i(">", error.errorCode)
         if (error.errorCode == "400") {
             setEditTextBackground(listOf(binding.etEmail))
 
         } else if (error.errorCode == "401") {
             setEditTextBackground(listOf(binding.etPassword))
+
         }
     }
 
@@ -438,8 +454,7 @@ class LogInFragment : Fragment() {
                     Toast.makeText(
                         requireContext(),
                         getString(R.string.fingerprint_mismatch), Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    ).show()
                 }
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -465,7 +480,7 @@ class LogInFragment : Fragment() {
     private fun showDialogToSaveAccount() {
         val builder = AlertDialog.Builder(requireContext())
 
-        builder.setTitle(getString(R.string.unlnown_account))
+        builder.setTitle(getString(R.string.unknown_account))
         builder.setMessage(getString(R.string.biometric_accunt_link_question))
 
         builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
