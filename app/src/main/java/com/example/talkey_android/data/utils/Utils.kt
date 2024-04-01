@@ -117,7 +117,7 @@ object Utils {
 
     private fun formatDate(date: String): String {
         val backendFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-        backendFormat.timeZone = TimeZone.getTimeZone("UTC")
+        backendFormat.timeZone = TimeZone.getTimeZone("GMT-2:00")
         val backendDate = backendFormat.parse(date)
 
         val localFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
