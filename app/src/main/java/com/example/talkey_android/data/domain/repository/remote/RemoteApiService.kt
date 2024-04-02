@@ -40,9 +40,7 @@ interface RemoteApiService {
         @Body loginRequest: LoginRequest
     ): Response<LoginResponse>
 
-    /**
-     * This fun is not tested. Maybe doesn't work
-     */
+
     @POST("users/biometric")
     suspend fun loginBiometric(
         @Header("Authorization") token: String,
@@ -83,9 +81,7 @@ interface RemoteApiService {
         @Body updateProfileRequest: UpdateProfileRequest
     ): Response<SuccessResponse>
 
-    /**
-     * This fun is not tested. Maybe doesn't work
-     */
+
     @POST("users/upload")
     suspend fun uploadImg(
         @Header("Authorization") token: String,

@@ -9,12 +9,9 @@ import retrofit2.Response
 abstract class BaseApiCallService {
     suspend fun <T : Any> apiCall(call: suspend () -> Response<T>): BaseResponse<T> {
         val response: Response<T>
-        try {
+        return try {
             response = call.invoke()
-
-            //return BaseResponse.Error(ErrorModel(error = "Error forzado", errorCode = "F", message = "Error forzado"))
-
-            return if (!response.isSuccessful) {
+            if (!response.isSuccessful) {
                 val errorResponse = mapErrorResponse(response)
                 BaseResponse.Error(errorResponse)
             } else {
@@ -24,7 +21,7 @@ abstract class BaseApiCallService {
             }
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
-            return BaseResponse.Error(mapErrorResponse(throwable))
+            BaseResponse.Error(mapErrorResponse(throwable))
         }
     }
 
@@ -34,8 +31,7 @@ abstract class BaseApiCallService {
             val parsedData = Gson().fromJson(errorBody, ErrorResponse::class.java)
             if (response.code() == 401) {
                 parsedData.errorCode = 401.toString()
-                // TODO: Arreglar el mensaje de error y que no se quede aquí hardcodeado
-//                parsedData.message = "Usuario ya registrado"
+
                 parsedData.error = response.message()
             }
             parsedData

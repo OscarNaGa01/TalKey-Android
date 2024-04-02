@@ -24,7 +24,7 @@ class PopUpFragment(private val listener: OnButtonClickListener, private val isS
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPopUpBinding.inflate(inflater, container, false)
 
         listeners(isStatus)
