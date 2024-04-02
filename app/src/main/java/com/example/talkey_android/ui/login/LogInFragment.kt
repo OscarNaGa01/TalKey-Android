@@ -229,15 +229,21 @@ class LogInFragment : Fragment() {
             etNick.text?.clear()
             etPassword.text?.clear()
             etConfirmPassword.text?.clear()
-            etConfirmPassword.visibility = View.GONE
-            etNick.visibility = View.GONE
-            cbTermsConditions.visibility = View.GONE
-            cbTermsConditions.isChecked = false
+
             btnChange.text = getString(R.string.sign_up)
             btnAccept.text = getString(R.string.log_in)
-            setEditTextBackground(emptyList())
-            isLogin = true
+
             btnFingerPrint.visibility = View.VISIBLE
+
+            etNick.visibility = View.GONE
+            etConfirmPassword.visibility = View.GONE
+            cbTermsConditions.visibility = View.GONE
+            tvPasswordRequirements.visibility = View.GONE
+
+            cbTermsConditions.isChecked = false
+            isLogin = true
+
+            setEditTextBackground(emptyList())
         }
     }
 
@@ -245,14 +251,19 @@ class LogInFragment : Fragment() {
         with(binding) {
             etEmail.text?.clear()
             etPassword.text?.clear()
-            etConfirmPassword.visibility = View.VISIBLE
-            etNick.visibility = View.VISIBLE
-            cbTermsConditions.visibility = View.VISIBLE
+
             btnChange.text = getString(R.string.log_in)
             btnAccept.text = getString(R.string.sign_up)
-            setEditTextBackground(emptyList())
-            isLogin = false
+
+            etNick.visibility = View.VISIBLE
+            etConfirmPassword.visibility = View.VISIBLE
+            cbTermsConditions.visibility = View.VISIBLE
+
             btnFingerPrint.visibility = View.GONE
+
+            isLogin = false
+
+            setEditTextBackground(emptyList())
         }
     }
 
@@ -323,7 +334,7 @@ class LogInFragment : Fragment() {
 
             } else if (!isValidPassword()) {
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
-                with(binding.tvPasswordRequirements) {
+                with(tvPasswordRequirements) {
                     visibility = View.VISIBLE
                     text = getString(R.string.password_requirements)
                 }
@@ -331,7 +342,7 @@ class LogInFragment : Fragment() {
                     .show()
 
             } else if (etPassword.text.toString() != etConfirmPassword.text.toString()) {
-                binding.tvPasswordRequirements.visibility = View.GONE
+                tvPasswordRequirements.visibility = View.GONE
                 setEditTextBackground(listOf(etPassword, etConfirmPassword))
                 Toast.makeText(
                     requireContext(),
@@ -340,7 +351,7 @@ class LogInFragment : Fragment() {
                 ).show()
 
             } else if (!cbTermsConditions.isChecked) {
-                binding.tvPasswordRequirements.visibility = View.GONE
+                tvPasswordRequirements.visibility = View.GONE
                 setEditTextBackground(emptyList())
                 Toast.makeText(
                     requireContext(),
