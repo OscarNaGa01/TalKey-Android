@@ -23,7 +23,7 @@ class ContactsAdapter(
 
     interface CellListener {
         fun onClickContact(idContact: String)
-        fun onClickChat(idChat: String, contactNick: String)
+        fun onClickChat(idChat: String, contactNick: String, fbToken: String)
         fun onLongClickChat(idChat: String)
     }
 
@@ -32,9 +32,9 @@ class ContactsAdapter(
 
     inner class UsersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemRecyclerviewUserBinding.bind(view)
-        fun setListenerToChat(idChat: String, contactNick: String) {
+        fun setListenerToChat(idChat: String, contactNick: String, fbToken: String) {
             binding.root.setOnClickListener {
-                listener.onClickChat(idChat, contactNick)
+                listener.onClickChat(idChat, contactNick, fbToken)
             }
             binding.root.setOnLongClickListener {
                 Log.i(">", "Ha hecho longClick")
@@ -97,7 +97,11 @@ class ContactsAdapter(
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
-        holder.setListenerToChat(chatItemModel.idChat, chatItemModel.contactNick)
+        holder.setListenerToChat(
+            chatItemModel.idChat,
+            chatItemModel.contactNick,
+            chatItemModel.fbToken
+        )
     }
 
 
