@@ -45,7 +45,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             UpdateProfileUseCase(), UploadImgUseCase()
         )
 
-    val args: ProfileFragmentArgs by navArgs()
+    private val args: ProfileFragmentArgs by navArgs()
     private lateinit var id: String
     private var isNew: Boolean = false
     private var state: ProfileState = ProfileState.ShowProfile
@@ -88,7 +88,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         mainActivity = requireActivity() as MainActivity
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -314,9 +314,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     private fun cancelButton() {
         editToShow()
-        myUser.let {
-            setData(myUser!!)
-        }
+        setData(myUser!!)
         setEditTextBackground(emptyList())
     }
 

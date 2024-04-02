@@ -126,8 +126,7 @@ class ProfileFragmentViewModel(
 
     fun getProfile() {
         viewModelScope.launch(Dispatchers.IO) {
-            val baseResponse = getProfileUseCase()
-            when (baseResponse) {
+            when (val baseResponse = getProfileUseCase()) {
                 is BaseResponse.Success -> {
                     _getProfile.emit(baseResponse.data)
                 }

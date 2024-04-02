@@ -22,7 +22,7 @@ import com.example.talkey_android.data.domain.repository.remote.mapper.users.Fir
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.ListUsersMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.LoginRequestMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.LoginResponseToUserModelMapper
-import com.example.talkey_android.data.domain.repository.remote.mapper.users.RegisterRequestMappper
+import com.example.talkey_android.data.domain.repository.remote.mapper.users.RegisterRequestMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.RegisterResponseMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.UpdateProfileMapper
 import com.example.talkey_android.data.domain.repository.remote.mapper.users.UserFullDataToUserProfileMapper
@@ -33,13 +33,12 @@ import java.io.File
 
 object RemoteDataSource : DataSource {
 
-    //Aquí está la variable que iría en la inyección de dependencias
     private val apiCallService = ApiCallService(RetrofitClient.getApiServices())
 
     override suspend fun register(registerRequestModel: RegisterRequestModel)
             : BaseResponse<RegisterResponseModel> {
         val apiResult =
-            apiCallService.register(RegisterRequestMappper().toRequest(registerRequestModel))
+            apiCallService.register(RegisterRequestMapper().toRequest(registerRequestModel))
         return when (apiResult) {
             is BaseResponse.Success ->
                 BaseResponse.Success(RegisterResponseMapper().fromResponse(apiResult.data))
@@ -75,8 +74,7 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun logout(): BaseResponse<CommonMessageModel> {
-        val apiResult = apiCallService.logout()
-        return when (apiResult) {
+        return when (val apiResult = apiCallService.logout()) {
             is BaseResponse.Success ->
                 BaseResponse.Success(CommonMessageMapper().fromResponse(apiResult.data))
 
@@ -86,8 +84,7 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun getProfile(): BaseResponse<UserProfileModel> {
-        val apiResult = apiCallService.getProfile()
-        return when (apiResult) {
+        return when (val apiResult = apiCallService.getProfile()) {
             is BaseResponse.Success ->
                 BaseResponse.Success(UserFullDataToUserProfileMapper().fromResponse(apiResult.data))
 
@@ -97,8 +94,7 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun getListProfiles(): BaseResponse<ListUsersModel> {
-        val apiResult = apiCallService.getListProfiles()
-        return when (apiResult) {
+        return when (val apiResult = apiCallService.getListProfiles()) {
             is BaseResponse.Success ->
                 BaseResponse.Success(ListUsersMapper().fromResponse(apiResult.data))
 
@@ -123,8 +119,7 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun uploadImg(file: File): BaseResponse<CommonMessageModel> {
-        val apiResult = apiCallService.uploadImg(file)
-        return when (apiResult) {
+        return when (val apiResult = apiCallService.uploadImg(file)) {
             is BaseResponse.Success ->
                 BaseResponse.Success(CommonMessageMapper().fromResponse(apiResult.data))
 
@@ -134,9 +129,8 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun setOnline(isOnline: Boolean): BaseResponse<CommonMessageModel> {
-        val apiResult = apiCallService.setOnline(isOnline)
 
-        return when (apiResult) {
+        return when (val apiResult = apiCallService.setOnline(isOnline)) {
             is BaseResponse.Success ->
                 BaseResponse.Success(CommonMessageMapper().fromResponse(apiResult.data))
 
@@ -161,8 +155,7 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun getListChats(): BaseResponse<ListChatsModel> {
-        val apiResult = apiCallService.getListChats()
-        return when (apiResult) {
+        return when (val apiResult = apiCallService.getListChats()) {
             is BaseResponse.Success ->
                 BaseResponse.Success(ListChatsMapper().fromResponse(apiResult.data))
 
@@ -188,9 +181,8 @@ object RemoteDataSource : DataSource {
     }
 
     override suspend fun deleteChat(idChat: String): BaseResponse<SuccessModel> {
-        val apiResult = apiCallService.deleteChat(idChat)
 
-        return when (apiResult) {
+        return when (val apiResult = apiCallService.deleteChat(idChat)) {
             is BaseResponse.Success ->
                 BaseResponse.Success(SuccessMapper().fromResponse(apiResult.data))
 
@@ -221,9 +213,8 @@ object RemoteDataSource : DataSource {
         limit: Int,
         offset: Int
     ): BaseResponse<ListMessageModel> {
-        val apiResult = apiCallService.getMessages(idChat, limit, offset)
 
-        return when (apiResult) {
+        return when (val apiResult = apiCallService.getMessages(idChat, limit, offset)) {
             is BaseResponse.Success ->
                 BaseResponse.Success(ListMessageMapper().fromResponse(apiResult.data))
 

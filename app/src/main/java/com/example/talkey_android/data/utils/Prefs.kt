@@ -4,10 +4,10 @@ import android.content.Context
 
 class Prefs(val context: Context) {
 
-    val SHARED_DB_NAME = "db"
-    val SHARED_TOKEN = "token"
-    val SHARED_MAIL = "mail"
-    val storage = context.getSharedPreferences(SHARED_DB_NAME, 0)
+    private val SHARED_DB_NAME = "db"
+    private val SHARED_TOKEN = "token"
+    private val SHARED_MAIL = "mail"
+    private val storage = context.getSharedPreferences(SHARED_DB_NAME, 0)
 
     fun saveToken(token: String) {
         storage.edit().putString(SHARED_TOKEN, token).apply()
