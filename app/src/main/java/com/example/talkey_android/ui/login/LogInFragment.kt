@@ -57,19 +57,12 @@ class LogInFragment : Fragment() {
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
+            if (!isGranted) {
                 Toast.makeText(
                     requireContext(),
-                    "Ahora podrás recibir notificaciones!",
+                    getString(R.string.notNotificationAdvise),
                     Toast.LENGTH_SHORT
                 ).show()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Recomendamos que aceptes para saber cuándo te escriben.",
-                    Toast.LENGTH_SHORT
-                ).show()
-
             }
         }
 
@@ -85,7 +78,6 @@ class LogInFragment : Fragment() {
         observeViewModel()
 
         requestPostNotificationPermission()
-
 
         //biometric----------------------------------------------
         binding.btnFingerPrint.setOnClickListener {
