@@ -245,7 +245,7 @@ class HomeFragment
         }
     }
 
-    override fun onClickContact(idContact: String) {
+    override fun onClickContact(idContact: String, fbToken: String) {
         mBinding.searchView.isIconified = true
         mViewModel.createChat(args.id, idContact)
     }

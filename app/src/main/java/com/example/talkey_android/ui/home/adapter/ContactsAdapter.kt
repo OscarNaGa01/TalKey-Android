@@ -22,7 +22,7 @@ class ContactsAdapter(
 ) : RecyclerView.Adapter<ContactsAdapter.UsersViewHolder>() {
 
     interface CellListener {
-        fun onClickContact(idContact: String)
+        fun onClickContact(idContact: String, fbToken: String)
         fun onClickChat(idChat: String, contactNick: String, fbToken: String)
         fun onLongClickChat(idChat: String)
     }
@@ -43,9 +43,9 @@ class ContactsAdapter(
             }
         }
 
-        fun setListenerToContact(idTarget: String) {
+        fun setListenerToContact(idTarget: String, fbToken: String) {
             binding.root.setOnClickListener {
-                listener.onClickContact(idTarget)
+                listener.onClickContact(idTarget, fbToken)
             }
         }
     }
@@ -121,7 +121,7 @@ class ContactsAdapter(
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
-        holder.setListenerToContact(contact.id)
+        holder.setListenerToContact(contact.id, contact.fbToken)
     }
 
     override fun getItemCount() = list.count()
