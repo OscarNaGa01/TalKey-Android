@@ -6,6 +6,8 @@ plugins {
     id("com.google.devtools.ksp")
     //Args for navigation
     id("androidx.navigation.safeargs.kotlin")
+    //firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -49,6 +51,11 @@ android {
 }
 
 dependencies {
+
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
