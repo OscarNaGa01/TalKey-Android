@@ -28,7 +28,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.talkey_android.MainActivity
 import com.example.talkey_android.R
-import com.example.talkey_android.data.constants.Constants.PLATFORM
 import com.example.talkey_android.data.domain.model.error.ErrorModel
 import com.example.talkey_android.data.domain.model.users.LoginRequestModel
 import com.example.talkey_android.data.domain.model.users.RegisterRequestModel
@@ -293,10 +292,9 @@ class LogInFragment : Fragment() {
                 logInFragmentViewModel.postLogin(
                     LoginRequestModel(
                         etPassword.text.toString(),
-                        etEmail.text.toString(),
-                        PLATFORM,
-                        ""
-                    )
+                        etEmail.text.toString()
+                    ),
+                    requireContext()
                 )
                 setEditTextBackground(emptyList())
             } else {
@@ -320,10 +318,9 @@ class LogInFragment : Fragment() {
                     RegisterRequestModel(
                         etEmail.text.toString(),
                         etPassword.text.toString(),
-                        etNick.text.toString(),
-                        PLATFORM,
-                        ""
-                    )
+                        etNick.text.toString()
+                    ),
+                    requireContext()
                 )
 
             } else if (etEmail.text.toString().isEmpty() && etNick.text.toString()
