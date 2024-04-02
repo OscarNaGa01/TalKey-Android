@@ -15,9 +15,11 @@ import com.example.talkey_android.data.domain.model.messages.MessageModel
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.TimeZone
 
 
 object Utils {
@@ -85,12 +87,12 @@ object Utils {
             val currentDate = LocalDate.now()
 
             if (date == currentDate && !isChat) {
-                lastMsgDate.substring(11, 16)
+                formatDate(lastMsgDate).substring(11, 16)
             } else {
-                lastMsgDate.substring(0, 10)
+                formatDate(lastMsgDate).substring(0, 10)
             }
         } else {
-            lastMsgDate.substring(0, 10)
+            formatDate(lastMsgDate).substring(0, 10)
         }
     }
 
@@ -111,5 +113,15 @@ object Utils {
             }
         }
         return ListMessageModel(messageList.count(), messageList)
+    }
+
+    fun formatDate(date: String): String {
+        val backendFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        backendFormat.timeZone = TimeZone.getTimeZone("GMT-2:00")
+        val backendDate = backendFormat.parse(date)
+
+        val localFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        localFormat.timeZone = TimeZone.getDefault()
+        return localFormat.format(backendDate!!)
     }
 }
