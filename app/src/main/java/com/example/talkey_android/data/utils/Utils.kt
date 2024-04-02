@@ -125,4 +125,12 @@ object Utils {
         localFormat.timeZone = TimeZone.getDefault()
         return localFormat.format(backendDate!!)
     }
+
+    fun saveFirebaseToken(context: Context, firebaseToken: String) {
+        val sharedPreferences = context.getSharedPreferences("sp_talkey", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("firebase_token", firebaseToken)
+        editor.apply()
+    }
+
 }
