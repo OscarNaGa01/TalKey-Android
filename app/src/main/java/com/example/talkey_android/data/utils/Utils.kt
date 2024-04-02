@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.TimeZone
 
 
@@ -116,11 +117,11 @@ object Utils {
     }
 
     fun formatDate(date: String): String {
-        val backendFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        val backendFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
         backendFormat.timeZone = TimeZone.getTimeZone("GMT-2:00")
         val backendDate = backendFormat.parse(date)
 
-        val localFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val localFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         localFormat.timeZone = TimeZone.getDefault()
         return localFormat.format(backendDate!!)
     }

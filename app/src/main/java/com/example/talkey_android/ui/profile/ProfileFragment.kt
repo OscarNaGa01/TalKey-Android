@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
@@ -333,7 +334,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
     }
 
     private fun createUri(): Uri {
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val image = File(requireActivity().filesDir, "avatar_$timestamp.png")
         return FileProvider.getUriForFile(
             requireContext(),
