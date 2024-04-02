@@ -93,7 +93,7 @@ class ContactsAdapter(
             }
             Glide.with(context)
                 .load("https://mock-movilidad.vass.es/${chatItemModel.contactAvatar}")
-                .error(R.drawable.perfil_new_white)
+                .error(R.drawable.perfil)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
@@ -113,7 +113,7 @@ class ContactsAdapter(
             }
             Glide.with(context)
                 .load("https://mock-movilidad.vass.es/${contact.avatar}")
-                .error(R.drawable.perfil_new_white)
+                .error(R.drawable.perfil)
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }

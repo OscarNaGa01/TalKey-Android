@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text">#FFFFFFFF</color>
+    <color name="textbox_background">#393939</color>
+    <color name="hint">#FFa9a8aa</color>
+    <color name="darker_text">#C8C8C8</color>
+    <color name="vassAccent">#4DFFFFFF</color>
+    <color name="background">#000000</color>
+</resources>

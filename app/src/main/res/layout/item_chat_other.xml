@@ -40,6 +40,7 @@
             android:id="@+id/tvMessageOther"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/darker_text"
             android:layout_marginHorizontal="12dp"
             android:layout_marginTop="@dimen/minimal_margin"
             android:layout_marginBottom="24dp"
@@ -53,7 +54,7 @@
             android:layout_gravity="start|bottom"
             android:layout_marginHorizontal="12dp"
             android:layout_marginBottom="@dimen/minimal_margin"
-            android:textColor="@color/vassGreyDark"
+            android:textColor="@color/vassAccent"
             android:textSize="12sp"
             tools:text="12:45" />
 

@@ -107,14 +107,14 @@ class ChatFragment : Fragment() {
                 Glide.with(requireContext())
                     .load("https://mock-movilidad.vass.es/${userData.targetAvatar}")
                     .apply(RequestOptions().centerCrop())
-                    .error(R.drawable.perfil_new_blue)
+                    .error(R.drawable.perfil)
                     .into(profileImageStatusBinding.ivProfile)
 
                 if (userData.targetOnline) {
                     profileImageStatusBinding.ivStatus.setBackgroundColor(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.statusOnline
+                            R.color.green_lime
                         )
                     )
 

@@ -54,7 +54,7 @@ class PasswordChangeFragment : Fragment() {
         Glide.with(requireContext())
             .load("https://mock-movilidad.vass.es/${image}")
             .apply(RequestOptions().centerCrop())
-            .error(R.drawable.perfil_new_white)
+            .error(R.drawable.perfil)
             .into(binding.imgProfile)
     }
 
@@ -104,14 +104,14 @@ class PasswordChangeFragment : Fragment() {
         with(binding) {
             if (isValidPassword() && etPassword.text.toString() == etPasswordConfirm.text.toString()) {
                 setEditTextBackground(emptyList())
-                binding.tvPasswordRequirements.visibility = View.GONE
+                tvPasswordRequirements.visibility = View.GONE
                 viewModel.updateProfile(
                     etPassword.text.toString(), nick
                 )
 
             } else if (!isValidPassword()) {
                 setEditTextBackground(listOf(etPassword, etPasswordConfirm))
-                with(binding.tvPasswordRequirements) {
+                with(tvPasswordRequirements) {
                     visibility = View.VISIBLE
                     text = getString(R.string.password_requirements)
                 }

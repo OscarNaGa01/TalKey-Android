@@ -12,4 +12,11 @@
     <color name="statusOffline">#FFED4245</color>
     <color name="statusOnline">#FF3BA55C</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="green_lime">#FF75fb4c</color>
+    <color name="text">#FF000000</color>
+    <color name="textbox_background">#FFFFFFFF</color>
+    <color name="hint">#FFa9a8aa</color>
+    <color name="darker_text">#FF393939</color>
+    <color name="vassAccent">#4D000000</color>
+    <color name="background">#FFFFFFFF</color>
 </resources>
