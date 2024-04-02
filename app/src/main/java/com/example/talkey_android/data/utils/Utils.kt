@@ -10,6 +10,8 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import com.example.talkey_android.data.constants.Constants.SP_FB_TOKEN_KEY
+import com.example.talkey_android.data.constants.Constants.SP_NAME
 import com.example.talkey_android.data.domain.model.messages.ListMessageModel
 import com.example.talkey_android.data.domain.model.messages.MessageModel
 import java.io.File
@@ -127,10 +129,18 @@ object Utils {
     }
 
     fun saveFirebaseToken(context: Context, firebaseToken: String) {
-        val sharedPreferences = context.getSharedPreferences("sp_talkey", Context.MODE_PRIVATE)
+        val sharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putString("firebase_token", firebaseToken)
+        editor.putString(SP_FB_TOKEN_KEY, firebaseToken)
         editor.apply()
+        println(firebaseToken)
+    }
+
+    fun getFirebaseToken(context: Context): String {
+        val sharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+        val firebaseToken = sharedPreferences.getString(SP_FB_TOKEN_KEY, null)
+        println(firebaseToken)
+        return firebaseToken ?: ""
     }
 
 }
