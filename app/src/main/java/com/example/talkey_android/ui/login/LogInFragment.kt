@@ -1,7 +1,9 @@
 package com.example.talkey_android.ui.login
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -13,6 +15,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -52,7 +55,23 @@ class LogInFragment : Fragment() {
     private lateinit var prefs: Prefs
     private var isTryingBiometricAccess: Boolean = false
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(
+                    requireContext(),
+                    "Ahora podrás recibir notificaciones!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Recomendamos que aceptes para saber cuándo te escriben.",
+                    Toast.LENGTH_SHORT
+                ).show()
 
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +84,8 @@ class LogInFragment : Fragment() {
         initListeners()
         observeViewModel()
 
+        requestPostNotificationPermission()
+
 
         //biometric----------------------------------------------
         binding.btnFingerPrint.setOnClickListener {
@@ -75,6 +96,12 @@ class LogInFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    private fun requestPostNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
 
