@@ -9,6 +9,7 @@ import com.example.talkey_android.data.domain.repository.remote.response.BaseRes
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.SendMessageUseCase
+import com.example.talkey_android.data.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,10 +57,10 @@ class ChatFragmentViewModel(
         }
     }
 
-    fun getMessages(idChat: String, isSentMessage: Boolean) {
+    fun getMessages(idChat: String, isRefresh: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val offset = if (isSentMessage) {
+            val offset = if (isRefresh) {
                 page = 0
                 messageList.clear()
                 0
@@ -70,6 +71,7 @@ class ChatFragmentViewModel(
             when (val baseResponse = getListMessageUseCase(idChat, limit, offset)) {
                 is BaseResponse.Success -> {
                     messageList.addAll(baseResponse.data.rows)
+                    Utils.showDateOnce(messageList)
                     _message.emit(messageList)
                     page++
                 }

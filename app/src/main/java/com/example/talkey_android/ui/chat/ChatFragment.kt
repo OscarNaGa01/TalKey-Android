@@ -21,7 +21,6 @@ import com.example.talkey_android.R
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.SendMessageUseCase
-import com.example.talkey_android.data.utils.Utils
 import com.example.talkey_android.databinding.FragmentChatBinding
 import com.example.talkey_android.databinding.ItemProfileImageStatusChatBinding
 import com.example.talkey_android.ui.chat.adapter.ChatAdapter
@@ -94,9 +93,9 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun getMessageList(isSentMessage: Boolean) {
+    private fun getMessageList(isRefresh: Boolean) {
         chatFragmentViewModel.getContactData(args.idChat, args.idUser)
-        chatFragmentViewModel.getMessages(args.idChat, isSentMessage)
+        chatFragmentViewModel.getMessages(args.idChat, isRefresh)
     }
 
     private fun observeViewModel() {
@@ -132,7 +131,6 @@ class ChatFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             chatFragmentViewModel.message.collect { messages ->
-                Utils.showDateOnce(messages)
                 chatAdapter.updateList(messages)
             }
         }
