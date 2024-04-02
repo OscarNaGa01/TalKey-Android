@@ -38,7 +38,6 @@ class ProfileFragmentViewModel(
     private val _setOnlineError = MutableSharedFlow<ErrorModel>()
     val setOnlineError: SharedFlow<ErrorModel> = _setOnlineError
     private val _setOnlineMessage = MutableStateFlow(CommonMessageModel())
-    val setOnlineMessage: StateFlow<CommonMessageModel> = _setOnlineMessage
 
     private val _updateProfileError = MutableSharedFlow<ErrorModel>()
     val updateProfileError: SharedFlow<ErrorModel> = _updateProfileError
@@ -48,7 +47,6 @@ class ProfileFragmentViewModel(
     private val _uploadImgError = MutableSharedFlow<ErrorModel>()
     val uploadImgError: SharedFlow<ErrorModel> = _uploadImgError
     private val _uploadImgMessage = MutableStateFlow(CommonMessageModel())
-    val uploadImgMessage: StateFlow<CommonMessageModel> = _uploadImgMessage
 
     private val _selectedNewAvatar = MutableSharedFlow<Uri?>()
     val selectedNewAvatar: SharedFlow<Uri?> = _selectedNewAvatar
