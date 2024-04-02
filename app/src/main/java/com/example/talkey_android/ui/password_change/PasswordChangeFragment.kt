@@ -28,14 +28,14 @@ class PasswordChangeFragment : Fragment() {
     private val viewModel: PasswordChangeFragmentViewModel =
         PasswordChangeFragmentViewModel(UpdateProfileUseCase())
 
-    val args: PasswordChangeFragmentArgs by navArgs()
+    private val args: PasswordChangeFragmentArgs by navArgs()
     private lateinit var image: String
     private lateinit var nick: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPasswordChangeBinding.inflate(inflater, container, false)
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 

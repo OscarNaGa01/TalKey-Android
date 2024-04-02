@@ -21,7 +21,7 @@ import com.example.talkey_android.data.domain.use_cases.chats.DeleteChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
-import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
+import com.example.talkey_android.data.domain.use_cases.users.LogoutUseCase
 import com.example.talkey_android.databinding.FragmentHomeBinding
 import com.example.talkey_android.ui.home.adapter.ContactsAdapter
 import kotlinx.coroutines.launch
@@ -52,7 +52,7 @@ class HomeFragment
             GetListMessageUseCase(),
             CreateChatUseCase(),
             DeleteChatUseCase(),
-            SetOnlineUseCase()
+            LogoutUseCase()
         )
     }
 

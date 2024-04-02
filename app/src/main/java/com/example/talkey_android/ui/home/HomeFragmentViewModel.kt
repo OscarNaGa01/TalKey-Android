@@ -13,7 +13,7 @@ import com.example.talkey_android.data.domain.use_cases.chats.DeleteChatUseCase
 import com.example.talkey_android.data.domain.use_cases.chats.GetListChatsUseCase
 import com.example.talkey_android.data.domain.use_cases.messages.GetListMessageUseCase
 import com.example.talkey_android.data.domain.use_cases.users.GetListProfilesUseCase
-import com.example.talkey_android.data.domain.use_cases.users.SetOnlineUseCase
+import com.example.talkey_android.data.domain.use_cases.users.LogoutUseCase
 import com.example.talkey_android.data.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -29,7 +29,7 @@ class HomeFragmentViewModel(
     private val getListMessageUseCase: GetListMessageUseCase,
     private val createChatUseCase: CreateChatUseCase,
     private val deleteChatUseCase: DeleteChatUseCase,
-    private val setOnlineUseCase: SetOnlineUseCase
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _uiState =
@@ -52,7 +52,7 @@ class HomeFragmentViewModel(
 
     fun doLogout() {
         viewModelScope.launch(Dispatchers.IO) {
-            setOnlineUseCase(false)
+            logoutUseCase()
         }
     }
 

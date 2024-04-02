@@ -47,4 +47,5 @@
     <string name="password_updated">Contraseña Actualizada</string>
     <string name="password_error">No se pudo cambiar la contraseña</string>
     <string name="date_formater">%3$s-%2$s-%1$s</string>
+    <string name="manualLoginAdvise">Por motivos de seguridad, debes iniciar sesión manualmente</string>
 </resources>

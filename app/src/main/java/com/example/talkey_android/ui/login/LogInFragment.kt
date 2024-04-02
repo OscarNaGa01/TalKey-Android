@@ -1,5 +1,6 @@
 package com.example.talkey_android.ui.login
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
@@ -137,7 +138,7 @@ class LogInFragment : Fragment() {
             EncryptDecryptManager.removeKey()
             Toast.makeText(
                 requireContext(),
-                "Por motivos de seguridad, debes iniciar sesión manualmente",
+                getString(R.string.manualLoginAdvise),
                 Toast.LENGTH_SHORT
             ).show()
         } else {
@@ -396,6 +397,8 @@ class LogInFragment : Fragment() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: PromptInfo
+
+    @SuppressLint("SwitchIntDef")
     private fun checkDeviceBiometric() {
         val biometricManager = BiometricManager.from(requireContext())
         when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
@@ -446,7 +449,6 @@ class LogInFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
             }
         }
     }
@@ -479,7 +481,7 @@ class LogInFragment : Fragment() {
     }
 
     private fun createPromptInfo() {
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
+        promptInfo = PromptInfo.Builder()
             .setTitle(getString(R.string.login_title))
             .setSubtitle(getString(R.string.use_fingerprint_login))
             .setNegativeButtonText(getString(R.string.cancel))
