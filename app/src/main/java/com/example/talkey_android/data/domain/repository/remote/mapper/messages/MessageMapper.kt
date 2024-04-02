@@ -9,16 +9,18 @@ class MessageMapper : ResponseMapper<MessageResponse, MessageModel> {
     override fun fromResponse(response: MessageResponse): MessageModel {
         var formattedDay = ""
         var formattedHour = ""
-        if (response.date!!.isNotEmpty()) {
+
+        if (response.date != null) {
             formattedDay = Utils.formatDate(response.date).substring(0, 10)
             formattedHour = Utils.formatDate(response.date).substring(11, 16)
         }
+
         return MessageModel(
             response.id ?: "",
             response.chat ?: "",
             response.source ?: "",
             response.message ?: "",
-            response.date,
+            response.date ?: "",
             formattedDay,
             formattedHour
         )
