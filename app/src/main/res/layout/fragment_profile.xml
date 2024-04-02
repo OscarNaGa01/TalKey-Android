@@ -77,7 +77,7 @@
         android:id="@+id/ivImageEdit"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/camara_small"
+        android:src="@drawable/camera"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
         app:layout_constraintEnd_toEndOf="@id/imgProfile"

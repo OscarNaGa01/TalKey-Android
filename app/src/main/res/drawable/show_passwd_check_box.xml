@@ -3,5 +3,5 @@
     <!-- Estado marcado -->
     <item android:drawable="@drawable/hide_password" android:state_checked="true" />
     <!-- Estado desmarcado -->
-    <item android:drawable="@drawable/show_password_full" />
+    <item android:drawable="@drawable/show_password" />
 </selector>
