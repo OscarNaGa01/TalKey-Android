@@ -115,12 +115,12 @@ object Utils {
         return ListMessageModel(messageList.count(), messageList)
     }
 
-    private fun formatDate(date: String): String {
+    fun formatDate(date: String): String {
         val backendFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         backendFormat.timeZone = TimeZone.getTimeZone("GMT-2:00")
         val backendDate = backendFormat.parse(date)
 
-        val localFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+        val localFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         localFormat.timeZone = TimeZone.getDefault()
         return localFormat.format(backendDate!!)
     }
