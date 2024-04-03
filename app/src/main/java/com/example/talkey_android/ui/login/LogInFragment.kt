@@ -52,6 +52,7 @@ class LogInFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
 
     private lateinit var prefs: Prefs
+    private var isLoading = false
     private var isTryingBiometricAccess: Boolean = false
 
     private val requestPermissionLauncher =
@@ -80,8 +81,10 @@ class LogInFragment : Fragment() {
 
         //biometric----------------------------------------------
         binding.btnFingerPrint.setOnClickListener {
-            isTryingBiometricAccess = true
-            checkDeviceBiometric()
+            if (!isLoading) {
+                isTryingBiometricAccess = true
+                checkDeviceBiometric()
+            }
         }
         //biometric----------------------------------------------
 
@@ -106,6 +109,7 @@ class LogInFragment : Fragment() {
 
                     is LogInFragmentUiState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
+                        isLoading = true
                     }
 
                     is LogInFragmentUiState.Success -> {
