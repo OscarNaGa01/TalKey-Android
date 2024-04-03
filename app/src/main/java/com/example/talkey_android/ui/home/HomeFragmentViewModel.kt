@@ -145,7 +145,8 @@ class HomeFragmentViewModel(
                             idUser,
                             selectContactNick(idUser, chatModel),
                             selectContactOnline(idUser, chatModel),
-                            selectContactAvatar(idUser, chatModel)
+                            selectContactAvatar(idUser, chatModel),
+                            fbToken = chatModel.targetToken
                         )
                     )
                 }
