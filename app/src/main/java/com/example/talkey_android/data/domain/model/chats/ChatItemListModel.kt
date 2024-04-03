@@ -11,6 +11,5 @@ data class ChatItemListModel(
     val contactOnline: Boolean = false,
     val contactAvatar: String = "",
     var lastMessage: String = "",
-    var dateLastMessage: String = "",
-    var fbToken: String = ""
+    var dateLastMessage: String = ""
 ) : BaseModel()
