@@ -93,7 +93,8 @@ class ChatFragmentViewModel(
                             ChatModel(
                                 targetNick = selectContactNick(idUser, it),
                                 targetOnline = selectContactOnline(idUser, it),
-                                targetAvatar = selectContactAvatar(idUser, it)
+                                targetAvatar = selectContactAvatar(idUser, it),
+                                targetToken = selectFirebaseToken(idUser, it)
                             )
                         )
                     }
@@ -103,6 +104,14 @@ class ChatFragmentViewModel(
                     _getListChatsError.emit(baseResponse.error)
                 }
             }
+        }
+    }
+
+    private fun selectFirebaseToken(idUser: String, chatModel: ChatModel): String {
+        return if (idUser == chatModel.source) {
+            chatModel.targetToken
+        } else {
+            chatModel.sourceToken
         }
     }
 
