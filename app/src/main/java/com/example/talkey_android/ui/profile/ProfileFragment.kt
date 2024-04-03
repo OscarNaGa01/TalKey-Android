@@ -200,12 +200,13 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         with(binding) {
             tvNickname.text = user.nick
             tvLogin.text = user.login
+            etNickname.setText(user.nick)
         }
 
         if (user.online) {
             statusOnline()
         } else {
-            statusOfflinree()
+            statusOffline()
         }
 
 
@@ -346,6 +347,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         with(binding) {
             etNickname.visibility = View.VISIBLE
             ivImageEdit.visibility = View.VISIBLE
+            ivImageEditBackground.visibility = View.VISIBLE
 
             if (!isNew) {
                 cancelButton.visibility = View.VISIBLE
@@ -354,6 +356,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             editButton.visibility = View.GONE
             tvNickname.visibility = View.GONE
             ivStatus.visibility = View.GONE
+            ivStatusBackground.visibility = View.GONE
 
             btnAccept.text = getString(R.string.save)
             etNickname.setText(myUser!!.nick)
@@ -369,10 +372,12 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
             editButton.visibility = View.VISIBLE
             tvNickname.visibility = View.VISIBLE
             ivStatus.visibility = View.VISIBLE
+            ivStatusBackground.visibility = View.VISIBLE
 
             cancelButton.visibility = View.GONE
             etNickname.visibility = View.GONE
             ivImageEdit.visibility = View.GONE
+            ivImageEditBackground.visibility = View.GONE
 
             btnAccept.text = getString(R.string.change_password)
             etNickname.setText("")
@@ -395,11 +400,13 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
                 btnAccept.visibility = View.GONE
                 etNickname.visibility = View.GONE
                 ivImageEdit.visibility = View.GONE
+                ivImageEditBackground.visibility = View.GONE
             } else {
                 cancelButton.visibility = View.VISIBLE
                 btnAccept.visibility = View.VISIBLE
                 etNickname.visibility = View.VISIBLE
                 ivImageEdit.visibility = View.VISIBLE
+                ivImageEditBackground.visibility = View.VISIBLE
 
                 loadingBackground.visibility = View.GONE
                 loadingProgressBar.visibility = View.GONE
@@ -415,7 +422,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         )
     }
 
-    private fun statusOfflinree() {
+    private fun statusOffline() {
         binding.ivStatus.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(), R.color.statusOffline
@@ -444,7 +451,7 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
 
     override fun switchOffline() {
         Log.d("TAG", "Offline")
-        statusOfflinree()
+        statusOffline()
         viewModel.setOnline(false)
     }
 
@@ -452,8 +459,12 @@ class ProfileFragment : Fragment(), PopUpFragment.OnButtonClickListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (!isNew) {
+                    if (!isNew && state == ProfileState.ShowProfile) {
                         findNavController().popBackStack()
+                    } else if (!isNew && state == ProfileState.EditProfile) {
+                        editToShow()
+                    } else {
+                        // Do nothing
                     }
                 }
             })

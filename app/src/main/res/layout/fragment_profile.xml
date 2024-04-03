@@ -13,7 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/vassBlue"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Perfil"
+        app:title="@string/profile_title"
         app:titleTextColor="@android:color/white" />
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -64,6 +64,17 @@
         app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivStatusBackground"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@color/background"
+        app:layout_constraintTop_toTopOf="@id/ivStatus"
+        app:layout_constraintBottom_toBottomOf="@id/ivStatus"
+        app:layout_constraintStart_toStartOf="@id/ivStatus"
+        app:layout_constraintEnd_toEndOf="@id/ivStatus"
+        app:shapeAppearanceOverlay="@style/circleImageViewShape" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivStatus"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -71,6 +82,18 @@
         android:background="@color/statusOnline"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
         app:layout_constraintEnd_toEndOf="@id/imgProfile"
+        app:shapeAppearanceOverlay="@style/circleImageViewShape" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivImageEditBackground"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@color/background"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/ivImageEdit"
+        app:layout_constraintBottom_toBottomOf="@id/ivImageEdit"
+        app:layout_constraintStart_toStartOf="@id/ivImageEdit"
+        app:layout_constraintEnd_toEndOf="@id/ivImageEdit"
         app:shapeAppearanceOverlay="@style/circleImageViewShape" />
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -87,7 +110,7 @@
         android:id="@+id/tvNicknameLabel"
         style="@style/text"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="56dp"
         android:text="@string/hint_nick"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,8 +148,8 @@
         android:id="@+id/tvLoginLabel"
         style="@style/text"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/log_in"
+        android:layout_marginTop="36dp"
+        android:text="@string/hint_email"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrierNickname" />
