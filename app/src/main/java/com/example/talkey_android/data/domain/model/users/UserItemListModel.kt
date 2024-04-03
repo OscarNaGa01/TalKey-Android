@@ -8,5 +8,6 @@ data class UserItemListModel(
     val nick: String = "",
     val avatar: String = "",
     val online: Boolean = false,
-    val created: String = ""
+    val created: String = "",
+    val fbToken: String = ""
 ) : BaseModel()
