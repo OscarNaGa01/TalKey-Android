@@ -52,4 +52,5 @@
     <string name="date_formater">%3$s-%2$s-%1$s</string>
     <string name="manualLoginAdvise">Por motivos de seguridad, debes iniciar sesión manualmente</string>
     <string name="notNotificationAdvise">No podrás recibir avisos cuando te escriban</string>
+    <string name="default_channel" translatable="false">generic</string>
 </resources>
