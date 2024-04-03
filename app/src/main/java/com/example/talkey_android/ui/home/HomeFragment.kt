@@ -199,9 +199,7 @@ class HomeFragment
                 findNavController().navigate(
                     HomeFragmentDirections.actionHomeToChat(
                         args.id,
-                        idNewChat,
-//TODO (token for new chat) ------------------------------------------------------------------------
-                        ""
+                        idNewChat
                     )
                 )
             }
@@ -245,19 +243,18 @@ class HomeFragment
         }
     }
 
-    override fun onClickContact(idContact: String, fbToken: String) {
+    override fun onClickContact(idContact: String) {
         mBinding.searchView.isIconified = true
         mViewModel.createChat(args.id, idContact)
     }
 
-    override fun onClickChat(idChat: String, contactNick: String, fbToken: String) {
+    override fun onClickChat(idChat: String, contactNick: String) {
         mBinding.searchView.isIconified = true
         Log.i(">", "Ha clicado en un chat")
         findNavController().navigate(
             HomeFragmentDirections.actionHomeToChat(
                 args.id,
-                idChat,
-                fbToken
+                idChat
             )
         )
     }
