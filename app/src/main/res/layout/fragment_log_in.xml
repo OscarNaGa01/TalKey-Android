@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:buttonTint="@color/white"
-            android:text="@string/accept_terms_and_conditions_dialog"
+            android:text="@string/accept_our_terms_and_conditions"
             android:textColor="@color/white"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"

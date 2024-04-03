@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -46,6 +47,7 @@ class PasswordChangeFragment : Fragment() {
         observeViewModel()
         initListeners()
 
+        manageBack()
 
         return binding.root
     }
@@ -161,6 +163,15 @@ class PasswordChangeFragment : Fragment() {
             editText.background =
                 ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_error_background)
         }
+    }
+
+    private fun manageBack() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack()
+                }
+            })
     }
 
 

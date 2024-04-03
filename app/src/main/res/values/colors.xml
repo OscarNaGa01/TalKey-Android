@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="white_transparency50">#CCFFFFFF</color>
+    <color name="white_transparency80">#CCFFFFFF</color>
     <color name="vassBlue">#29BDEF</color>
     <color name="vassRed">#DF0000</color>
     <color name="vassGreyMedium">#4D999999</color>
@@ -18,5 +18,6 @@
     <color name="hint">#FFa9a8aa</color>
     <color name="darker_text">#FF393939</color>
     <color name="vassAccent">#4D000000</color>
-    <color name="background">#FFFFFFFF</color>
+    <color name="background">#FFFEF7FF</color>
+    <color name="blacknWhite">#FFFFFFFF</color>
 </resources>

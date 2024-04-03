@@ -6,7 +6,6 @@
     <string name="hint_nick">Nick</string>
     <string name="hint_password">Contraseña</string>
     <string name="hint_confirm_password">Confirmar contraseña</string>
-    <string name="accept_terms_and_conditions_dialog">Acepta nuestros términos y condiciones de uso</string>
     <string name="img_profile_description">La imagen de perfil del usuario</string>
     <string name="save">Guardar cambios</string>
     <string name="change_password">Cambiar contraseña</string>
@@ -53,4 +52,5 @@
     <string name="manualLoginAdvise">Por motivos de seguridad, debes iniciar sesión manualmente</string>
     <string name="notNotificationAdvise">No podrás recibir avisos cuando te escriban</string>
     <string name="default_channel" translatable="false">generic</string>
+    <string name="profile_title">Perfil</string>
 </resources>

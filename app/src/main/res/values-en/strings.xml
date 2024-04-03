@@ -6,7 +6,6 @@
     <string name="hint_nick">Nick</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm password</string>
-    <string name="accept_terms_and_conditions_dialog">Accept our terms and conditions</string>
     <string name="img_profile_description">User\'s image profile</string>
     <string name="save">Save changes</string>
     <string name="change_password">Change password</string>
@@ -50,4 +49,5 @@
     <string name="date_formater">%2$s-%3$s-%1$s</string>
     <string name="manualLoginAdvise">For security reasons, you must log in manually</string>
     <string name="notNotificationAdvise">You will not be able to receive notices when they write to you</string>
+    <string name="profile_title">Profile</string>
 </resources>

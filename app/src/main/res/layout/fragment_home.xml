@@ -80,6 +80,13 @@
             app:layout_constraintTop_toBottomOf="@id/toolBar"
             tools:ignore="TextContrastCheck" />
 
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrierToogleButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="tbContacts,tbChats" />
+
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
             android:layout_width="0dp"
@@ -87,7 +94,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tbContacts" />
+            app:layout_constraintTop_toBottomOf="@id/barrierToogleButtons" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -96,8 +103,18 @@
             app:layout_constraintTop_toBottomOf="@id/searchView"
             tools:listitem="@layout/item_recyclerview_user" />
 
+        <View
+            android:id="@+id/loadingBackground"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/background"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/barrierToogleButtons"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <ProgressBar
-            android:id="@+id/progressBarr"
+            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminateTint="@color/vassBlue"
