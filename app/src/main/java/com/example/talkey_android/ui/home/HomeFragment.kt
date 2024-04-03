@@ -215,11 +215,13 @@ class HomeFragment
             mViewModel.uiState.collect {
                 when (it) {
                     is HomeFragmentUiState.Loading -> {
-                        mBinding.progressBarr.visibility = View.VISIBLE
+                        mBinding.progressBar.visibility = View.VISIBLE
+                        mBinding.loadingBackground.visibility = View.VISIBLE
                     }
 
                     is HomeFragmentUiState.Success -> {
-                        mBinding.progressBarr.visibility = View.GONE
+                        mBinding.progressBar.visibility = View.GONE
+                        mBinding.loadingBackground.visibility = View.GONE
                         Log.i(">", "Refresca la lista del recycler")
                         mAdapter.refreshData(it.dataList)
                     }

@@ -37,6 +37,7 @@
         <item name="android:layout_marginEnd">@dimen/common_margin</item>
         <item name="android:textSize">@dimen/textSize_common</item>
         <item name="android:backgroundTint">@color/vassBlue</item>
+        <item name="android:textColor">@color/blacknWhite</item>
     </style>
 
     <style name="menuOverflowToolbar" parent="Widget.AppCompat.ActionButton.Overflow">
