@@ -22,8 +22,8 @@ class ContactsAdapter(
 ) : RecyclerView.Adapter<ContactsAdapter.UsersViewHolder>() {
 
     interface CellListener {
-        fun onClickContact(idContact: String, fbToken: String)
-        fun onClickChat(idChat: String, contactNick: String, fbToken: String)
+        fun onClickContact(idContact: String)
+        fun onClickChat(idChat: String, contactNick: String)
         fun onLongClickChat(idChat: String)
     }
 
@@ -32,9 +32,9 @@ class ContactsAdapter(
 
     inner class UsersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemRecyclerviewUserBinding.bind(view)
-        fun setListenerToChat(idChat: String, contactNick: String, fbToken: String) {
+        fun setListenerToChat(idChat: String, contactNick: String) {
             binding.root.setOnClickListener {
-                listener.onClickChat(idChat, contactNick, fbToken)
+                listener.onClickChat(idChat, contactNick)
             }
             binding.root.setOnLongClickListener {
                 Log.i(">", "Ha hecho longClick")
@@ -43,9 +43,9 @@ class ContactsAdapter(
             }
         }
 
-        fun setListenerToContact(idTarget: String, fbToken: String) {
+        fun setListenerToContact(idTarget: String) {
             binding.root.setOnClickListener {
-                listener.onClickContact(idTarget, fbToken)
+                listener.onClickContact(idTarget)
             }
         }
     }
@@ -97,11 +97,7 @@ class ContactsAdapter(
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
-        holder.setListenerToChat(
-            chatItemModel.idChat,
-            chatItemModel.contactNick,
-            chatItemModel.fbToken
-        )
+        holder.setListenerToChat(chatItemModel.idChat, chatItemModel.contactNick)
     }
 
 
@@ -121,7 +117,7 @@ class ContactsAdapter(
                 .apply(RequestOptions().centerCrop())
                 .into(imgProfile)
         }
-        holder.setListenerToContact(contact.id, contact.fbToken)
+        holder.setListenerToContact(contact.id)
     }
 
     override fun getItemCount() = list.count()

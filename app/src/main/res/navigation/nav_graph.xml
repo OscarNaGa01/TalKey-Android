@@ -61,10 +61,6 @@
         <argument
             android:name="idChat"
             app:argType="string" />
-        <argument
-            android:name="fbTocken"
-            app:argType="string"
-            app:nullable="true" />
 
     </fragment>
     <fragment
