@@ -52,6 +52,7 @@ class ChatFragment : Fragment() {
         initRecyclerView()
         observeViewModel()
         initListeners()
+        refreshConfig()
         getMessageList(false)
     }
 
@@ -76,6 +77,18 @@ class ChatFragment : Fragment() {
                 getMessageList(true)
                 swipeToRefresh.isRefreshing = false
             }
+        }
+    }
+
+    private fun refreshConfig() {
+        with(binding.swipeToRefresh) {
+            setProgressBackgroundColorSchemeColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.background
+                )
+            )
+            setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.vassBlue))
         }
     }
 
