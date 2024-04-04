@@ -151,6 +151,8 @@ class LogInFragment : Fragment() {
             setEditTextBackground(listOf(binding.etEmail))
             Toast.makeText(requireContext(), getString(R.string.user_exists), Toast.LENGTH_SHORT)
                 .show()
+        } else {
+            Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -241,12 +243,12 @@ class LogInFragment : Fragment() {
             setLoginToSignupView()
 
         } else {
-            setSetupToLoginView()
+            setSignupToLoginView()
         }
 
     }
 
-    private fun setSetupToLoginView() {
+    private fun setSignupToLoginView() {
         with(binding) {
             etEmail.text?.clear()
             etNick.text?.clear()
