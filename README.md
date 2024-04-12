@@ -16,9 +16,6 @@ This Android Studio project, made with my colleagues Enrique Guevara and Marc Se
 - Network and business communication using mappers
 - Firebase Cloud Messaging
 
-## Visuals
-<img src="![1712914245856 (1)](https://github.com/OscarNaGa01/TalKey-Android/assets/134143213/3187e468-f6e9-4346-ba2e-1b9b7f430ea0)" width="1200" height="540">
-
 ## Support
 If you have any questions or are interested in asking me something, you can contact me by email: oscarnav01@gmail.com
 
