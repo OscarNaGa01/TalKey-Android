@@ -16,6 +16,9 @@ This Android Studio project, made with my colleagues Enrique Guevara and Marc Se
 - Network and business communication using mappers
 - Firebase Cloud Messaging
 
+## Visuals
+<img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914246063%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914246025%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914245984%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914245938%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914245898%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914245856%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914245816%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914245768%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914245720%20(1).jpg" width="140" height="300"> <img src="https://github.com/OscarNaGa01/TalKey-Android/blob/develop/1712914245674%20(1).jpg" width="140" height="300">
+
 ## Support
 If you have any questions or are interested in asking me something, you can contact me by email: oscarnav01@gmail.com
 
